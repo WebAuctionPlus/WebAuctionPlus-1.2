@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>me.lorenzop</groupId>
   <artifactId>WebAuctionPlus</artifactId>
-  <version>1.2.x-SNAPSHOT</version>
+  <version>1.2.x</version>
   <packaging>jar</packaging>
   <name>WebAuctionPlus</name>
   <url>http://maven.apache.org</url>
