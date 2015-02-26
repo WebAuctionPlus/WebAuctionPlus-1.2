@@ -9,23 +9,24 @@ import me.lorenzop.webauctionplus.tasks.PlayerConvertTask;
 
 import org.bukkit.Bukkit;
 
+
 public class MySQLUpdate {
 
 	// update database
 	public static void doUpdate(String fromVersion) {
 		// update potions  (< 1.1.6)
-		if(WebAuctionPlus.compareVersions(fromVersion, "1.1.6").equals("<")){
+		if(WebAuctionPlus.compareVersions(fromVersion, "1.1.6").equals("<")) {
 			UpdatePotions1_1_6();
-                }
+		}
 		// update db fields  (< 1.1.14)
-		if(WebAuctionPlus.compareVersions(fromVersion, "1.1.14").equals("<")){
+		if(WebAuctionPlus.compareVersions(fromVersion, "1.1.14").equals("<")) {
 			UpdateFields1_1_14();
-                }
-                // update db fields  (< 1.1.15)
-		if(WebAuctionPlus.compareVersions(fromVersion, "1.1.15").equals("<")){
-			UpdateUUID1_1_15();
-                        Bukkit.getServer().getScheduler().runTask(Bukkit.getPluginManager().getPlugin("WebAuctionPlus"), new PlayerConvertTask());
-                }
+		}
+		// update db fields  (< 1.2.0)
+		if(WebAuctionPlus.compareVersions(fromVersion, "1.2.0").equals("<")) {
+			UpdateFields1_2_0();
+			Bukkit.getServer().getScheduler().runTask(Bukkit.getPluginManager().getPlugin("WebAuctionPlus"), new PlayerConvertTask());
+		}
 	}
 
 
@@ -47,29 +48,29 @@ public class MySQLUpdate {
 	}
 
 	// UUID update
-	private static void UpdateUUID1_1_15() {
+	private static void UpdateFields1_2_0() {
 		final Connection conn = WebAuctionPlus.dataQueries.getConnection();
 		try {
 			WebAuctionPlus.log.warning(WebAuctionPlus.logPrefix+"Updating db fields for 1.1.15");
 			final String[] queries = new String[]{
 				// Add UUID support
 				"ALTER TABLE `"+WebAuctionPlus.dataQueries.dbPrefix()+"Players` ADD `uuid` VARCHAR(50) NULL DEFAULT NULL AFTER `playerName`, ADD UNIQUE (`uuid`)",
-                                "ALTER TABLE `"+WebAuctionPlus.dataQueries.dbPrefix()+"Auctions` ADD `playerId` INT(11) NOT NULL DEFAULT '1' AFTER `playerName`",
-                                "ALTER TABLE `"+WebAuctionPlus.dataQueries.dbPrefix()+"Auctions` ADD CONSTRAINT `"+WebAuctionPlus.dataQueries.dbPrefix()+"_fk_player_id1` FOREIGN KEY (`playerId`) REFERENCES `"+WebAuctionPlus.dataQueries.dbPrefix()+"Players` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION",
-                                "UPDATE "+WebAuctionPlus.dataQueries.dbPrefix()+"Auctions JOIN "+WebAuctionPlus.dataQueries.dbPrefix()+"Players ON "+WebAuctionPlus.dataQueries.dbPrefix()+"Auctions.playerName = "+WebAuctionPlus.dataQueries.dbPrefix()+"Players.Playername SET "+WebAuctionPlus.dataQueries.dbPrefix()+"Auctions.playerId = "+WebAuctionPlus.dataQueries.dbPrefix()+"Players.Id",
-                                "ALTER TABLE `"+WebAuctionPlus.dataQueries.dbPrefix()+"Auctions` DROP `PlayerName`",
-                                "ALTER TABLE `"+WebAuctionPlus.dataQueries.dbPrefix()+"Items` ADD `playerId` INT(11) NOT NULL DEFAULT '1' AFTER `playerName`",
-                                "ALTER TABLE `"+WebAuctionPlus.dataQueries.dbPrefix()+"Items` ADD CONSTRAINT `"+WebAuctionPlus.dataQueries.dbPrefix()+"_fk_player_id2` FOREIGN KEY (`playerId`) REFERENCES `"+WebAuctionPlus.dataQueries.dbPrefix()+"Players` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION",
-                                "UPDATE "+WebAuctionPlus.dataQueries.dbPrefix()+"Items JOIN "+WebAuctionPlus.dataQueries.dbPrefix()+"Players ON "+WebAuctionPlus.dataQueries.dbPrefix()+"Items.playerName = "+WebAuctionPlus.dataQueries.dbPrefix()+"Players.Playername SET "+WebAuctionPlus.dataQueries.dbPrefix()+"Items.playerId = "+WebAuctionPlus.dataQueries.dbPrefix()+"Players.Id",
-                                "ALTER TABLE `"+WebAuctionPlus.dataQueries.dbPrefix()+"Items` DROP `playerName`",
-                                "ALTER TABLE `"+WebAuctionPlus.dataQueries.dbPrefix()+"LogSales` ADD `sellerId` INT(11) NOT NULL DEFAULT '0' AFTER `seller`",
-                                "ALTER TABLE `"+WebAuctionPlus.dataQueries.dbPrefix()+"LogSales` ADD `buyerId` INT(11) DEFAULT NULL AFTER `buyer`",
-                                "ALTER TABLE `"+WebAuctionPlus.dataQueries.dbPrefix()+"LogSales` ADD CONSTRAINT `"+WebAuctionPlus.dataQueries.dbPrefix()+"_fk_seller_id1` FOREIGN KEY (`sellerId`) REFERENCES `"+WebAuctionPlus.dataQueries.dbPrefix()+"Players` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION",
-                                "ALTER TABLE `"+WebAuctionPlus.dataQueries.dbPrefix()+"LogSales` ADD CONSTRAINT `"+WebAuctionPlus.dataQueries.dbPrefix()+"_fk_buyer_id1` FOREIGN KEY (`buyerId`) REFERENCES `"+WebAuctionPlus.dataQueries.dbPrefix()+"Players` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION",
-                                "UPDATE "+WebAuctionPlus.dataQueries.dbPrefix()+"LogSales JOIN "+WebAuctionPlus.dataQueries.dbPrefix()+"Players ON "+WebAuctionPlus.dataQueries.dbPrefix()+"LogSales.seller = "+WebAuctionPlus.dataQueries.dbPrefix()+"Players.Playername SET "+WebAuctionPlus.dataQueries.dbPrefix()+"LogSales.sellerId = "+WebAuctionPlus.dataQueries.dbPrefix()+"Players.Id",
-                                "UPDATE "+WebAuctionPlus.dataQueries.dbPrefix()+"LogSales JOIN "+WebAuctionPlus.dataQueries.dbPrefix()+"Players ON "+WebAuctionPlus.dataQueries.dbPrefix()+"LogSales.buyer = "+WebAuctionPlus.dataQueries.dbPrefix()+"Players.Playername SET "+WebAuctionPlus.dataQueries.dbPrefix()+"LogSales.buyerId = "+WebAuctionPlus.dataQueries.dbPrefix()+"Players.Id",
-                                "ALTER TABLE `"+WebAuctionPlus.dataQueries.dbPrefix()+"LogSales` DROP `seller`",
-                                "ALTER TABLE `"+WebAuctionPlus.dataQueries.dbPrefix()+"LogSales` DROP `buyer`"
+				"ALTER TABLE `"+WebAuctionPlus.dataQueries.dbPrefix()+"Auctions` ADD `playerId` INT(11) NOT NULL DEFAULT '1' AFTER `playerName`",
+				"ALTER TABLE `"+WebAuctionPlus.dataQueries.dbPrefix()+"Auctions` ADD CONSTRAINT `"+WebAuctionPlus.dataQueries.dbPrefix()+"_fk_player_id1` FOREIGN KEY (`playerId`) REFERENCES `"+WebAuctionPlus.dataQueries.dbPrefix()+"Players` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION",
+				"UPDATE "+WebAuctionPlus.dataQueries.dbPrefix()+"Auctions JOIN "+WebAuctionPlus.dataQueries.dbPrefix()+"Players ON "+WebAuctionPlus.dataQueries.dbPrefix()+"Auctions.playerName = "+WebAuctionPlus.dataQueries.dbPrefix()+"Players.Playername SET "+WebAuctionPlus.dataQueries.dbPrefix()+"Auctions.playerId = "+WebAuctionPlus.dataQueries.dbPrefix()+"Players.Id",
+				"ALTER TABLE `"+WebAuctionPlus.dataQueries.dbPrefix()+"Auctions` DROP `PlayerName`",
+				"ALTER TABLE `"+WebAuctionPlus.dataQueries.dbPrefix()+"Items` ADD `playerId` INT(11) NOT NULL DEFAULT '1' AFTER `playerName`",
+				"ALTER TABLE `"+WebAuctionPlus.dataQueries.dbPrefix()+"Items` ADD CONSTRAINT `"+WebAuctionPlus.dataQueries.dbPrefix()+"_fk_player_id2` FOREIGN KEY (`playerId`) REFERENCES `"+WebAuctionPlus.dataQueries.dbPrefix()+"Players` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION",
+				"UPDATE "+WebAuctionPlus.dataQueries.dbPrefix()+"Items JOIN "+WebAuctionPlus.dataQueries.dbPrefix()+"Players ON "+WebAuctionPlus.dataQueries.dbPrefix()+"Items.playerName = "+WebAuctionPlus.dataQueries.dbPrefix()+"Players.Playername SET "+WebAuctionPlus.dataQueries.dbPrefix()+"Items.playerId = "+WebAuctionPlus.dataQueries.dbPrefix()+"Players.Id",
+				"ALTER TABLE `"+WebAuctionPlus.dataQueries.dbPrefix()+"Items` DROP `playerName`",
+				"ALTER TABLE `"+WebAuctionPlus.dataQueries.dbPrefix()+"LogSales` ADD `sellerId` INT(11) NOT NULL DEFAULT '0' AFTER `seller`",
+				"ALTER TABLE `"+WebAuctionPlus.dataQueries.dbPrefix()+"LogSales` ADD `buyerId` INT(11) DEFAULT NULL AFTER `buyer`",
+				"ALTER TABLE `"+WebAuctionPlus.dataQueries.dbPrefix()+"LogSales` ADD CONSTRAINT `"+WebAuctionPlus.dataQueries.dbPrefix()+"_fk_seller_id1` FOREIGN KEY (`sellerId`) REFERENCES `"+WebAuctionPlus.dataQueries.dbPrefix()+"Players` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION",
+				"ALTER TABLE `"+WebAuctionPlus.dataQueries.dbPrefix()+"LogSales` ADD CONSTRAINT `"+WebAuctionPlus.dataQueries.dbPrefix()+"_fk_buyer_id1` FOREIGN KEY (`buyerId`) REFERENCES `"+WebAuctionPlus.dataQueries.dbPrefix()+"Players` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION",
+				"UPDATE "+WebAuctionPlus.dataQueries.dbPrefix()+"LogSales JOIN "+WebAuctionPlus.dataQueries.dbPrefix()+"Players ON "+WebAuctionPlus.dataQueries.dbPrefix()+"LogSales.seller = "+WebAuctionPlus.dataQueries.dbPrefix()+"Players.Playername SET "+WebAuctionPlus.dataQueries.dbPrefix()+"LogSales.sellerId = "+WebAuctionPlus.dataQueries.dbPrefix()+"Players.Id",
+				"UPDATE "+WebAuctionPlus.dataQueries.dbPrefix()+"LogSales JOIN "+WebAuctionPlus.dataQueries.dbPrefix()+"Players ON "+WebAuctionPlus.dataQueries.dbPrefix()+"LogSales.buyer = "+WebAuctionPlus.dataQueries.dbPrefix()+"Players.Playername SET "+WebAuctionPlus.dataQueries.dbPrefix()+"LogSales.buyerId = "+WebAuctionPlus.dataQueries.dbPrefix()+"Players.Id",
+				"ALTER TABLE `"+WebAuctionPlus.dataQueries.dbPrefix()+"LogSales` DROP `seller`",
+				"ALTER TABLE `"+WebAuctionPlus.dataQueries.dbPrefix()+"LogSales` DROP `buyer`"
 			};
 			// execute queries
 			for(final String sql : queries) {
@@ -83,7 +84,7 @@ public class MySQLUpdate {
 			WebAuctionPlus.dataQueries.closeResources(conn);
 		}
 	}
-        
+
 	// update broken fields
 	private static void UpdateFields1_1_14() {
 		final Connection conn = WebAuctionPlus.dataQueries.getConnection();
