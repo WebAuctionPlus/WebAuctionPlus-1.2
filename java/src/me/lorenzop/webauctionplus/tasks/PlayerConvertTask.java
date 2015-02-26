@@ -5,17 +5,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import me.lorenzop.webauctionplus.WebAuctionPlus;
-import me.lorenzop.webauctionplus.dao.AuctionPlayer;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
 
 public class PlayerConvertTask implements Runnable {
 

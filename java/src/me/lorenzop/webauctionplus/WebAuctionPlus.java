@@ -27,10 +27,8 @@ import me.lorenzop.webauctionplus.mysql.MySQLTables;
 import me.lorenzop.webauctionplus.mysql.MySQLUpdate;
 import me.lorenzop.webauctionplus.tasks.AnnouncerTask;
 import me.lorenzop.webauctionplus.tasks.PlayerAlertTask;
-import me.lorenzop.webauctionplus.tasks.PlayerConvertTask;
 import me.lorenzop.webauctionplus.tasks.RecentSignTask;
 import me.lorenzop.webauctionplus.tasks.ShoutSignTask;
-import me.lorenzop.webauctionplus.Metrics;
 import net.milkbowl.vault.economy.Economy;
 
 import org.bukkit.Bukkit;

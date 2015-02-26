@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.util.Random;
 
 import me.lorenzop.webauctionplus.WebAuctionPlus;
-import static me.lorenzop.webauctionplus.WebAuctionPlus.log;
 import me.lorenzop.webauctionplus.WebInventory;
 import me.lorenzop.webauctionplus.dao.AuctionPlayer;
 import me.lorenzop.webauctionplus.tasks.PlayerAlertTask;
