@@ -7,8 +7,8 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-import me.lorenzop.webauctionplus.dao.AuctionPlayer;
 
+import me.lorenzop.webauctionplus.dao.AuctionPlayer;
 import me.lorenzop.webauctionplus.mysql.DataQueries;
 
 import org.bukkit.Bukkit;
@@ -20,7 +20,7 @@ import org.bukkit.inventory.ItemStack;
 public class WebInventory {
 
 	// inventory instances
-	protected static final Map<String, WebInventory> openInvs = new HashMap<String, WebInventory>();
+	protected static final Map<UUID, WebInventory> openInvs = new HashMap<UUID, WebInventory>();
 
 	protected final Player player;
 	protected final Inventory chest;
@@ -55,7 +55,7 @@ public class WebInventory {
 			// lock inventory                   
                         if(Aplayer_tmp != null) {
                             setLocked(playerUUID, true);
-                            if(openInvs.containsKey(playerName)) {
+                            if(openInvs.containsKey(playerUUID)) {
                                     // chest already open
                                     player.sendMessage(WebAuctionPlus.chatPrefix+"MailBox already opened!");
                                     WebAuctionPlus.log.warning("Inventory already open for "+playerName+"!");
@@ -67,7 +67,7 @@ public class WebInventory {
                                     player.sendMessage(WebAuctionPlus.chatPrefix+"Opening Inventory.....");
                                     WebAuctionPlus.log.info(WebAuctionPlus.logPrefix+"Inventory opened for: "+playerName);
                                     final WebInventory inventory = new WebInventory(player, Aplayer_tmp);
-                                    openInvs.put(playerName, inventory);
+                                    openInvs.put(playerUUID, inventory);
                             }
                          } else {
                             player.sendMessage(WebAuctionPlus.chatPrefix+"You have to create an WebAuction account before you can use this sing.");
@@ -82,12 +82,12 @@ public class WebInventory {
                 final UUID playerUUID = player.getUniqueId();
 		if(playerName == null || playerName.isEmpty()) throw new NullPointerException();
 		synchronized(openInvs){
-			if(!openInvs.containsKey(playerName)) return;
-			final WebInventory inventory = openInvs.get(playerName);
+			if(!openInvs.containsKey(playerUUID)) return;
+			final WebInventory inventory = openInvs.get(playerUUID);
 			// save inventory
 			inventory.saveInventory();
 			// remove inventory chest
-			openInvs.remove(playerName);
+			openInvs.remove(playerUUID);
 			// unlock inventory
 			setLocked(playerUUID, false);
 		}
@@ -96,8 +96,8 @@ public class WebInventory {
 	}
 	public static void ForceCloseAll() {
 		if(openInvs==null || openInvs.size()==0) return;
-		for(final String playerName : openInvs.keySet()) {
-			final Player player = Bukkit.getPlayerExact(playerName);
+		for(final UUID playerUUID : openInvs.keySet()) {
+			final Player player = Bukkit.getPlayer(playerUUID);
 			player.closeInventory();
 			WebInventory.onInventoryClose(player);
 		}
