@@ -6,10 +6,11 @@ import java.sql.SQLException;
 
 import me.lorenzop.webauctionplus.WebAuctionPlus;
 import me.lorenzop.webauctionplus.tasks.PlayerConvertTask;
+
 import org.bukkit.Bukkit;
 
 public class MySQLUpdate {
-    
+
 	// update database
 	public static void doUpdate(String fromVersion) {
 		// update potions  (< 1.1.6)

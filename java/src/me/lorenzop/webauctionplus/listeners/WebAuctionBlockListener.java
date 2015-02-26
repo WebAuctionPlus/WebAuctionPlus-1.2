@@ -1,8 +1,8 @@
 package me.lorenzop.webauctionplus.listeners;
 
 import me.lorenzop.webauctionplus.WebAuctionPlus;
-import org.bukkit.ChatColor;
 
+import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
