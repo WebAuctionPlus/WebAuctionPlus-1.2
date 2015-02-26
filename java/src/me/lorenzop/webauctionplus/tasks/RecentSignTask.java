@@ -12,23 +12,21 @@ import java.util.concurrent.ExecutionException;
 
 import me.lorenzop.webauctionplus.WebAuctionPlus;
 
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 
-import com.bergerkiller.bukkit.sl.API.TickMode;
-import com.bergerkiller.bukkit.sl.API.Variable;
-import com.bergerkiller.bukkit.sl.API.Variables;
 
 public class RecentSignTask implements Runnable {
 
+/*
 	Variable varTitle;
 	Variable varQtyPrice;
 	Variable varSeller;
 	Variable varType;
+*/
 
 	private final WebAuctionPlus plugin;
 
@@ -39,6 +37,7 @@ public class RecentSignTask implements Runnable {
 		// %waPrice  - price each
 		// %waSeller - sellers name
 		// %waType   - Buy Now or Auction
+/*
 		if(WebAuctionPlus.useSignLink()) {
 			varTitle	= Variables.get("waTitle");
 			varTitle.setDefault				("N/A       ");
@@ -57,17 +56,20 @@ public class RecentSignTask implements Runnable {
 			varType.getTicker().interval	= 10;
 			varType.getTicker().mode		= TickMode.LEFT;
 		}
+*/
 	}
 
 
 	public void run() {
 		if(!WebAuctionPlus.useSignLink() && !WebAuctionPlus.useOriginalRecent()) return;
 		if(WebAuctionPlus.getOnlinePlayers().length == 0) return;
+/*
 		// signlink vars
 		String tickTitle	= "";
 		String tickQtyPrice	= "";
 		String tickSeller	= "";
 		String tickType		= "";
+*/
 		// query auctions
 		Connection conn = WebAuctionPlus.dataQueries.getConnection();
 		PreparedStatement st = null;
@@ -89,9 +91,11 @@ public class RecentSignTask implements Runnable {
 				String strQtyPrice	= Integer.toString(qty)+"x "+strPrice;
 				String strSeller	= rs.getString("playerName");
 				if(strSeller==null || strSeller.isEmpty()) strSeller = "N/A       ";
+/*
 				String strType = "";
 				if(rs.getInt("allowBids") == 0)	strType = "Buy Now";
 				else							strType = "Auction";
+*/
 
 				// recent signs
 				if(WebAuctionPlus.useOriginalRecent()) {
@@ -104,6 +108,7 @@ public class RecentSignTask implements Runnable {
 					UpdateRecentSigns(offset, lines);
 				}
 
+/*
 				// sign link
 				if(WebAuctionPlus.useSignLink()) {
 					int size = strTitle.length();
@@ -116,6 +121,7 @@ public class RecentSignTask implements Runnable {
 					tickSeller		+= padString(strSeller,		size);
 					tickType		+= padString(strType,		size);
 				}
+*/
 
 			}
 		} catch(SQLException e) {
@@ -125,6 +131,7 @@ public class RecentSignTask implements Runnable {
 			WebAuctionPlus.dataQueries.closeResources(conn, st, rs);
 		}
 
+/*
 		// set signlink vars
 		if(WebAuctionPlus.useSignLink()) {
 			try {
@@ -136,6 +143,7 @@ public class RecentSignTask implements Runnable {
 				e.printStackTrace();
 			}
 		}
+*/
 
 	}
 
@@ -200,6 +208,7 @@ public class RecentSignTask implements Runnable {
 	}
 
 
+/*
 	// pad string with spaces for scrolling signlink signs
 	private String padString(String text, int size) {
 		if(text == null) return null;
@@ -207,6 +216,7 @@ public class RecentSignTask implements Runnable {
 		if(text.length() < size) return text+StringUtils.repeat(" ", size-text.length());
 		return text;
 	}
+*/
 
 
 }
