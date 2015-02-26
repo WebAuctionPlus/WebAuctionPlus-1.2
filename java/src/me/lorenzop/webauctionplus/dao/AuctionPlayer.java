@@ -8,7 +8,7 @@ public class AuctionPlayer {
 
 	private int playerId	= 0;
 	private String player	= null;
-        private UUID   uuid     = null;
+	private UUID   uuid     = null;
 	private Player p        = null;
 	private double money	= 0D;
 	private boolean canBuy	= false;
@@ -19,7 +19,7 @@ public class AuctionPlayer {
 	}
 	public AuctionPlayer(UUID uuid) {
 		this.uuid = uuid;
-                this.player = Bukkit.getOfflinePlayer(uuid).getName();
+		this.player = Bukkit.getOfflinePlayer(uuid).getName();
 	}
 
 
@@ -39,19 +39,18 @@ public class AuctionPlayer {
 	public void setPlayerName(String player) {
 		this.player = player;
 	}
-        
-        // player uuid
+
+	// player uuid
 	public UUID getPlayerUUID() {
 		return uuid;
 	}
-        
 	public void setPlayerUUID(UUID uuid) {
 		this.uuid = uuid;
 	}
 
 	// player object
 	public Player getPlayer() {
-		if(p == null) p = Bukkit.getPlayerExact(player);
+		if(p == null) p = Bukkit.getPlayer(this.uuid);
 		return p;
 	}
 	public void setPlayer(Player p) {
