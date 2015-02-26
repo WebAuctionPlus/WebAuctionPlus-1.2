@@ -28,6 +28,7 @@ public class PlayerAlertTask implements Runnable {
 	}
 
 
+	@SuppressWarnings("resource")
 	public synchronized void run() {
 		HashMap<Integer, AuctionPlayer> playersMap = new HashMap<Integer, AuctionPlayer>();
 		AuctionPlayer waPlayer = null;

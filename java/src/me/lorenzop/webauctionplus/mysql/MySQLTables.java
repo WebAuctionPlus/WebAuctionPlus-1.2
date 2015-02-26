@@ -243,6 +243,7 @@ public class MySQLTables {
 	}
 
 	// convert database tables to Plus
+	@SuppressWarnings("resource")
 	private void ConvertDatabase1_0() {
 		// update tables
 		sqlTables(true, "Auctions");
@@ -447,6 +448,7 @@ public class MySQLTables {
 
 
 	// update from 1.0 to 1.1.1
+	@SuppressWarnings("resource")
 	private void ConvertDatabase1_1_1() {
 		Connection conn			= getConnection();
 		PreparedStatement st	= null;
