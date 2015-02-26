@@ -1,6 +1,7 @@
 package me.lorenzop.webauctionplus;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.security.MessageDigest;
@@ -561,7 +562,7 @@ public class WebAuctionPlus extends JavaPlugin {
 
 	// announce radius
 	public static void BroadcastRadius(String msg, Location loc, int radius) {
-		Collection<? extends Player> playerList = Bukkit.getOnlinePlayers();
+		final Player[] playerList = WebAuctionPlus.getOnlinePlayers();
 		Double x = loc.getX();
 		Double z = loc.getZ();
 		for(Player player : playerList) {
@@ -691,6 +692,24 @@ public class WebAuctionPlus extends JavaPlugin {
 				} catch (Exception ignored) {}
 			}
 		}, 5 * 20, 14400 * 20); // run every 4 hours
+	}
+
+
+	// Bukkit.getOnlinePlayers() changed the api from returning an array to a Collection in 1.7.10 and broke backward compatibility
+	public static Player[] getOnlinePlayers() {
+		try {
+			if(Bukkit.class.getMethod("getOnlinePlayers", new Class<?>[0]).getReturnType() == Collection.class)
+				return ((Collection<?>) Bukkit.class.getMethod("getOnlinePlayers", new Class<?>[0]).invoke(null, new Object[0])).toArray(new Player[0]);
+			else
+				return ((Player[])Bukkit.class.getMethod("getOnlinePlayers", new Class<?>[0]).invoke(null, new Object[0]));
+		} catch (NoSuchMethodException e) {
+			e.printStackTrace();
+		} catch (InvocationTargetException e){
+			e.printStackTrace();
+		} catch (IllegalAccessException e){
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 

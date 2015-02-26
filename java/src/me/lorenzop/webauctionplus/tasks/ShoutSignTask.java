@@ -31,7 +31,7 @@ public class ShoutSignTask implements Runnable {
 		if(lastAuction >= latestAuctionID) return;
 		lastAuction = latestAuctionID;
 		if(WebAuctionPlus.isDebug()) WebAuctionPlus.log.info(WebAuctionPlus.logPrefix+"Current Auction id = "+lastAuction);
-		if(plugin.getServer().getOnlinePlayers().size() == 0) return;
+		if(WebAuctionPlus.getOnlinePlayers().length == 0) return;
 
 		Auction auction = WebAuctionPlus.dataQueries.getAuction(latestAuctionID);
 		ItemStack stack = auction.getItemStack();

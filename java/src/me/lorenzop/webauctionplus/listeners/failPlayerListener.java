@@ -26,7 +26,7 @@ public class failPlayerListener implements Listener {
 			// send msg to players when joining
 			Bukkit.getPluginManager().registerEvents(instance, plugin);
 			// send msg to players already online
-			for(Player p : Bukkit.getOnlinePlayers())
+			for(Player p : WebAuctionPlus.getOnlinePlayers())
 				sendMsg(p);
 		}
 	}

@@ -23,7 +23,7 @@ public class AnnouncerTask implements Runnable {
 	}
 
 	public void run() {
-		if (plugin.getServer().getOnlinePlayers().size() == 0) return;
+		if (WebAuctionPlus.getOnlinePlayers().length == 0) return;
 		if (announcementMessages.isEmpty()) return;
 		// random
 		if (announceRandom) {
@@ -65,7 +65,7 @@ public class AnnouncerTask implements Runnable {
 			// is command
 			if (message.startsWith("/")) {
 				server.dispatchCommand(server.getConsoleSender(), message.substring(1));
-			} else if (server.getOnlinePlayers().size() > 0) {
+			} else if (WebAuctionPlus.getOnlinePlayers().length > 0) {
 				message = WebAuctionPlus.ReplaceColors(chatPrefix + message);
 				server.broadcast(message, "wa.announcer.receive");
 			}

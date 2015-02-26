@@ -62,7 +62,7 @@ public class RecentSignTask implements Runnable {
 
 	public void run() {
 		if(!WebAuctionPlus.useSignLink() && !WebAuctionPlus.useOriginalRecent()) return;
-		if(Bukkit.getServer().getOnlinePlayers().size() == 0) return;
+		if(WebAuctionPlus.getOnlinePlayers().length == 0) return;
 		// signlink vars
 		String tickTitle	= "";
 		String tickQtyPrice	= "";

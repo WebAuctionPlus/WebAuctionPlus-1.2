@@ -36,9 +36,9 @@ public class PlayerAlertTask implements Runnable {
 		int i = 0;
 		// build players online hashmap
 		if(playerJoined == null) {
-			Collection<? extends Player> playersList = Bukkit.getOnlinePlayers();
+			final Player[] playersList = WebAuctionPlus.getOnlinePlayers();
 			// no players online
-			if (playersList.size() == 0) return;
+			if (playersList.length == 0) return;
 			// build query
 			for (Player player : playersList) {
                                 waPlayer = WebAuctionPlus.dataQueries.getPlayer(player.getUniqueId());
