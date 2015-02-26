@@ -78,7 +78,6 @@
         <id>spigot-repo</id>
         <url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
     </repository>
-    
     <!-- For Vault -->
     <repository>
         <id>theyeticave</id>
@@ -107,8 +106,8 @@
     </dependency>
     <dependency>
         <groupId>net.milkbowl.vault</groupId>
-	<artifactId>Vault</artifactId>
-	<version>1.5.2</version>
+	<artifactId>VaultAPI</artifactId>
+	<version>1.5</version>
     </dependency>
     <dependency>
       <groupId>com.bergerkiller.bukkit.sl.SignLink</groupId>
