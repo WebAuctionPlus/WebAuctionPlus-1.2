@@ -1,6 +1,7 @@
 package me.lorenzop.webauctionplus.listeners;
 
 import java.math.BigDecimal;
+
 import me.lorenzop.webauctionplus.WebAuctionPlus;
 import me.lorenzop.webauctionplus.WebInventory;
 import me.lorenzop.webauctionplus.dao.AuctionPlayer;
@@ -133,7 +134,7 @@ public class WebAuctionCommands implements CommandExecutor {
 				} else {
 					if (params != 3) return false;
 					if (args[1].isEmpty() || args[2].isEmpty()) return false;
-					player = Bukkit.getOfflinePlayer(args[1]);
+					player = getOfflinePlayer(args[1]);
 					if(!player.hasPlayedBefore()) {
 						sender.sendMessage(WebAuctionPlus.logPrefix+"Player not found!");
 						sender.sendMessage(WebAuctionPlus.logPrefix+"Note: if you really need to, you can add a player to the database, just md5 the password.");
@@ -217,7 +218,7 @@ public class WebAuctionCommands implements CommandExecutor {
 				} else {
 					if (params != 3) return false;
 					if (args[1].isEmpty() || args[2].isEmpty()) return false;
-					player = Bukkit.getOfflinePlayer(args[1]);
+					player = getOfflinePlayer(args[1]);
 					if(!player.hasPlayedBefore()) {
 						WebAuctionPlus.log.info(WebAuctionPlus.logPrefix+"Player not found!");
 						return true;
@@ -282,7 +283,7 @@ public class WebAuctionCommands implements CommandExecutor {
                                 } else {
 					if (params != 3) return false;
 					if (args[1].isEmpty() || args[2].isEmpty()) return false;
-					player = Bukkit.getOfflinePlayer(args[1]);
+					player = getOfflinePlayer(args[1]);
 					if(!player.hasPlayedBefore()) {
 						WebAuctionPlus.log.info(WebAuctionPlus.logPrefix+"Player not found!");
 						return true;
@@ -323,5 +324,12 @@ public class WebAuctionCommands implements CommandExecutor {
 		}
 		return false;
 	}
+
+
+	@SuppressWarnings("deprecation")
+	private static OfflinePlayer getOfflinePlayer(final String playerName) {
+		return Bukkit.getOfflinePlayer(playerName);
+	}
+
 
 }

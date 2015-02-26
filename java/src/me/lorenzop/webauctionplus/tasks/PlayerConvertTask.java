@@ -43,7 +43,7 @@ public class PlayerConvertTask implements Runnable {
                         if (value != null) 
                         {
                             name = value.toString();
-                            OfflinePlayer Player = Bukkit.getOfflinePlayer(name);
+                            OfflinePlayer Player = getOfflinePlayer(name);
                             if(Player.hasPlayedBefore()) {
                                 uuid = Player.getUniqueId().toString();
                                 st = conn.prepareStatement("UPDATE "+WebAuctionPlus.dataQueries.dbPrefix()+"Players SET uuid = '"+uuid+"' WHERE playerName = '"+name+"'");
@@ -58,6 +58,12 @@ public class PlayerConvertTask implements Runnable {
             } catch (SQLException ex) {
                 Logger.getLogger(PlayerConvertTask.class.getName()).log(Level.SEVERE, null, ex);
             }
+	}
+
+
+	@SuppressWarnings("deprecation")
+	private static OfflinePlayer getOfflinePlayer(final String playerName) {
+		return Bukkit.getOfflinePlayer(playerName);
 	}
 
 
