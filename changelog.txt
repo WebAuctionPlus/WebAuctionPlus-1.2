@@ -1,6 +1,12 @@
 WebAuctionPlus - Change Log
 
 
+2015-xx-xx WA+ 1.2.x alpha
+==========================
+* MarioG1 takes over as lead dev of the project
+* updated plugin to support UUID
+
+
 2014-01-08 WA+ 1.1.14 beta
 ==========================
 * updated to bukkit 1.7.2-R0.2 beta and fixed depreciated calls
