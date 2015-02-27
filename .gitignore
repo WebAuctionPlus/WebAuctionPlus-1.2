@@ -1,2 +1,27 @@
 target/
+bin/
+rpmbuild-root/
+out/
+build/
+
+*/.project
+*/.classpath
+*/.settings
+.metadata
+.git
+
+*.class
+*.jar
+*.rpm
+*.zip
+*.exe
+*.lock
+*.out
+*.swp
+.*.swp
+*~
+
+*/.externalToolBuilders
+*/nb-configuration.xml
+*/maven-eclipse.xml
 
