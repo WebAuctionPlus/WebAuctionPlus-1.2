@@ -27,12 +27,13 @@ public static function Sell($id, $qty, $price, $desc){global $config, $user;
   $Item = QueryItems::QuerySingle($user->getId(), $id);
   if(!$Item){$config['error'] = 'Item not found!'; return(FALSE);}
   if($qty > $Item->getItemQty()){$qty = $Item->getItemQty(); $config['error'] = 'You don\'t have that many!'; return(FALSE);}
-  // create auction
+  // create auction  
   $query = "INSERT INTO `".$config['table prefix']."Auctions` (".
-           "`playerId`, `itemId`, `itemDamage`, `qty`, `enchantments`, `itemTitle`, `price`, `created` )VALUES( ".
+           "`playerId`, `itemId`, `itemDamage`, `itemData`, `qty`, `enchantments`, `itemTitle`, `price`, `created` )VALUES( ".
            "'".mysql_san($user->getId())."', ".
            ((int)$Item->getItemId()).", ".
            ((int)$Item->getItemDamage()).", ".
+           "'".mysql_san($Item->getItemData())."', ".
            ((int)$qty).", ".
            "'".mysql_san($Item->getEnchantmentsCompressed())."', ".
            "'".mysql_san($Item->getItemTitle())."', ".

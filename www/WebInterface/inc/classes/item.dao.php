@@ -6,16 +6,18 @@ class ItemDAO{
 protected $tableRowId =-1;
 protected $itemId     =-1;
 protected $itemDamage = 0;
+protected $itemData = NULL;
 protected $qty        = 0;
 protected $enchantments = array();
 protected $marketPrice = False;
 protected $marketPriceTotal = False;
 
 
-function __construct($tableRowId=0, $itemId=0, $itemDamage=0, $qty=0, $marketPrice = "--", $marketPriceTotal = "--", $enchantments=array()){
+function __construct($tableRowId=0, $itemId=0, $itemDamage=0, $itemData=NULL, $qty=0, $marketPrice = "--", $marketPriceTotal = "--", $enchantments=array()){
   $this->tableRowId = ($tableRowId<1 ? -1 : (int)$tableRowId);
   $this->itemId     = ($itemId<1     ? -1 : (int)$itemId);
   $this->itemDamage = ($itemDamage<1 ?  0 : (int)$itemDamage);
+  $this->itemData   = $itemData;
   $this->qty        = ($qty<1        ?  0 : (int)$qty);
   $this->marketPrice = $marketPrice;
   $this->marketPriceTotal = $marketPriceTotal;
@@ -32,6 +34,7 @@ public static function makeCopy($Item){
     $Item->getTableRowId(),
     $Item->getItemId(),
     $Item->getItemDamage(),
+    $Item->getItemData(),
     $Item->getItemQty(),
     $Item->getMarketPrice(),
     $Item->getMarketPriceTotal(),
@@ -59,6 +62,10 @@ public function getItemId(){
 // item damage value
 public function getItemDamage(){
   return((int)$this->itemDamage);
+}
+// item data
+public function getItemData(){
+  return($this->itemData);
 }
 // item qty
 public function getItemQty(){

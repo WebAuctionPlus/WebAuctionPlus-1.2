@@ -270,6 +270,7 @@ public static function AddCreateItem($playerId, $Item){global $config;
            "`playerId`='".mysql_san($playerId)."' AND ".
            "`itemId` = ".    ((int)$Item->getItemId())." AND ".
            "`itemDamage` = ".((int)$Item->getItemDamage())." AND ".
+           "`itemData` = '".mysql_san($Item->getItemData())."' AND ".
            "`enchantments` = '".mysql_san($Item->getEnchantmentsCompressed())."' ".
            "LIMIT 1";
   $result = RunQuery($query, __file__, __line__);
@@ -288,10 +289,11 @@ public static function AddCreateItem($playerId, $Item){global $config;
   }
   // create new stack
   $query = "INSERT INTO `".$config['table prefix']."Items` (".
-           "`playerId`, `itemId`, `itemDamage`, `qty`, `enchantments`, `itemTitle`) VALUES (".
+           "`playerId`, `itemId`, `itemDamage`, `itemData`, `qty`, `enchantments`, `itemTitle`) VALUES (".
            "'".mysql_san($playerId)."', ".
            ((int)$Item->getItemId()).", ".
            ((int)$Item->getItemDamage()).", ".
+           "'".mysql_san($Item->getItemData())."', ".
            ((int)$Item->getItemQty()).", ".
            "'".mysql_san($Item->getEnchantmentsCompressed())."', ".
            "'".mysql_san($Item->getItemTitle())."')";

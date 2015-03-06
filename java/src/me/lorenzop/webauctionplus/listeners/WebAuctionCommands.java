@@ -81,7 +81,7 @@ public class WebAuctionCommands implements CommandExecutor {
                         // wa mailbox
 			if (args[0].equalsIgnoreCase("mailbox")) {
                             if(sender instanceof Player) {
-                                if(!sender.hasPermission("wa.use.mailbox")) {
+                                if(!sender.hasPermission("wa.use.command.mailbox")) {
                                     sender.sendMessage(WebAuctionPlus.chatPrefix + WebAuctionPlus.Lang.getString("no_permission"));
                                     return true;
                                 }

@@ -82,17 +82,18 @@ public class MySQLTables {
 				executeRawSQL("ALTER TABLE `"+dbPrefix+"Auctions`	CHANGE		`currentWinner` `currentWinner`	VARCHAR(16)		CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL");
 			} else {
 				setTableExists("Auctions",
-					"`id`				INT    (11)		NOT NULL	AUTO_INCREMENT	, PRIMARY KEY(`id`), " +
-					"`playerId`		    INT    (11)		NOT NULL	DEFAULT '0'		, " +
+					"`id`				INT    (11)		NOT NULL	AUTO_INCREMENT          , PRIMARY KEY(`id`), " +
+					"`playerId`		        INT    (11)		NOT NULL	DEFAULT '0'             , " +
 					"`itemId`			INT    (11)		NOT NULL	DEFAULT '0'		, " +
-					"`itemDamage`		INT    (11)		NOT NULL	DEFAULT '0'		, " +
+					"`itemDamage`                   INT    (11)		NOT NULL	DEFAULT '0'		, " +
+                                        "`itemData`                     TEXT                    NULL            DEFAULT NULL		, " +
 					"`qty`				INT    (11)		NOT NULL	DEFAULT '0'		, " +
-					"`enchantments`		VARCHAR(255)	NULL		DEFAULT NULL	, " +
-					"`price`			DECIMAL(11,2)	NOT NULL	DEFAULT '0.00'	, " +
+					"`enchantments`                 VARCHAR(255)            NULL		DEFAULT NULL            , " +
+					"`price`			DECIMAL(11,2)           NOT NULL	DEFAULT '0.00'          , " +
 					"`created`			DATETIME		NOT NULL	DEFAULT '0000-00-00 00:00:00', " +
-					"`allowBids`		TINYINT(1)		NOT NULL	DEFAULT '0'		, " +
-					"`currentBid`		DECIMAL(11,2)	NOT NULL	DEFAULT '0.00'	, " +
-					"`currentWinner`	VARCHAR(16)		NULL		DEFAULT NULL	");
+					"`allowBids`                    TINYINT(1)		NOT NULL	DEFAULT '0'		, " +
+					"`currentBid`                   DECIMAL(11,2)           NOT NULL	DEFAULT '0.00'          , " +
+					"`currentWinner`                VARCHAR(16)		NULL		DEFAULT NULL	");
 			}
 		} else
 		// Items
@@ -107,10 +108,11 @@ public class MySQLTables {
 					"`id`				INT    (11)		NOT NULL	AUTO_INCREMENT	, PRIMARY KEY(`id`), " +
 					"`playerId`			INT    (11)		NOT NULL	DEFAULT '0'		, " +
 					"`itemId`			INT    (11)		NOT NULL	DEFAULT '0'		, " +
-					"`itemDamage`		INT    (11)		NOT NULL	DEFAULT '0'		, " +
+					"`itemDamage`                   INT    (11)		NOT NULL	DEFAULT '0'		, " +
+                                        "`itemData`                     TEXT                    NULL            DEFAULT NULL		, " +
 					"`qty`				INT    (11)		NOT NULL	DEFAULT '0'		, " +
-					"`enchantments`		VARCHAR(255)	NULL		DEFAULT NULL	, " +
-					"`itemTitle`		VARCHAR(32)		NULL		DEFAULT NULL	");
+					"`enchantments`                 VARCHAR(255)            NULL		DEFAULT NULL	, " +
+					"`itemTitle`                    VARCHAR(32)		NULL		DEFAULT NULL	");
 			}
 		} else
 //		// MarketPrices
@@ -137,20 +139,20 @@ public class MySQLTables {
 				WebAuctionPlus.log.severe("Shouldn't run this!");
 			} else {
 				sucess  = setTableExists("LogSales",
-					"`id`				INT(11)			NOT NULL	AUTO_INCREMENT	, PRIMARY KEY(`id`), " +
-					"`logType`			ENUM('', 'new','sale','cancel')	NULL	DEFAULT NULL	, " +
-					"`saleType`			ENUM('', 'buynow','auction')	NULL	DEFAULT NULL	, " +
-					"`timestamp`		DATETIME		NOT NULL	DEFAULT '0000-00-00 00:00:00'	, " +
-					"`itemType`			ENUM('', 'tool','map','book')	NULL	DEFAULT NULL	, " +
-					"`itemId`			INT(11)			NOT NULL	DEFAULT 0		, " +
-					"`itemDamage`		INT(11)			NOT NULL	DEFAULT 0		, " +
-					"`enchantments`		VARCHAR(255)	NULL		DEFAULT NULL	, " +
-					"`itemTitle`		VARCHAR(32)		NULL		DEFAULT NULL	, " +
-					"`sellerId`			INT(11)			NOT NULL	DEFAULT '0'	, " +
-					"`buyerId`			INT(11)			NULL		DEFAULT NULL	, " +
-					"`qty`				INT(11)			NOT NULL	DEFAULT 0		, " +
-					"`price`			DECIMAL(11,2)	NOT NULL	DEFAULT 0.00	, " +
-					"`alert`			TINYINT(1)		NOT NULL	DEFAULT 0		");
+					"`id`				INT(11)                         NOT NULL	AUTO_INCREMENT	, PRIMARY KEY(`id`), " +
+					"`logType`			ENUM('', 'new','sale','cancel')	NULL            DEFAULT NULL	, " +
+					"`saleType`			ENUM('', 'buynow','auction')	NULL            DEFAULT NULL	, " +
+					"`timestamp`                    DATETIME                        NOT NULL	DEFAULT '0000-00-00 00:00:00'	, " +
+					"`itemType`			ENUM('', 'tool','map','book')	NULL            DEFAULT NULL	, " +
+					"`itemId`			INT(11)                         NOT NULL	DEFAULT 0		, " +
+					"`itemDamage`                   INT(11)                         NOT NULL	DEFAULT 0		, " +
+					"`enchantments`                 VARCHAR(255)                    NULL                    DEFAULT NULL	, " +
+					"`itemTitle`                    VARCHAR(32)                     NULL		DEFAULT NULL	, " +
+					"`sellerId`			INT(11)                         NOT NULL	DEFAULT '0'	, " +
+					"`buyerId`			INT(11)                         NULL            DEFAULT NULL	, " +
+					"`qty`				INT(11)                         NOT NULL	DEFAULT 0		, " +
+					"`price`			DECIMAL(11,2)                   NOT NULL	DEFAULT 0.00	, " +
+					"`alert`			TINYINT(1)                      NOT NULL	DEFAULT 0		");
 				if(sucess){
 					executeRawSQL("ALTER TABLE `"+dbPrefix+"LogSales` ADD CONSTRAINT `"+dbPrefix+"_fk_seller_id1` FOREIGN KEY (`sellerId`) REFERENCES `"+dbPrefix+"Players` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION");
 					executeRawSQL("ALTER TABLE `"+dbPrefix+"LogSales` ADD CONSTRAINT `"+dbPrefix+"_fk_buyer_id1` FOREIGN KEY (`buyerId`) REFERENCES `"+dbPrefix+"Players` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION");
@@ -170,17 +172,17 @@ public class MySQLTables {
 				executeRawSQL("ALTER TABLE `"+dbPrefix+"Players`	ADD			`Permissions`	SET( '', 'canBuy', 'canSell', 'isAdmin' )	NULL	DEFAULT NULL");
 			} else {
 				sucess = setTableExists("Players",
-					"`id`				INT    (11)		NOT NULL	AUTO_INCREMENT	, PRIMARY KEY(`id`), " +
-					"`playerName`		VARCHAR(16)		NULL		DEFAULT NULL	, " +
-					"`uuid`				VARCHAR(50)		NULL		DEFAULT NULL	, UNIQUE(`uuid`), " +
-					"`password`			VARCHAR(32)		NULL		DEFAULT NULL	, " +
-					"`money`			DECIMAL(11,2)	NOT NULL	DEFAULT '0.00'	, " +
-					"`itemsSold`		INT    (11)		NOT NULL	DEFAULT '0'		, " +
-					"`itemsBought`		INT    (11)		NOT NULL	DEFAULT '0'		, " +
-					"`earnt`			DECIMAL(11,2)	NOT NULL	DEFAULT '0.00'	, " +
-					"`spent`			DECIMAL(11,2)	NOT NULL	DEFAULT '0.00'	, " +
-					"`Permissions`		SET( '', 'canBuy', 'canSell', 'isAdmin' ) NULL DEFAULT NULL ," +
-					"`Locked`			TINYINT(1)		NOT NULL	DEFAULT '0'		");
+					"`id`				INT    (11)                                 NOT NULL	AUTO_INCREMENT	, PRIMARY KEY(`id`), " +
+					"`playerName`                   VARCHAR(16)                                 NULL		DEFAULT NULL	, " +
+                                        "`uuid`                         VARCHAR(50)                                 NULL		DEFAULT NULL	, " +
+					"`password`			VARCHAR(32)                                 NULL		DEFAULT NULL	, " +
+					"`money`			DECIMAL(11,2)                               NOT NULL	DEFAULT '0.00'	, " +
+					"`itemsSold`                    INT    (11)                                 NOT NULL	DEFAULT '0'		, " +
+					"`itemsBought`                  INT    (11)                                 NOT NULL	DEFAULT '0'		, " +
+					"`earnt`			DECIMAL(11,2)                               NOT NULL	DEFAULT '0.00'	, " +
+					"`spent`			DECIMAL(11,2)                               NOT NULL	DEFAULT '0.00'	, " +
+					"`Permissions`                  SET( '', 'canBuy', 'canSell', 'isAdmin' )   NULL DEFAULT NULL ," +
+					"`Locked`			TINYINT(1)                                  NOT NULL	DEFAULT '0'		");
 				if(sucess){
 					executeRawSQL("ALTER TABLE `"+dbPrefix+"Auctions` ADD CONSTRAINT `"+dbPrefix+"_fk_player_id1` FOREIGN KEY (`playerId`) REFERENCES `"+dbPrefix+"Players` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION");
 					executeRawSQL("ALTER TABLE `"+dbPrefix+"Items` ADD CONSTRAINT `"+dbPrefix+"_fk_player_id2` FOREIGN KEY (`playerId`) REFERENCES `"+dbPrefix+"Players` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION");
@@ -235,7 +237,7 @@ public class MySQLTables {
 				setTableExists("Settings",
 					"`id`				INT(11)			NOT NULL	AUTO_INCREMENT	, PRIMARY KEY(`id`), " +
 					"`name`				VARCHAR(32)		NULL		DEFAULT NULL	, UNIQUE(`name`)   , " +
-					"`value`			VARCHAR(255)	NULL		DEFAULT NULL	");
+					"`value`			VARCHAR(255)            NULL		DEFAULT NULL	");
 			}
 		} else
 		// ShoutSigns

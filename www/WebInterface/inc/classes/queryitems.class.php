@@ -24,7 +24,7 @@ public static function QuerySingle($playerId, $id){
 // query
 protected function doQuery($WHERE){global $config;
   if(empty($WHERE)) {$this->result = FALSE; return;}
-  $query="SELECT `id`, `itemId`, `itemDamage`, `qty`, `enchantments` ".
+  $query="SELECT `id`, `itemId`, `itemDamage`, `itemData`, `qty`, `enchantments` ".
          "FROM `".$config['table prefix']."Items` ".
          "WHERE ".$WHERE." ORDER BY `id` ASC";
   $this->result = RunQuery($query, __file__, __line__);  
@@ -60,6 +60,7 @@ public function getNext(){global $config;
     $row['id'],
     $row['itemId'],
     $row['itemDamage'],
+    $row['itemData'],
     $row['qty'],
     FormatPrice($marketPrice),
     FormatPrice($marketPrice_total),

@@ -31,7 +31,7 @@ public static function QuerySingle($id){global $config;
 // query
 protected function doQuery($WHERE=''){global $config;
   $query = "SELECT ".(getVar('ajax','bool')?"SQL_CALC_FOUND_ROWS ":'').
-           "".$config['table prefix']."Auctions.id, `playerId`, `playerName`, `uuid`, `itemId`, `itemDamage`, `qty`, `enchantments`, ".
+           "".$config['table prefix']."Auctions.id, `playerId`, `playerName`, `uuid`, `itemId`, `itemDamage`, `itemData`, `qty`, `enchantments`, ".
            "`price`, UNIX_TIMESTAMP(`created`) AS `created`, `allowBids`, `currentBid`, `currentWinner` ".
            "FROM `".$config['table prefix']."Auctions` JOIN `".$config['table prefix']."Players` ON ".$config['table prefix']."Auctions.playerId = ".$config['table prefix']."Players.id ";
   // where
@@ -136,6 +136,7 @@ public function getNext(){
       -1,
       $row['itemId'],
       $row['itemDamage'],
+      $row['itemData'],
       $row['qty'],
       $marketPrice,
       $marketPrice_total,

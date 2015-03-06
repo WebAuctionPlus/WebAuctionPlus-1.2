@@ -1,18 +1,28 @@
 package me.lorenzop.webauctionplus;
 
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectOutputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import me.lorenzop.webauctionplus.dao.AuctionPlayer;
 import me.lorenzop.webauctionplus.mysql.DataQueries;
+import org.apache.commons.lang.ArrayUtils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -26,6 +36,8 @@ public class WebInventory {
 	protected final Inventory chest;
         protected final AuctionPlayer Aplayer;
 	protected final Map<Integer, Integer> tableRowIds = new HashMap<Integer, Integer>();
+        
+        private ItemStack addStack = null;
 //	protected List<Integer> slotChanged = new ArrayList<Integer>();
 
 
@@ -176,28 +188,46 @@ public class WebInventory {
 		tableRowIds.clear();
 		try {
 			if(WebAuctionPlus.isDebug()) WebAuctionPlus.log.info("WA Query: isLocked");
-			st = conn.prepareStatement("SELECT `id`, `itemId`, `itemDamage`, `qty`, `enchantments`, `itemTitle` "+
+			st = conn.prepareStatement("SELECT `id`, `itemId`, `itemDamage`, `qty`, `enchantments`, `itemTitle`, `itemData` "+
 				"FROM `"+WebAuctionPlus.dataQueries.dbPrefix()+"Items` WHERE `playerId` = ? ORDER BY `id` ASC LIMIT ?");
 			st.setInt(1, Aplayer.getPlayerId());
 			st.setInt   (2, chest.getSize());
 			rs = st.executeQuery();
-			ItemStack[] stacks = new ItemStack[chest.getSize()];
+			ItemStack[] stacks = null;
 			int i = -1;
 			while(rs.next()) {
 				if(rs.getInt("qty") < 1) continue;
-				i++; if(i >= chest.getSize()) break;
+				i++;
 				tableRowIds.put(i, rs.getInt("id"));
 				// create/split item stack
-				stacks[i] = getSplitItemStack(
+				stacks =  (ItemStack[]) ArrayUtils.addAll(stacks, getSplitItemStack(
 					rs.getInt("itemId"),
 					rs.getShort("itemDamage"),
 					rs.getInt("qty"),
 					rs.getString("enchantments"),
-					rs.getString("itemTitle")
-				);
+					rs.getString("itemTitle"),
+                                        rs.getString("itemData")
+				));
 				if(stacks[i] == null) tableRowIds.remove(i);
+                                if(stacks.length >= chest.getSize()) break;
 			}
-			chest.setContents(stacks);
+                        
+                        if(stacks != null){
+                            chest.setContents(Arrays.copyOf(stacks, chest.getSize()));
+                            
+                            if(stacks.length > chest.getSize()){
+                                ItemStack[] addStacks = Arrays.copyOfRange(stacks, chest.getSize(), stacks.length);
+                                WebAuctionPlus.log.log(Level.INFO, "addStack: {0}", Arrays.toString(addStacks));
+                                addStack = addStacks[0].clone();
+                                addStack.setAmount(0); 
+                                for(i=0; i < addStacks.length; i++){
+                                    addStack.setAmount(addStack.getAmount() + addStacks[i].getAmount());
+                                    WebAuctionPlus.log.log(Level.INFO, "Array Index: {0}", i);
+                                    WebAuctionPlus.log.log(Level.INFO, "QTY: {0}", addStacks[i].getAmount());
+                                }
+                                WebAuctionPlus.log.log(Level.INFO, "addStack: {0}", addStack.toString());
+                            }
+                        }
 		} catch(SQLException e) {
 			WebAuctionPlus.log.warning(WebAuctionPlus.logPrefix+"Unable to set inventory lock");
 			e.printStackTrace();
@@ -205,51 +235,66 @@ public class WebInventory {
 			WebAuctionPlus.dataQueries.closeResources(conn, st);
 		}
 	}
+        
+        
 	// create/split item stack
-	private ItemStack getSplitItemStack(final int itemId, final short itemDamage, final int qty, final String enchStr, final String itemTitle) {
+	private ItemStack[] getSplitItemStack(final int itemId, final short itemDamage, final int qty, final String enchStr, final String itemTitle, final String itemData) {
 		final Material mat = Material.matchMaterial(Integer.toString(itemId));
+                ItemStack tmp_stack;
+                
 		if(mat == null) {
 			(new NullPointerException("Unknown material id: "+Integer.toString(itemId)))
 				.printStackTrace();
 			return null;
 		}
 		int tmpQty = qty;
-		final ItemStack stack = new ItemStack(mat, qty, itemDamage);
-		final int maxSize = stack.getMaxStackSize();
+                
+                if (itemData != null && !itemData.equals("")) {
+                    YamlConfiguration itemc = new YamlConfiguration();
+                    try {
+                        itemc.loadFromString(itemData);
+                        tmp_stack = itemc.getItemStack("item");
+                        tmp_stack.setAmount(qty);
+                    } catch (InvalidConfigurationException ex) {
+                        WebAuctionPlus.log.info("Error loading Item Stack form the Item Data. Fall back to old system");
+                        tmp_stack = new ItemStack(mat, qty, itemDamage);
+                        if(enchStr != null && !enchStr.isEmpty())
+                            WebItemMeta.decodeEnchants(tmp_stack, player, enchStr);
+                    }
+                } else {
+                    WebAuctionPlus.log.info("Item without itemData found. Loading item with the old system");
+                    tmp_stack = new ItemStack(mat, qty, itemDamage);
+                    if(enchStr != null && !enchStr.isEmpty())
+			WebItemMeta.decodeEnchants(tmp_stack, player, enchStr);
+                }           
+		
+		final int maxSize = tmp_stack.getMaxStackSize();
 		if(maxSize < 1) return null;
-		// split stack
+                
+                // split stack
+                ItemStack[] stacks = new ItemStack[(int)Math.ceil((double)qty/(double)maxSize)];
+                
 		if(qty > maxSize) {
-			Connection conn = WebAuctionPlus.dataQueries.getConnection();
-			PreparedStatement st = null;
-			while(tmpQty > maxSize) {
-				try {
-					if(WebAuctionPlus.isDebug()) WebAuctionPlus.log.info("WA Query: getSplitItemStack  qty:"+Integer.toString(tmpQty)+"  max:"+Integer.toString(maxSize));
-					st = conn.prepareStatement("INSERT INTO `"+WebAuctionPlus.dataQueries.dbPrefix()+"Items` ( "+
-						"`playerId`, `itemId`, `itemDamage`, `qty`, `enchantments`, `itemTitle` )VALUES( ?, ?, ?, ?, ?, ? )");
-					st.setInt(1, Aplayer.getPlayerId());
-					st.setInt   (2, itemId);
-					st.setShort (3, itemDamage);
-					st.setInt   (4, maxSize);
-					st.setString(5, enchStr);
-					st.setString(6, itemTitle);
-					st.executeUpdate();
-				} catch(SQLException e) {
-					WebAuctionPlus.log.warning(WebAuctionPlus.logPrefix+"Unable to insert new item to inventory!");
-					e.printStackTrace();
-					return null;
-				} finally {
-					DataQueries.closeResources(st, null);
-				}
-				tmpQty -= maxSize;
-			}
-			stack.setAmount(tmpQty);
-			WebAuctionPlus.dataQueries.closeResources(conn);
-		}
-		// add enchantments
-		if(enchStr != null && !enchStr.isEmpty())
-			WebItemMeta.decodeEnchants(stack, player, enchStr);
-		return stack;
+                int i = 0;    
+                    while (tmpQty > 0){         
+                        if(tmpQty > maxSize){
+                            stacks[i] = tmp_stack.clone();
+                            stacks[i].setAmount(maxSize);
+                            tmp_stack.setAmount(tmpQty-maxSize);
+                            tmpQty -= maxSize;
+                        } else {
+                            stacks[i] = tmp_stack;
+                            tmpQty -= maxSize;
+                        }
+                        i++;
+                    }
+                    //stacks.setAmount(tmpQty);
+		} else {
+                    stacks[0] = tmp_stack;
+                }
+		return stacks;
 	}
+        
 	// save inventory to db
 	protected void saveInventory() {
 		Connection conn = WebAuctionPlus.dataQueries.getConnection();
@@ -257,9 +302,36 @@ public class WebInventory {
 		int countInserted = 0;
 		int countUpdated  = 0;
 		int countDeleted  = 0;
-		for(int i = 0; i < chest.getSize(); i++) {
+                List<ItemStack> tmp_chest = new ArrayList<>();
+                
+                if(addStack != null){
+                    tmp_chest.add(addStack);
+                }
+                
+                //Sum qty of equal items in the chest
+                boolean item_found = false;
+                for(int i = 0; i < chest.getSize(); i++) {
+                    for(ItemStack entry : tmp_chest){
+                        if(entry != null){
+                            if(entry.isSimilar(chest.getItem(i))){
+                                entry.setAmount(entry.getAmount()+chest.getItem(i).getAmount());
+                                item_found = true;
+                                break;
+                            } 
+                        }
+                    }
+                    if(!item_found){
+                        tmp_chest.add(chest.getItem(i));
+                    } else {
+                        item_found = false;
+                    }
+                }
+                                
+                int i = -1;           
+		for(ItemStack entry : tmp_chest) {
+                        i++;
 //			if(!slotChanged.contains(i)) continue;
-			ItemStack stack = chest.getItem(i);
+			ItemStack stack = entry;
 
 			// empty slot
 			if(stack == null || getTypeId(stack) == 0) {
@@ -287,10 +359,15 @@ public class WebInventory {
 
 			// item in slot
 			} else {
+                                
+                                YamlConfiguration itemc = new YamlConfiguration();
+                                itemc.set("item", stack);
+                                String items = itemc.saveToString();                           
 
 				final int itemId = getTypeId(stack);
 				final short itemDamage = stack.getDurability();
 				final int itemQty = stack.getAmount();
+                               
 				String enchStr = WebItemMeta.encodeEnchants(stack, player);
 
 				// update existing item
@@ -298,12 +375,13 @@ public class WebInventory {
 					try {
 						if(WebAuctionPlus.isDebug()) WebAuctionPlus.log.info("WA Query: saveInventory::update slot "+Integer.toString(i));
 						st = conn.prepareStatement("UPDATE `"+WebAuctionPlus.dataQueries.dbPrefix()+"Items` SET "+
-							"`itemId` = ?, `itemDamage` = ?, `qty` = ?, `enchantments` = ? WHERE `id` = ? LIMIT 1");
+							"`itemId` = ?, `itemDamage` = ?, `qty` = ?, `enchantments` = ?, `itemData` = ? WHERE `id` = ? LIMIT 1");
 						st.setInt   (1, itemId);
 						st.setShort (2, itemDamage);
 						st.setInt   (3, itemQty);
 						st.setString(4, enchStr);
-						st.setInt   (5, tableRowIds.get(i));
+                                                st.setString(5, items);
+						st.setInt   (6, tableRowIds.get(i));
 						st.executeUpdate();
 					} catch(SQLException e) {
 						WebAuctionPlus.log.warning(WebAuctionPlus.logPrefix+"Unable to update item to inventory!");
@@ -319,12 +397,13 @@ public class WebInventory {
 					try {
 						if(WebAuctionPlus.isDebug()) WebAuctionPlus.log.info("WA Query: saveInventory::insert slot "+Integer.toString(i));
 						st = conn.prepareStatement("INSERT INTO `"+WebAuctionPlus.dataQueries.dbPrefix()+"Items` ( "+
-							"`playerId`, `itemId`, `itemDamage`, `qty`, `enchantments` )VALUES( ?, ?, ?, ?, ? )");
+							"`playerId`, `itemId`, `itemDamage`, `qty`, `enchantments`, `itemData` )VALUES( ?, ?, ?, ?, ?, ? )");
 						st.setInt   (1, Aplayer.getPlayerId());
 						st.setInt   (2, itemId);
 						st.setShort (3, itemDamage);
 						st.setInt   (4, itemQty);
 						st.setString(5, enchStr);
+                                                st.setString(6, items);
 						st.executeUpdate();
 					} catch(SQLException e) {
 						WebAuctionPlus.log.warning(WebAuctionPlus.logPrefix+"Unable to insert new item to inventory!");
