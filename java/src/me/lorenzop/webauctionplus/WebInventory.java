@@ -1,7 +1,5 @@
 package me.lorenzop.webauctionplus;
 
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectOutputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -13,7 +11,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import me.lorenzop.webauctionplus.dao.AuctionPlayer;
 import me.lorenzop.webauctionplus.mysql.DataQueries;
@@ -217,15 +214,11 @@ public class WebInventory {
                             
                             if(stacks.length > chest.getSize()){
                                 ItemStack[] addStacks = Arrays.copyOfRange(stacks, chest.getSize(), stacks.length);
-                                WebAuctionPlus.log.log(Level.INFO, "addStack: {0}", Arrays.toString(addStacks));
                                 addStack = addStacks[0].clone();
                                 addStack.setAmount(0); 
                                 for(i=0; i < addStacks.length; i++){
                                     addStack.setAmount(addStack.getAmount() + addStacks[i].getAmount());
-                                    WebAuctionPlus.log.log(Level.INFO, "Array Index: {0}", i);
-                                    WebAuctionPlus.log.log(Level.INFO, "QTY: {0}", addStacks[i].getAmount());
                                 }
-                                WebAuctionPlus.log.log(Level.INFO, "addStack: {0}", addStack.toString());
                             }
                         }
 		} catch(SQLException e) {
