@@ -10,7 +10,7 @@
 		<fileSet>
 			<directory>${project.basedir}</directory>
 			<outputDirectory>/</outputDirectory>
-			<lineEnding>crlf</lineEnding>
+<!--			<lineEnding>crlf</lineEnding> -->
 			<useDefaultExcludes>true</useDefaultExcludes>
 			<excludes>
 				<exclude>/nbproject/*</exclude>
