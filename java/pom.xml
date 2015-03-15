@@ -4,7 +4,7 @@
   <artifactId>WebAuctionPlus</artifactId>
   <version>1.2.x</version>
   <packaging>jar</packaging>
-  <name>WebAuctionPlus</name>
+  <name>WebAuctionPlus Plugin</name>
   <url>http://maven.apache.org</url>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -95,7 +95,7 @@
     <dependency>
         <groupId>org.bukkit</groupId>
         <artifactId>bukkit</artifactId>
-        <version>1.8-R0.1-SNAPSHOT</version>
+        <version>1.8.3-R0.1-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.avaje</groupId>
