@@ -13,7 +13,6 @@
 			<lineEnding>crlf</lineEnding>
 			<useDefaultExcludes>true</useDefaultExcludes>
 			<excludes>
-				<exclude>**/*.original</exclude>
 				<exclude>/nbproject/*</exclude>
 				<exclude>**/resources/*</exclude>
 				<exclude>**/pom.xml</exclude>
@@ -21,9 +20,7 @@
 				<exclude>**/package.xml</exclude>
 				<exclude>**/assembly.xml</exclude>
 				<exclude>**/.git</exclude>
-				<exclude>**/.htaccess</exclude>
 				<exclude>**/.project</exclude>
-				<exclude>**/config.php</exclude>
 				<exclude>/*.sh</exclude>
 				<exclude>/*.rpm</exclude>
 				<exclude>**/*.spec</exclude>
