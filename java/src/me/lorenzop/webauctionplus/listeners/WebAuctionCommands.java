@@ -25,11 +25,9 @@ public class WebAuctionCommands implements CommandExecutor {
 	}
 
 	@EventHandler(priority = EventPriority.NORMAL)
-	public boolean onCommand(CommandSender c_sender, Command command, String label, String[] args) {
+	public boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args) {
 		int params = args.length;
-		OfflinePlayer player = null;
-                final CommandSender sender = c_sender;
-		if(sender instanceof Player) player = ((Player) sender);
+		OfflinePlayer player = (sender instanceof Player) ? ((Player) sender) : null ;
 		// 0 args
 		if(params == 0) {
 			return false;
