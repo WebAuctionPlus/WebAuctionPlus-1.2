@@ -6,6 +6,13 @@ global $config;
 if(!$config['user']->isOk()) ForwardTo('./', 0);
 
 
+// need to change temp pass
+if($config['user']->isTempPass()) {
+  ForwardTo('./?page=changepass', 0);
+  exit();
+}
+
+
 function RenderPage_myitems(){global $config,$html;
   $UseAjaxSource = FALSE;
   $config['title'] = 'My Items';

@@ -10,6 +10,13 @@ if(getVar('ajax', 'boolean')){
 }
 
 
+// need to change temp pass
+if($config['user']->isTempPass()) {
+  ForwardTo('./?page=changepass', 0);
+  exit();
+}
+
+
 // buy an auction
 if($config['action']=='buy'){
   CSRF::ValidateToken();
