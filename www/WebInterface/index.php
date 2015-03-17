@@ -66,6 +66,12 @@ $config=array(
     'use'        => 'auto',
     'table'      => 'iConomy'
   ),
+  'CC' => array(
+    'use'        => 'false',
+    'prefix'     => 'cc3',
+    'group'      => 'default',
+    'currency'   => 'Dollar'
+  ),
   'session name' => 'WebAuctionPlus User'
 );
 $settings = &$config['settings'];
