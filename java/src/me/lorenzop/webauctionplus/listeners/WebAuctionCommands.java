@@ -112,6 +112,55 @@ public class WebAuctionCommands implements CommandExecutor {
 				WebAuctionPlus.log.info(WebAuctionPlus.logPrefix+"Updated recent signs.");
 				return true;
 			}
+			// wa password
+			if (args[0].equalsIgnoreCase("password") ||
+				args[0].equalsIgnoreCase("pass")     ||
+				args[0].equalsIgnoreCase("pw")       ) {
+					if(!(sender instanceof Player)) {
+						sender.sendMessage(WebAuctionPlus.chatPrefix+"Cannot use this command from console.");
+						return true;
+					}
+					// generate random password
+					final String pass = WebAuctionPlus.Lang.generatePassword();
+					if(pass == null || pass.isEmpty()) {
+						WebAuctionPlus.log.warning(WebAuctionPlus.chatPrefix+"Failed to generate a password for player: "+player.getName());
+						sender.sendMessage(WebAuctionPlus.chatPrefix+"Failed to generate a password!");
+						return true;
+					}
+					// query account from database
+					AuctionPlayer waPlayer = WebAuctionPlus.dataQueries.getPlayer(player.getUniqueId());
+					// create that person in database
+					if(waPlayer == null) {
+						// permission to create an account
+						if(!sender.hasPermission("wa.password.create")) {
+							sender.sendMessage(WebAuctionPlus.chatPrefix+WebAuctionPlus.Lang.getString("no_permission"));
+							return true;
+						}
+						waPlayer = new AuctionPlayer(player.getUniqueId());
+						waPlayer.setPerms(
+							sender.hasPermission("wa.canbuy"),
+							sender.hasPermission("wa.cansell"),
+							sender.hasPermission("wa.webadmin")
+						);
+						// create account in database
+						WebAuctionPlus.dataQueries.createPlayer(waPlayer, pass);
+						sender.sendMessage(WebAuctionPlus.chatPrefix+WebAuctionPlus.Lang.getString("password_generated")+"  "+pass);
+						WebAuctionPlus.log.info(WebAuctionPlus.logPrefix+WebAuctionPlus.Lang.getString("account_created")+
+								" "+player.getName()+" with perms: "+waPlayer.getPermsString());
+					// change password for an existing account
+					} else {
+						// permission to change password
+						if (!sender.hasPermission("wa.password.change")){
+							sender.sendMessage(WebAuctionPlus.chatPrefix+WebAuctionPlus.Lang.getString("no_permission"));
+							return true;
+						}
+						// update password in database
+						WebAuctionPlus.dataQueries.updatePlayerPassword(player.getUniqueId(), pass);
+						sender.sendMessage(WebAuctionPlus.chatPrefix+WebAuctionPlus.Lang.getString("password_generated")+"  "+pass);
+						WebAuctionPlus.log.info(WebAuctionPlus.logPrefix+WebAuctionPlus.Lang.getString("password_changed")+" "+player.getName());
+					}
+				return true;
+			}
 			return false;
 		}
 		if(!WebAuctionPlus.isOk()) {sender.sendMessage(WebAuctionPlus.chatPrefix+"Plugin isn't loaded"); return true;}
@@ -121,65 +170,10 @@ public class WebAuctionCommands implements CommandExecutor {
 			if (args[0].equalsIgnoreCase("password") ||
 				args[0].equalsIgnoreCase("pass")     ||
 				args[0].equalsIgnoreCase("pw")       ) {
-				String pass = "";
-				// is player
-				boolean isPlayer = (sender instanceof Player);
-				if (isPlayer) {
-					if (params != 2 || args[1].isEmpty()) return false;
-					pass = WebAuctionPlus.MD5(args[1]);
-					args[1] = "";
-				// is console
-				} else {
-					if (params != 3) return false;
-					if (args[1].isEmpty() || args[2].isEmpty()) return false;
-					player = getOfflinePlayer(args[1]);
-					if(!player.hasPlayedBefore()) {
-						sender.sendMessage(WebAuctionPlus.logPrefix+"Player not found!");
-						sender.sendMessage(WebAuctionPlus.logPrefix+"Note: if you really need to, you can add a player to the database, just md5 the password.");
-						return true;
-					}
-					pass = WebAuctionPlus.MD5(args[2]);
-					args[2] = "";
-				}
-				//if(player.isEmpty()) return false;
-				AuctionPlayer waPlayer = WebAuctionPlus.dataQueries.getPlayer(player.getUniqueId());
-				// create that person in database
-				if(waPlayer == null) {
-					// permission to create an account
-					if (isPlayer) {
-						if (!sender.hasPermission("wa.password.create")){
-							((Player)sender).sendMessage(WebAuctionPlus.chatPrefix + WebAuctionPlus.Lang.getString("no_permission"));
-							return true;
-						}
-					}
-					waPlayer = new AuctionPlayer(player.getUniqueId());
-					waPlayer.setPerms(
-						sender.hasPermission("wa.canbuy")   && isPlayer,
-						sender.hasPermission("wa.cansell")  && isPlayer,
-						sender.hasPermission("wa.webadmin") && isPlayer
-					);
-					WebAuctionPlus.dataQueries.createPlayer(waPlayer, pass);
-					if (sender instanceof Player)
-						sender.sendMessage(WebAuctionPlus.chatPrefix + WebAuctionPlus.Lang.getString("account_created"));
-					WebAuctionPlus.log.info(WebAuctionPlus.logPrefix + WebAuctionPlus.Lang.getString("account_created") + " " + player +
-							" with perms: " + waPlayer.getPermsString());
-				// change password for an existing account
-				} else {
-					// permission to change password
-					if(sender instanceof Player) {
-						if (!sender.hasPermission("wa.password.change")){
-							((Player)sender).sendMessage(WebAuctionPlus.chatPrefix + WebAuctionPlus.Lang.getString("no_permission"));
-							return true;
-						}
-					}
-					WebAuctionPlus.dataQueries.updatePlayerPassword(player.getUniqueId(), pass);
-					if(sender instanceof Player)
-						sender.sendMessage(WebAuctionPlus.chatPrefix + WebAuctionPlus.Lang.getString("password_changed"));
-					WebAuctionPlus.log.info(WebAuctionPlus.logPrefix + WebAuctionPlus.Lang.getString("password_changed") + " " + player);
-				}
+					sender.sendMessage(WebAuctionPlus.chatPrefix + WebAuctionPlus.Lang.getString("password_cmd_changed"));
 				return true;
 			}
-                        // wa deposit
+			// wa deposit
 			if (args[0].equalsIgnoreCase("deposit")) {
 				double amount = 0.0D;
 				// is player
