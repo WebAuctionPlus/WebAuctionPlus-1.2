@@ -187,6 +187,8 @@ public class Language {
 		langMap.put("mailbox_closed",				"");
 		langMap.put("please_wait",					"");
 		langMap.put("removed_enchantments",			"");
+		this.langMap.put("password_cmd_changed",        "");
+		this.langMap.put("password_generated",          "");
 	}
 
 
