@@ -24,8 +24,8 @@ $output.='
   <!-- ====================== -->
   <p style="margin-bottom: 10px; font-size: large; color: #FFFFFF;">&nbsp;'.
     '<a href="http://dev.bukkit.org/server-mods/webauctionplus/" '.
-    'target="_blank" style="color: #FFFFFF;"><u>WebAuctionPlus</u> '.SettingsClass::getString('Version').'</a> By lorenzop&nbsp;<br />'.
-    '<span style="font-size: medium;">&nbsp;Based on WebAuction By Exote&nbsp;</span></p>
+    'target="_blank" style="color: #FFFFFF;"><u>WebAuctionPlus</u> '.SettingsClass::getString('Version').'</a>&nbsp;<br />'.
+    '<span style="font-size: medium;">&nbsp;Based on the original WebAuction&nbsp;</span></p>
   <p style="margin-bottom: 10px; font-size: smaller; color: #FFFFFF;">'.
     '<b>&nbsp;Rendered page in '.GetRenderTime().' Seconds with '.((int)@$num_queries).' Queries&nbsp;</b></p>
   <p style="font-size: smaller; color: #FFFFFF;">'.
