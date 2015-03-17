@@ -48,6 +48,14 @@
         </includes>
         <targetPath>languages</targetPath>
       </resource>
+      <resource>
+        <directory>${project.basedir}/src/words/</directory>
+        <filtering>true</filtering>
+        <includes>
+          <include>*.txt</include>
+        </includes>
+        <targetPath>words</targetPath>
+      </resource>
     </resources>
 <!-- ${project.build.outputDirectory} -->
     <plugins>
