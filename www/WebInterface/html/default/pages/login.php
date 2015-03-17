@@ -37,7 +37,7 @@ window.onload = formfocus;
 
 
 $outputs['error']='
-<h2 style="color: #ff0000; text-align: center;">{message}</h2>
+<h2 style="color: #ff0000; text-align: center;"><span style="background-color: black;">&nbsp;{message}&nbsp;</span></h2>
 ';
 
 
