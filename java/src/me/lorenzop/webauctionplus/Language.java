@@ -1,9 +1,14 @@
 package me.lorenzop.webauctionplus;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Random;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -12,6 +17,8 @@ public class Language {
 
 	protected HashMap<String, String> langMap = new HashMap<String, String>();
 	protected FileConfiguration langConfig = null;
+
+	protected final List<String> words = new ArrayList<String>();
 
 	protected final WebAuctionPlus plugin;
 	private boolean isOk;
@@ -28,6 +35,24 @@ public class Language {
 		final String effectiveLang = (lang == null || lang.isEmpty() || lang.length() != 2) ? "en" : lang;
 		if(effectiveLang.length() != 2)
 			WebAuctionPlus.log.warning(WebAuctionPlus.logPrefix+"Language should only be 2 letters! "+effectiveLang);
+		// load words file
+		{
+			final List<String> words = this.loadWordsFile(effectiveLang);
+			if(words != null && !words.isEmpty()) {
+				this.words.clear();
+				this.words.addAll(words);
+			} else {
+				final List<String> words_en = this.loadWordsFile("en");
+				if(words_en != null && !words_en.isEmpty()) {
+					this.words.clear();
+					this.words.addAll(words_en);
+				} else {
+					WebAuctionPlus.log.severe(WebAuctionPlus.logPrefix+"Failed to load words file! "+effectiveLang);
+					this.isOk = false;
+					return;
+				}
+			}
+		}
 		// try loading language file
 		loadLanguageFile(effectiveLang);
 		if(isOk) return;
@@ -78,6 +103,49 @@ public class Language {
 		}
 		isOk = true;
 	}
+	private List<String> loadWordsFile(final String lang) {
+		// load from plugins folder
+		try {
+			final File wordsFile = new File(
+					this.plugin.getDataFolder()+
+					File.separator+"words.txt"
+			);
+			final List<String> words = Files.readAllLines(wordsFile.toPath());
+			if(words != null && !words.isEmpty())
+				return words;
+		} catch (Exception ignore) {}
+		// load from plugins words/ folder
+		try {
+			final File wordsFile = new File(
+					this.plugin.getDataFolder()+
+					File.separator+"words"+
+					File.separator+lang+".txt"
+			);
+			final List<String> words = Files.readAllLines(wordsFile.toPath());
+			if(words != null && !words.isEmpty())
+				return words;
+		} catch (Exception ignore) {}
+		// load from jar
+		try {
+			final InputStream stream = this.plugin.getClass().getClassLoader().getResourceAsStream(
+					"words/"+lang+".txt"
+			);
+			if(stream != null) {
+				final BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
+				final List<String> lines = new ArrayList<String>();
+				while(true) {
+					final String line = reader.readLine();
+					if(line == null)
+						break;
+					lines.add(line);
+				}
+				if(!lines.isEmpty())
+					return lines;
+			}
+		} catch (Exception ignore) {}
+		WebAuctionPlus.log.severe(WebAuctionPlus.logPrefix+"Failed to load words.txt file from jar!");
+		return null;
+	}
 
 	public synchronized String getString(final String key) {
 		if(!isOk) {
@@ -120,5 +188,31 @@ public class Language {
 		langMap.put("please_wait",					"");
 		langMap.put("removed_enchantments",			"");
 	}
+
+
+	public String generatePassword() {
+		final StringBuilder pass = new StringBuilder();
+		pass.append(getRandomWord(this.words));
+		final Random rand = new Random(System.nanoTime());
+		pass.append(rand.nextInt(90)+10);
+		pass.append(getRandomWord(this.words));
+		if(pass.length() >= 32) {
+			for(int i=0; i<10; i++) {
+				final String pass2 = generatePassword();
+				if(pass2.length() < 32)
+					return pass2;
+			}
+			return null;
+		}
+		return pass.toString();
+	}
+
+
+	private static String getRandomWord(final List<String> words) {
+		if(words == null || words.isEmpty()) throw new NullPointerException();
+		final Random rand = new Random(System.nanoTime());
+		return words.get(rand.nextInt(words.size()));
+	}
+
 
 }
