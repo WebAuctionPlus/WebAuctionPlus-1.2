@@ -40,7 +40,7 @@ private function doValidate($username, $password=FALSE){global $config;
   if(empty($this->Name)) return(FALSE);
   if($password!==FALSE && empty($password)) return(FALSE);
   // validate player
-  $query = "SELECT `id`,`playerName`, `UUID`,`money`,`itemsSold`,`itemsBought`,`earnt`,`spent`,`Permissions`,`Locked` ".
+  $query = "SELECT `id`,`playerName`,`uuid`,`money`,`itemsSold`,`itemsBought`,`earnt`,`spent`,`Permissions`,`Locked` ".
            "FROM `".$config['table prefix']."Players` ".
            "WHERE LOWER(`playerName`)='".mysql_san(strtolower($this->Name))."' ".
            ($password===FALSE?"":"AND `password`='".mysql_san($password)."' ").
@@ -56,7 +56,7 @@ private function doValidate($username, $password=FALSE){global $config;
     if( strtolower($row['playerName']) != strtolower($this->Name) ) return(FALSE);
     $this->UserId      = ((int)    $row['id']         );
     $this->Name        =           $row['playerName'];
-    $this->UUID        =           $row['UUID'];
+    $this->UUID        =           $row['uuid'];
     $this->Money       = ((double) $row['money']      );
     $this->ItemsSold   = ((int)    $row['itemsSold']  );
     $this->ItemsBought = ((int)    $row['itemsBought']);
