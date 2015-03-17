@@ -29,13 +29,15 @@ function doCheckLogin(){global $config;
   // successful login
   if($result !== FALSE && $config['user']->isOk() && getVar('error')==''){
     $lastpage = getLastPage();
-    if(strpos($lastpage,'login')!==FALSE) $lastpage = './';
+    if(strpos($lastpage,'login') !== FALSE)
+      $lastpage = './';
     ForwardTo($lastpage);
     exit();
   }
   unset($username, $password);
+  return TRUE;
 }
-doCheckLogin();  
+doCheckLogin();
 
 
 function RenderPage_login(){global $config,$html;
@@ -45,15 +47,16 @@ function RenderPage_login(){global $config,$html;
   $html->LoadCss('login.css');
   $outputs = RenderHTML::LoadHTML('pages/login.php');
   $html->addTags(array(
-    'messages'	=> '',
-    'username'	=> $config['demo'] ? 'demo' : getVar(LOGIN_FORM_USERNAME),
-    'password'	=> $config['demo'] ? 'demo' : '',
+    'messages' => '',
+    'username' => $config['demo'] ? 'demo' : getVar(LOGIN_FORM_USERNAME),
+    'password' => $config['demo'] ? 'demo' : '',
   ));
   // display error
-  if(getVar('error') != '')
+  if(getVar('error') != '') {
     $html->addTags(array(
       'messages' => str_replace('{message}', 'Login Failed', $outputs['error'])
     ));
+  }
   return($outputs['body']);
 }
 

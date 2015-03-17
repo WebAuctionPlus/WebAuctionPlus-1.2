@@ -3,7 +3,11 @@
 
 
 global $config;
-if(!$config['user']->isOk()) ForwardTo('./', 0);
+// need to log in
+if(!$config['user']->isOk()) {
+  ForwardTo('./', 0);
+  exit();
+}
 
 
 // need to change temp pass
