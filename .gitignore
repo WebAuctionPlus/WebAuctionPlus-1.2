@@ -4,9 +4,10 @@ rpmbuild-root/
 out/
 build/
 
-*/.project
-*/.classpath
-*/.settings
+**/.project
+**/.classpath
+**/.buildpath
+**/.settings
 .metadata
 .git
 
