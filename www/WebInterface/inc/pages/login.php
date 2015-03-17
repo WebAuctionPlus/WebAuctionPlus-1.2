@@ -5,9 +5,10 @@
 //NoPageCache();
 // check login
 function doCheckLogin(){global $config;
-  if(!isset($_POST[LOGIN_FORM_USERNAME]) || !isset($_POST[LOGIN_FORM_PASSWORD])) return;
+  if(!isset($_POST[LOGIN_FORM_USERNAME]) || !isset($_POST[LOGIN_FORM_PASSWORD])) return NULL;
   $username = trim(stripslashes( @$_POST[LOGIN_FORM_USERNAME] ));
-  $password =      stripslashes( @$_POST[LOGIN_FORM_PASSWORD] );
+  $password = trim(stripslashes( @$_POST[LOGIN_FORM_PASSWORD] ));
+  unset($_POST[LOGIN_FORM_PASSWORD]);
   session_init();
   if(CSRF::isEnabled() && !isset($_SESSION[CSRF::SESSION_KEY])){
     echo '<p style="color: red;">PHP Session seems to have failed!</p>';
@@ -15,10 +16,18 @@ function doCheckLogin(){global $config;
     exit();
   }
   CSRF::ValidateToken();
-  $password = md5($password);
-  $config['user']->doLogin($username, $password);
-  if($config['user']->isOk() && getVar('error')==''){
-  	// success
+  // check hashed password
+  $result = $config['user']->doLogin($username, md5($password));
+  // try temporary password
+  if($result !== TRUE && $_GET['error'] == 'bad login' && strlen($password) < 32) {
+    unset($_GET['error']);
+    $result = $config['user']->doLogin($username, $password);
+    if($result === TRUE && $config['user']->isOk() && getVar('error')=='') {
+      $config['user']->isTempPass(TRUE);
+    }
+  }
+  // successful login
+  if($result !== FALSE && $config['user']->isOk() && getVar('error')==''){
     $lastpage = getLastPage();
     if(strpos($lastpage,'login')!==FALSE) $lastpage = './';
     ForwardTo($lastpage);
