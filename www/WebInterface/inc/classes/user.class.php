@@ -113,6 +113,58 @@ public function isOk(){
 }
 
 
+public function ChangePassword($password) {global $config;
+  if(!$this->isOk()) {
+    echo '<p>Session not valid, cannot change password!</p>';
+    exit();
+  }
+  if(empty($this->UUID)) {
+    echo '<p>UUID not valid, cannot change password!</p>';
+    exit();
+  }
+  $password = trim($password);
+  if(strlen($password) != 32) {
+    echo '<p>Invalid password argument provided to ChangePassword() function!</p>';
+    exit();
+  }
+  // update password in database
+  $query = "UPDATE `".$config['table prefix']."Players` SET ".
+           "`password` = '".mysql_san($password)."' ".
+           "WHERE `uuid` = '".mysql_san($this->UUID)."' LIMIT 1";
+  $result = RunQuery($query, __file__, __line__);
+  global $db;
+  if(mysql_affected_rows($db) != 1) {
+    if(!$this->VerifyPasswordChanged($password)) {
+      echo '<p>Failed to update password!</p>';
+      exit();
+    }
+  }
+  return TRUE;
+}
+// if password has already been changed, update returns 0 affected rows
+private function VerifyPasswordChanged($password) {global $config;
+  if(empty($password)) {
+    echo 'Password argument is missing in VerifyPasswordChanged() function!';
+    exit();
+  }
+  $result = mysql_query("SELECT COUNT(*) AS `count` FROM `".$config['table prefix']."Players` ".
+                        "WHERE `uuid` = '".mysql_san($this->UUID)."' AND ".
+                        "`password` = '".mysql_san($password)."' LIMIT 1");
+  if(!$result) return FALSE;
+  $row = mysql_fetch_assoc($result);
+  return ($row['count'] == 1);
+}
+
+
+public function isTempPass($value=NULL) {
+  if(!$this->isOk())
+    return FALSE;
+  if($value !== NULL)
+    $_SESSION['Temp Pass'] = ($value !== FALSE);
+  return ($_SESSION['Temp Pass'] != FALSE);
+}
+
+
 // do logout
 public function doLogout(){global $config;
   session_init();
