@@ -55,6 +55,7 @@ $outputs['body row']='
 {if permission[canSell]}
       <td style="text-align: center;"><a href="./?page=sell&amp;id={item row id}&amp;lastpage=page-myitems" class="button">Sell it</a></td>
 {endif}
+    </tr>
 ';
 //      <td style="padding-bottom: 10px; text-align: center;">'.
 //// add enchantments to this link!
