@@ -12,6 +12,11 @@ public static function QueryCurrent(){
   if(!$class->result) return(FALSE);
   return($class);
 }
+public static function QueryServerShops(){
+  $class = new QueryAuctions();
+  $class->doQuery('', TRUE);
+  return($class);
+}
 // get my auctions
 public static function QueryMy(){global $user;
   if(!$user->isOk()) {$this->result = FALSE; return(FALSE);}
@@ -29,11 +34,21 @@ public static function QuerySingle($id){global $config;
   return($class->getNext());
 }
 // query
-protected function doQuery($WHERE=''){global $config;
-  $query = "SELECT ".(getVar('ajax','bool')?"SQL_CALC_FOUND_ROWS ":'').
-           "".$config['table prefix']."Auctions.id, `playerId`, `playerName`, `uuid`, `itemId`, `itemDamage`, `itemData`, `qty`, `enchantments`, ".
-           "`price`, UNIX_TIMESTAMP(`created`) AS `created`, `allowBids`, `currentBid`, `currentWinner` ".
-           "FROM `".$config['table prefix']."Auctions` JOIN `".$config['table prefix']."Players` ON ".$config['table prefix']."Auctions.playerId = ".$config['table prefix']."Players.id ";
+protected function doQuery($WHERE='', $adminshops=FALSE){global $config;
+  // admin shop
+  if($adminshops) {
+    $query = "SELECT ".(getVar('ajax','bool')?"SQL_CALC_FOUND_ROWS ":'').
+             "`id`, `itemId`, `itemDamage`, `itemData`, `qty`, `enchantments`, ".
+             "`priceBuy`, `priceSell`, UNIX_TIMESTAMP(`created`) AS `created` ".
+             "FROM `".$config['table prefix']."AdminShops` ";
+  // normal auction
+  } else {
+    $query = "SELECT ".(getVar('ajax','bool')?"SQL_CALC_FOUND_ROWS ":'').
+             "`".$config['table prefix']."Auctions`.`id`, `playerId`, `playerName`, `uuid`, `itemId`, `itemDamage`, `itemData`, `qty`, `enchantments`, ".
+             "`price`, UNIX_TIMESTAMP(`created`) AS `created`, `allowBids`, `currentBid`, `currentWinner` ".
+             "FROM `".$config['table prefix']."Auctions` ".
+             "JOIN `".$config['table prefix']."Players` ON `".$config['table prefix']."Auctions`.`playerId` = `".$config['table prefix']."Players`.`id` ";
+  }
   // where
   if(is_array($WHERE)){
     $query_where = $WHERE;
@@ -69,7 +84,13 @@ protected function doQuery($WHERE=''){global $config;
       $query_order .= $order_cols[$iSortCol].' '.mysql_san(getVar('sSortDir_'.$i, 'str'));
     }
   }
-  if(empty($query_order)) $query_order = "".$config['table prefix']."Auctions.id ASC";
+  if(empty($query_order)) {
+    if($adminshops) {
+      $query_order = "`id` ASC";
+    } else {
+      $query_order = "`".$config['table prefix']."Auctions`.`id` ASC";
+    }
+  }
   $query_order = ' ORDER BY '.$query_order;
   // pagination
   $query_limit = '';
@@ -126,6 +147,15 @@ public function getNext(){
           $marketPrice_total = "--";
       }
   }
+  if(!isset($row['playerName']))    $row['playerName']    = '';
+  if(!isset($row['uuid']))          $row['uuid']          = '';
+  if(!isset($row['playerId']))      $row['playerId']      = '';
+  if(!isset($row['price']))         $row['price']         = 0.0;
+  if(!isset($row['priceBuy']))      $row['priceBuy']      = 0.0;
+  if(!isset($row['priceSell']))     $row['priceSell']     = 0.0;
+  if(!isset($row['allowBids']))     $row['allowBids']     = 0;
+  if(!isset($row['currentBid']))    $row['currentBid']    = '';
+  if(!isset($row['currentWinner'])) $row['currentWinner'] = '';
   // new auction dao
   return(new AuctionDAO(
     $row['id'],
@@ -143,6 +173,8 @@ public function getNext(){
       $row['enchantments']
     ),
     $row['price'],
+    $row['priceBuy'],
+    $row['priceSell'],
     $row['created'],
     $row['allowBids']!=0,
     $row['currentBid'],
