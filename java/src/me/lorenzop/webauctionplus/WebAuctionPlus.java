@@ -108,6 +108,8 @@ public class WebAuctionPlus extends JavaPlugin {
 
 
 	public void onEnable() {
+		if(!CheckJavaVersion("1.8"))
+			throw new RuntimeException("This plugin requires java 1.8 or newer!");
 		if(isOk) {
 			getServer().getConsoleSender().sendMessage(ChatColor.RED+"********************************************");
 			getServer().getConsoleSender().sendMessage(ChatColor.RED+"*** WebAuctionPlus is already running!!! ***");
@@ -671,6 +673,16 @@ public class WebAuctionPlus extends JavaPlugin {
 			output += String.format("%"+maxWidth+'s', s);
 		}
 		return output;
+	}
+
+	private static boolean CheckJavaVersion(final String requiredVersion) {
+		final String javaVersion;
+		{
+			final String vers = System.getProperty("java.version");
+			if(vers == null || vers.isEmpty()) throw new NullPointerException("Failed to get java version");
+			javaVersion = vers.replace('_', '.');
+		}
+		return !(compareVersions(javaVersion, requiredVersion).equals("<"));
 	}
 
 	// check for an updated version
