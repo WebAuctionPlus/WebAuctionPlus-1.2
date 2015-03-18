@@ -87,6 +87,7 @@ window.onload = formfocus;
 '.($user->hasPerms('isAdmin')?'
 <a href="./?page=admin">Admin</a><br />
 ':'').'
+<a href="./?page=servershops">Server Shop</a><br />
 {if logged in}
 <a href="./?page=myitems">My Items</a><br />
 <a href="./?page=myauctions">My Auctions</a><br />
