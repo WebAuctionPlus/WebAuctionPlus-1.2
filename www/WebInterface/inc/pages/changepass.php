@@ -62,6 +62,7 @@ function RenderPage_changepass(){global $config,$html;
   // load page html
   $html->LoadCss('login.css');
   $outputs = RenderHTML::LoadHTML('pages/changepass.php');
+  if(!is_array($outputs)) {echo 'Failed to load html!'; exit();}
   $html->addTags(array(
     'messages' => '',
   ));
