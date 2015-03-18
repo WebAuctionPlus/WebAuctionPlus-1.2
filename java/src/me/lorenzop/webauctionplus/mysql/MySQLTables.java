@@ -33,6 +33,7 @@ public class MySQLTables {
 		sqlTables("ShoutSigns");
 		sqlTables("Settings");
 		sqlTables("LogSales");
+		sqlTables("AdminShops");
 
 		// update existing tables from original web auction
 		if(!tableExists("ItemEnchantments") && tableExists("EnchantLinks")) {
@@ -256,6 +257,23 @@ public class MySQLTables {
 					"`x`				INT(11)			NOT NULL	DEFAULT '0'		, " +
 					"`y`				INT(11)			NOT NULL	DEFAULT '0'		, " +
 					"`z`				INT(11)			NOT NULL	DEFAULT '0'		");
+			}
+		} else
+		// AdminShops
+		if (tableName.equals("AdminShops")) {
+			if (alter) {
+			} else {
+				setTableExists("AdminShops",
+						"`id`               INT(11)         NOT NULL    AUTO_INCREMENT  , PRIMARY KEY(`id`), " +
+						"`itemId`           INT(11)         NOT NULL    DEFAULT '0'     , " +
+						"`itemDamage`       INT(11)         NOT NULL    DEFAULT '0'     , " +
+						"`itemData`         TEXT            NULL        DEFAULT NULL    , " +
+						"`qty`              INT(11)         NOT NULL    DEFAULT '0'     , " +
+						"`enchantments`     VARCHAR(255)    NULL        DEFAULT NULL    , " +
+						"`priceBuy`         DECIMAL(11,2)   NOT NULL    DEFAULT '0.00'  , " +
+						"`priceSell`        DECIMAL(11,2)   NOT NULL    DEFAULT '0.00'  , " +
+						"`created`          DATETIME        NOT NULL    DEFAULT '0000-00-00 00:00:00' , " +
+						"`itemTitle`        VARCHAR(32)     NULL        DEFAULT NULL    ");
 			}
 		}
 	}
