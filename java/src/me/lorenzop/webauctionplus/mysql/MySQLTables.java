@@ -33,7 +33,7 @@ public class MySQLTables {
 		sqlTables("ShoutSigns");
 		sqlTables("Settings");
 		sqlTables("LogSales");
-		sqlTables("AdminShops");
+		sqlTables("ServerShops");
 
 		// update existing tables from original web auction
 		if(!tableExists("ItemEnchantments") && tableExists("EnchantLinks")) {
@@ -259,11 +259,11 @@ public class MySQLTables {
 					"`z`				INT(11)			NOT NULL	DEFAULT '0'		");
 			}
 		} else
-		// AdminShops
-		if (tableName.equals("AdminShops")) {
+		// ServerShops
+		if (tableName.equals("ServerShops")) {
 			if (alter) {
 			} else {
-				setTableExists("AdminShops",
+				setTableExists("ServerShops",
 						"`id`               INT(11)         NOT NULL    AUTO_INCREMENT  , PRIMARY KEY(`id`), " +
 						"`itemId`           INT(11)         NOT NULL    DEFAULT '0'     , " +
 						"`itemDamage`       INT(11)         NOT NULL    DEFAULT '0'     , " +
