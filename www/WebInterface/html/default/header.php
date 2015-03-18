@@ -67,7 +67,7 @@ case 'default':
   <td><input type="password" name="'.LOGIN_FORM_PASSWORD.'" value="" class="input" size="30" tabindex="2" id="'.LOGIN_FORM_PASSWORD.'" /></td>
 </tr>
 <tr><td style="height: 5px;"></td></tr>
-<tr><td colspan="3" align="center" style="font-size: small;">If you don\'t have an account, you can create one using the command:<br />/wa password &lt;somepassword&gt;</td></tr>
+<tr><td colspan="3" align="center" style="font-size: small;">If you don\'t have an account, you can create<br />one using the command: /wa password</td></tr>
 </table>
 </form>
 <script type="text/javascript">
