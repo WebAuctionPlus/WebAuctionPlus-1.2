@@ -142,7 +142,7 @@ public class MySQLTables {
 				sucess  = setTableExists("LogSales",
 					"`id`				INT(11)                         NOT NULL	AUTO_INCREMENT	, PRIMARY KEY(`id`), " +
 					"`logType`			ENUM('', 'new','sale','cancel')	NULL            DEFAULT NULL	, " +
-					"`saleType`			ENUM('', 'buynow','auction')	NULL            DEFAULT NULL	, " +
+					"`saleType`			ENUM('', 'buynow','auction','server')	NULL            DEFAULT NULL	, " +
 					"`timestamp`                    DATETIME                        NOT NULL	DEFAULT '0000-00-00 00:00:00'	, " +
 					"`itemType`			ENUM('', 'tool','map','book')	NULL            DEFAULT NULL	, " +
 					"`itemId`			INT(11)                         NOT NULL	DEFAULT 0		, " +

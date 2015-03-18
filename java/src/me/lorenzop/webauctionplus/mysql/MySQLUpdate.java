@@ -27,10 +27,14 @@ public class MySQLUpdate {
 			UpdateFields1_2_0();
 			Bukkit.getServer().getScheduler().runTask(Bukkit.getPluginManager().getPlugin("WebAuctionPlus"), new PlayerConvertTask());
 		}
-                // update db fields  (< 1.2.7)
+		// update db fields  (< 1.2.7)
 		if(WebAuctionPlus.compareVersions(fromVersion, "1.2.7").equals("<")){
 			UpdateItemData1_2_7();
-                }
+		}
+		// update db fields  (< 1.2.17)
+		if(WebAuctionPlus.compareVersions(fromVersion, "1.2.17").equals("<")){
+			UpdateItemData1_2_17();
+		}
 	}
 
 
@@ -50,7 +54,29 @@ public class MySQLUpdate {
 		}
 		return true;
 	}
-        
+
+
+	private static void UpdateItemData1_2_17() {
+		final Connection conn = WebAuctionPlus.dataQueries.getConnection();
+		try {
+			WebAuctionPlus.log.warning(WebAuctionPlus.logPrefix+"Updating db fields for 1.2.17");
+			final String[] queries = new String[] {
+					"ALTER TABLE `"+WebAuctionPlus.dataQueries.dbPrefix()+"LogSales` CHANGE `saleType` `saleType` ENUM('','buynow','auction','server') "+
+							"CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL;"
+			};
+			// execute queries
+			for(final String sql : queries) {
+				if(sql == null || sql.isEmpty()) continue;
+				if(!execQuery(conn, sql)) {
+					WebAuctionPlus.fail("Failed to update from 1.2.16! Check console log for details.");
+					throw new RuntimeException();
+				}
+			}
+		} finally {
+			WebAuctionPlus.dataQueries.closeResources(conn);
+		}
+	}
+
 	// ItemData update
 	private static void UpdateItemData1_2_7() {
 		final Connection conn = WebAuctionPlus.dataQueries.getConnection();
@@ -59,7 +85,7 @@ public class MySQLUpdate {
 			final String[] queries = new String[]{
 				// Save all the Item data in the Database
 				"ALTER TABLE `"+WebAuctionPlus.dataQueries.dbPrefix()+"Items` ADD `itemData` TEXT NULL DEFAULT NULL AFTER `itemDamage`",
-                                "ALTER TABLE `"+WebAuctionPlus.dataQueries.dbPrefix()+"Auctions` ADD `itemData` TEXT  NULL DEFAULT NULL AFTER `itemDamage`",
+				"ALTER TABLE `"+WebAuctionPlus.dataQueries.dbPrefix()+"Auctions` ADD `itemData` TEXT  NULL DEFAULT NULL AFTER `itemDamage`",
 			};
 			// execute queries
 			for(final String sql : queries) {
@@ -123,7 +149,7 @@ public class MySQLUpdate {
 				"ALTER TABLE `"+WebAuctionPlus.dataQueries.dbPrefix()+"Items`    CHANGE `enchantments` `enchantments` VARCHAR(255) NULL DEFAULT NULL",
 				// enums
 				"ALTER TABLE `"+WebAuctionPlus.dataQueries.dbPrefix()+"LogSales` CHANGE `logType`  `logType`  ENUM('', 'new', 'sale', 'cancel') NULL DEFAULT NULL",
-				"ALTER TABLE `"+WebAuctionPlus.dataQueries.dbPrefix()+"LogSales` CHANGE `saleType` `saleType` ENUM('', 'buynow', 'auction') NULL DEFAULT NULL",
+				"ALTER TABLE `"+WebAuctionPlus.dataQueries.dbPrefix()+"LogSales` CHANGE `saleType` `saleType` ENUM('', 'buynow', 'auction', 'server') NULL DEFAULT NULL",
 				"ALTER TABLE `"+WebAuctionPlus.dataQueries.dbPrefix()+"LogSales` CHANGE `itemType` `itemType` ENUM('', 'tool', 'map', 'book') NULL DEFAULT NULL",
 				"ALTER TABLE `"+WebAuctionPlus.dataQueries.dbPrefix()+"Players`  CHANGE `Permissions` `Permissions` SET('', 'canBuy', 'canSell', 'isAdmin') NULL DEFAULT NULL"
 			};
