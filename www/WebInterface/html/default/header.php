@@ -43,7 +43,7 @@ case 'default':
 <tr>
   <td rowspan="4"><img src="./?page=mcskin&user='.$user->getName().'&view=body" alt="" width="60" height="120" id="mcface" /></td>
   <td height="30">Name:</td><td>'.$user->getName().
-      ($user->hasPerms('isAdmin')?'&nbsp;<a style="font-size: small; font-weight: bold; color: #000000;">[ADMIN]</a>':'').'</td>
+      ($user->hasPerms('isAdmin')?'&nbsp;<a href="./?page=admin" style="font-size: small; font-weight: bold; color: #000000;">[ADMIN]</a>':'').'</td>
 </tr>
 <tr><td height="30">Money:&nbsp;&nbsp;</td><td>'.str_replace(' ','&nbsp;',FormatPrice($user->getMoney())).'</td></tr>
 <tr><td colspan="2" align="center" style="font-size: smaller;">'.@date('jS M Y H:i:s').'</td></tr>
@@ -84,6 +84,9 @@ window.onload = formfocus;
 
 
 <a href="./">Home</a><br />
+'.($user->hasPerms('isAdmin')?'
+<a href="./?page=admin">Admin</a><br />
+':'').'
 {if logged in}
 <a href="./?page=myitems">My Items</a><br />
 <a href="./?page=myauctions">My Auctions</a><br />
