@@ -19,6 +19,7 @@
 				<exclude>**/pom.xml.original</exclude>
 				<exclude>**/package.xml</exclude>
 				<exclude>**/assembly.xml</exclude>
+				<exclude>**/version.txt.original</exclude>
 				<exclude>**/.git</exclude>
 				<exclude>**/.project</exclude>
 				<exclude>/*.sh</exclude>
