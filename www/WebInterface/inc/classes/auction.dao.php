@@ -9,23 +9,40 @@ protected $playerUUID    = '';
 protected $playerId      = -1;
 protected $Item          = FALSE;
 protected $price         = 0.0;
+protected $priceBuy      = 0.0;
+protected $priceSell     = 0.0;
 protected $created       = -1;
 protected $allowBids     = FALSE;
 protected $currentBid    = 0.0;
 protected $currentWinner = '';
 
 
-function __construct($tableRowId=0, $playerName='', $playerUUID='', $playerId=0, $Item=FALSE, $price=0.0, $created=0, $allowBids=FALSE, $currentBid=0.0, $currentWinner=''){
-  $this->tableRowId = ($tableRowId<1  ? -1 : (int)  $tableRowId);
-  $this->playerName = (string)$playerName;
-  $this->playerUUID = (string)$playerUUID;
-  $this->playerId   = (int)$playerId;
+function __construct(
+    $tableRowId    = 0,
+    $playerName    = '',
+    $playerUUID    = '',
+    $playerId      = 0,
+    $Item          = FALSE,
+    $price         = 0.0,
+    $priceBuy      = 0.0,
+    $priceSell     = 0.0,
+    $created       = 0,
+    $allowBids     = FALSE,
+    $currentBid    = 0.0,
+    $currentWinner = ''
+      ){
+  $this->tableRowId = ($tableRowId < 1 ? -1 : (int) $tableRowId);
+  $this->playerName = (string) $playerName;
+  $this->playerUUID = (string) $playerUUID;
+  $this->playerId   = (int)    $playerId;
   $this->Item       = $Item;
-  $this->price      = ($price<0.0     ? 0.0: (float)$price);
-  $this->created    = ($created<0     ? -1 : (int)  $created);
+  $this->price      = ($price     < 0.0 ? 0.0 : (float) $price);
+  $this->priceBuy   = ($priceBuy  < 0.0 ? 0.0 : (float) $priceBuy);
+  $this->priceSell  = ($priceSell < 0.0 ? 0.0 : (float) $priceSell);
+  $this->created    = ($created   < 0   ?  -1 : (int)   $created);
   $this->allowBids  = (boolean)$allowBids;
-  $this->currentBid = ($currentBid<0.0? 0.0: (float)$currentBid);
-  $this->currentWinner = (string)$currentWinner;
+  $this->currentBid = ($currentBid < 0.0 ? 0.0 : (float) $currentBid);
+  $this->currentWinner = (string) $currentWinner;
 }
 
 
@@ -52,6 +69,7 @@ public function getItem(){
 public function getItemCopy(){
   return($this->Item->getCopy());
 }
+
 // get price
 public function getPrice(){
   return( (float)$this->price );
@@ -61,6 +79,27 @@ public function getPriceTotal(){
   $qty = $this->Item->getItemQty();
   return( ((float)$this->price) * ((float)$qty) );
 }
+
+// get price buy
+public function getPriceBuy(){
+  return( (float)$this->priceBuy );
+}
+public function getPriceBuyTotal(){
+  if(!$this->Item) return('ERROR');
+  $qty = $this->Item->getItemQty();
+  return( ((float)$this->priceBuy) * ((float)$qty) );
+}
+
+// get price sell
+public function getPriceSell(){
+  return( (float)$this->priceSell );
+}
+public function getPriceSellTotal(){
+  if(!$this->Item) return('ERROR');
+  $qty = $this->Item->getItemQty();
+  return( ((float)$this->priceSell) * ((float)$qty) );
+}
+
 // get date created
 public function getCreated(){
   return($this->created);
