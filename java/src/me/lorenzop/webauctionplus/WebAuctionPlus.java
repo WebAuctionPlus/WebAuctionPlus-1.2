@@ -29,6 +29,7 @@ import me.lorenzop.webauctionplus.tasks.AnnouncerTask;
 import me.lorenzop.webauctionplus.tasks.PlayerAlertTask;
 import me.lorenzop.webauctionplus.tasks.RecentSignTask;
 import me.lorenzop.webauctionplus.tasks.ShoutSignTask;
+import me.lorenzop.webauctionplus.tasks.TempPasswordTimeoutTask;
 import net.milkbowl.vault.economy.Economy;
 
 import org.bukkit.Bukkit;
@@ -96,6 +97,9 @@ public class WebAuctionPlus extends JavaPlugin {
 	// recent sign task
 	public static RecentSignTask recentSignTask = null;
 
+	// temp password timeout task
+	public static volatile TempPasswordTimeoutTask tempPassTimeoutTask = null;
+
 	// announcer
 	public AnnouncerTask waAnnouncerTask = null;
 	public boolean announcerEnabled	= false;
@@ -149,6 +153,7 @@ public class WebAuctionPlus extends JavaPlugin {
 		try {
 			getServer().getScheduler().cancelTasks(this);
 		} catch (Exception ignore) {}
+		if(tempPassTimeoutTask != null) tempPassTimeoutTask.shutdown();
 		if(waAnnouncerTask != null) waAnnouncerTask.clearMessages();
 		if(shoutSigns      != null) shoutSigns.clear();
 		if(recentSigns     != null) recentSigns.clear();
@@ -263,6 +268,10 @@ public class WebAuctionPlus extends JavaPlugin {
 			// scheduled tasks
 			BukkitScheduler scheduler = Bukkit.getScheduler();
 			boolean UseMultithreads = config.getBoolean("Development.UseMultithreads");
+
+			// temp password timeout task
+			if(tempPassTimeoutTask == null || tempPassTimeoutTask.isStopped())
+				tempPassTimeoutTask = new TempPasswordTimeoutTask(this);
 
 			// announcer
 			announcerEnabled = config.getBoolean("Announcer.Enabled");
