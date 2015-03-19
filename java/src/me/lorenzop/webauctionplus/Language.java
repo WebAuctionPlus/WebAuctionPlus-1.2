@@ -173,6 +173,7 @@ public class Language {
 		this.langMap.put("password_changed",            "");
 		this.langMap.put("password_cmd_changed",        "");
 		this.langMap.put("password_generated",          "");
+		this.langMap.put("temp_password_expired",      "");
 		this.langMap.put("account_not_found",          "");
 		this.langMap.put("created_shout_sign",         "");
 		this.langMap.put("created_recent_sign",        "");
