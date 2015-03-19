@@ -159,6 +159,8 @@ public class WebAuctionCommands implements CommandExecutor {
 						sender.sendMessage(WebAuctionPlus.chatPrefix+WebAuctionPlus.Lang.getString("password_generated")+"  "+pass);
 						WebAuctionPlus.log.info(WebAuctionPlus.logPrefix+WebAuctionPlus.Lang.getString("password_changed")+" "+player.getName());
 					}
+					WebAuctionPlus.tempPassTimeoutTask
+						.register(player.getUniqueId());
 				return true;
 			}
 			return false;

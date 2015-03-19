@@ -377,4 +377,44 @@ public class DataQueries extends MySQLConnPool {
 	}
 
 
+	// checks if account has temp password
+	public Boolean queryTempPassword(final UUID uuid) {
+		Connection conn = getConnection();
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		try {
+			if(isDebug()) log.info("WA Query: queryTempPassword "+uuid.toString());
+			st = conn.prepareStatement("SELECT LENGTH(`password`) AS `size` FROM `"+this.dbPrefix+"Players` WHERE `uuid` = ? LIMIT 1");
+			st.setString(1, uuid.toString());
+			rs = st.executeQuery();
+			if(rs.next()) {
+				final int size = rs.getInt("size");
+				return Boolean.valueOf(size < 32);
+			}
+		} catch (SQLException e) {
+			log.warning(logPrefix+"Unable to query temp password");
+			e.printStackTrace();
+		} finally {
+			closeResources(conn, st, rs);
+		}
+		return null;
+	}
+	// disables a temp password
+	public void clearTempPassword(final UUID uuid) {
+		Connection conn = getConnection();
+		PreparedStatement st = null;
+		try {
+			if(isDebug()) log.info("WA Query: clearTempPassword "+uuid.toString());
+			st = conn.prepareStatement("UPDATE `"+this.dbPrefix+"Players` SET `password` = NULL WHERE `uuid` = ? LIMIT 1");
+			st.setString(1, uuid.toString());
+			st.executeUpdate();
+		} catch (SQLException e) {
+			log.warning(logPrefix+"Unable to query temp password");
+			e.printStackTrace();
+		} finally {
+			closeResources(conn, st);
+		}
+	}
+
+
 }
