@@ -159,6 +159,8 @@ private function VerifyPasswordChanged($password) {global $config;
 public function isTempPass($value=NULL) {
   if(!$this->isOk())
     return FALSE;
+  if(!isset($_SESSION['Temp Pass']))
+    return FALSE;
   if($value !== NULL)
     $_SESSION['Temp Pass'] = ($value !== FALSE);
   return ($_SESSION['Temp Pass'] != FALSE);
