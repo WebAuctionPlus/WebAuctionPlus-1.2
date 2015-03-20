@@ -64,8 +64,6 @@ function RenderPage_changepass(){global $config,$html;
   $outputs = RenderHTML::LoadHTML('pages/changepass.php');
   if(!is_array($outputs)) {echo 'Failed to load html!'; exit();}  // display error
   $messages = '';
-  if(isset($config['error']))
-    $messages .= str_replace('{message}', $config['error'], $outputs['error']);
   if(isset($_SESSION['error'])) {
     $messages .= str_replace('{message}', $_SESSION['error'], $outputs['error']);
     unset($_SESSION['error']);

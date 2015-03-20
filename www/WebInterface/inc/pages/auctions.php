@@ -154,8 +154,6 @@ function RenderPage_auctions(){global $config,$html;
   $html->addToHeader($outputs['header']);
   // display error
   $messages = '';
-  if(isset($config['error']))
-    $messages .= str_replace('{message}', $config['error'], $outputs['error']);
   if(isset($_SESSION['error'])) {
     $messages .= str_replace('{message}', $_SESSION['error'], $outputs['error']);
     unset($_SESSION['error']);

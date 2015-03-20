@@ -190,8 +190,6 @@ function RenderPage_sell(){global $config,$html,$user;
   );
   unset($Item);
   // input errors
-  if(isset($config['error']))
-    $messages .= str_replace('{message}', $config['error'], $outputs['error']);
   if(isset($_SESSION['error'])) {
     $messages .= str_replace('{message}', $_SESSION['error'], $outputs['error']);
     unset($_SESSION['error']);
