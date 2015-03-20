@@ -155,104 +155,51 @@ if($config['user']->isLocked()){
 //	}
 
 
-function RenderPage_sell(){global $config,$html,$user,$settings; $output='';
-  $id        = getVar('id', 'int');
-  $qty       = getVar('qty');
-  $priceEach = getVar('price', 'double');
+function RenderPage_sell(){global $config,$html,$user;
+  $config['title'] = 'Sell Items';
+  $id = getVar('id', 'int');
+  // load page html
+  $outputs = RenderHTML::LoadHTML('pages/sell.php');
+  if(!is_array($outputs)) {echo 'Failed to load html!'; exit();}
+  // load javascript
+  $html->addToHeader($outputs['header']);
   // query item
   $Item = QueryItems::QuerySingle($user->getId(), $id);
-  if(!$Item) return('<h2 style="text-align: center;">The item you\'re trying to sell couldn\'t be found!</h2>');
-//echo '<pre>';print_r($Item);exit();
-  if(empty($qty)) $qty = $Item->getItemQty();
-  if($priceEach == 0.0){
-    $priceEach  = '';
-    $priceTotal = '';
-  }else{
-    $priceTotal = ((double)$priceEach) * ((double)$qty);
+  if(!$Item) {
+    return('<h2 style="text-align: center;">The item you\'re trying to sell couldn\'t be found!</h2>');
   }
-$html->addToHeader('
-<script type="text/javascript" language="javascript">
-function updateTotal(thisfield,otherfieldid){
-  otherfield = document.getElementById(otherfieldid);
-  document.getElementById("pricetotal").innerHTML = (thisfield.value * otherfield.value).toFixed(2);
-//  $("pricetotal").update( thisfield.value * otherfield.value );
-}
-</script>
-');
-//if(isset($_SESSION['error'])) {
-//  $output.='<p style="color:red">'.$_SESSION['error'].'</p>';
-//  unset($_SESSION['error']);
-//}
-//if(isset($_SESSION['success'])) {
-//  $output.='<p style="color: green;">'.$_SESSION['success'].'</p>';
-//  unset($_SESSION['success']);
-//}
+  $qty       = getVar('qty');
+  $priceEach = getVar('price', 'double');
+  if(empty($qty))
+    $qty = $Item->getItemQty();
+  if($priceEach < 0.0)
+    $priceEach = '';
 
 
-$output.='
-<!-- mainTable example -->
-<form action="./" method="post">
-{token form}
-<input type="hidden" name="page"     value="'.$config['page'].'" />
-<input type="hidden" name="action"   value="newauction" />
-<input type="hidden" name="lastpage" value="'.getLastPage().'" />
-<input type="hidden" name="id"       value="'.getVar('id','int').'" />
-<table border="0" cellpadding="0" cellspacing="0" id="createauctionTable">
-';
-// input errors
-if(!isset($config['error']))
-  if(!$user->hasPerms('canSell'))
-    $config['error'] = 'You don\'t have permission to sell.';
-if(isset($config['error']))
-  $output.='<tr><td align="center" style="padding-top: 20px; color: red; font-size: larger;">'.$config['error'].'</td></tr>';
-// add enchantments to this link!
-//  '<a href="./?page=graph&amp;name='.((int)$Item->getItemId()).'&amp;damage='.$Item->getItemDamage().'">'.' .
-$output.='
-<tr><td align="center"><h2>Create a New Auction</h2></td></tr>
-<tr><td align="center"><div class="input" style="width: 150px; padding-top: 15px; padding-bottom: 15px; text-align: center;">'.$Item->getDisplay().'</div></td></tr>
-<tr><td height="20"></td></tr>
-
-<tr><td align="center"><b>You have <font size="+2">'.((int)$Item->getItemQty()).'</font> items</b></td></tr>
-<tr><td><table border="0" cellpadding="0" cellspacing="10" align="center">
-<tr>
-  <td align="right"><b>Quantity:</b></td>
-  <td><div style="position: absolute; margin-top: 10px; margin-left: 8px; font-size: larger; font-weight: bold;">x</div>'.
-    '<input type="text" name="qty" value="'.((int)$qty).'" id="qty" class="input" style="width: 160px; text-align: center;" '.
-    'onkeypress="return numbersonly(this, event);" onkeyup="updateTotal(this,\'price\');" /></td>
-</tr>
-<tr>
-  <td align="right"><b>Price Each:</b></td>
-  <td><div style="position: absolute; margin-top: 8px; margin-left: 8px; font-size: larger; font-weight: bold;">'.SettingsClass::getString('Currency Prefix').'</div>'.
-    '<input type="text" name="price" value="'.$priceEach.'" id="price" class="input" style="width: 160px; text-align: center;" '.
-    'onkeypress="return numbersonly(this, event);" onkeyup="updateTotal(this,\'qty\');" />'.
-    '<b>&nbsp;'.SettingsClass::getString('Currency Postfix').'</b></td>
-</tr>
-<tr>
-  <td align="right"><b>Price Total:</b></td>
-  <td><div style="position: absolute; margin-top: 8px; margin-left: 8px; font-size: larger; font-weight: bold;">'.SettingsClass::getString('Currency Prefix').'</div>'.
-    '<div id="pricetotal" class="input" style="float: left; width: 160px; text-align: center; font-size: larger; font-weight: bold;">&nbsp;</div>'.
-    '<div style="margin-top: 8px;"><b>&nbsp;'.SettingsClass::getString('Currency Postfix').'</b></div></td>
-</tr>
-</table></td></tr>
-<tr><td height="20"></td></tr>
-';
-
-// custom descriptions
-if(SettingsClass::getString('Custom Descriptions')) $output.='
-<tr><td colspan="2" align="center">&nbsp;&nbsp;<b>Description:</b> (optional)</td></tr>
-<tr><td height="10"></td></tr>
-<tr><td colspan="2" align="center"><textarea name="desc" class="input" style="width: 80%; height: 55px;" readonly>Coming soon!</textarea></td></tr>
-<tr><td height="30"></td></tr>
-';
-
-$output.='
-<tr><td colspan="2" align="center"><input type="submit" value="Create Auction" class="input" /></td></tr>
-<tr><td height="30"></td></tr>
-</table>
-</form>
-';
+  $messages = '';
+  $tags = array(
+    'messages'     => &$messages,
+    'item id'      => (int) $id,
+    'item display' => $Item->getDisplay(),
+    'have qty'     => (int) $Item->getItemQty(),
+    'qty'          => (int) $qty,
+    'price each'   => (double) $priceEach,
+    'currency prefix'  => SettingsClass::getString('Currency Prefix'),
+    'currency postfix' => SettingsClass::getString('Currency Postfix'),
+  );
   unset($Item);
-  return($output);
+  // input errors
+  if(isset($config['error']))
+    $messages .= str_replace('{message}', $config['error'], $outputs['error']);
+  if(isset($_SESSION['error'])) {
+    $messages .= str_replace('{message}', $_SESSION['error'], $outputs['error']);
+    unset($_SESSION['error']);
+  }
+  if(!$user->hasPerms('canSell'))
+    $messages .= str_replace('{message}', 'You don\'t have permission to sell.', $outputs['error']);
+  RenderHTML::RenderTags($outputs['body'], $tags);
+  unset($tags);
+  return $outputs['body'];
 }
 
 
