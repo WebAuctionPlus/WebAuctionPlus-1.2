@@ -62,21 +62,14 @@ function RenderPage_changepass(){global $config,$html;
   // load page html
   $html->LoadCss('login.css');
   $outputs = RenderHTML::LoadHTML('pages/changepass.php');
-  if(!is_array($outputs)) {echo 'Failed to load html!'; exit();}
-  $html->addTags(array(
-    'messages' => '',
-  ));
-  // display error
-  if(@$_GET['error'] == 'passwords dont match') {
-    $html->addTags(array(
-      'messages' => str_replace('{message}', 'Passwords don\'t match. Please try again.', $outputs['error'])
-    ));
-  }
-  if(@$_GET['error'] == 'password to short') {
-    $html->addTags(array(
-      'messages' => str_replace('{message}', 'Password is to short, must be at least 6 characters long.', $outputs['error'])
-    ));
-  }
+  if(!is_array($outputs)) {echo 'Failed to load html!'; exit();}  // display error
+  $messages = '';
+  if(@$_GET['error'] == 'passwords dont match')
+    $messages .= str_replace('{message}', 'Passwords don\'t match. Please try again.', $outputs['error']);
+  if(@$_GET['error'] == 'password to short')
+    $messages .= str_replace('{message}', 'Password is to short, must be at least 6 characters long.', $outputs['error']);
+  $messages = str_replace('{messages}', $messages, $outputs['body']);
+  unset($messages);
   return($outputs['body']);
 }
 

@@ -153,23 +153,24 @@ function RenderPage_auctions(){global $config,$html;
   $config['title'] = 'Current Auctions';
   // load page html
   $outputs = RenderHTML::LoadHTML('pages/auctions.php');
-  $html->addTags(array(
-    'messages' => ''
-  ));
+  if(!is_array($outputs)) {echo 'Failed to load html!'; exit();}
   // load javascript
   $html->addToHeader($outputs['header']);
   // display error
+  $messages = '';
   if(isset($config['error']))
-    $config['tags']['messages'] .= str_replace('{message}', $config['error'], $outputs['error']);
-  if(isset($_SESSION['error'])){
-    $config['tags']['messages'] .= str_replace('{message}', $_SESSION['error'], $outputs['error']);
+    $messages .= str_replace('{message}', $config['error'], $outputs['error']);
+  if(isset($_SESSION['error'])) {
+    $messages .= str_replace('{message}', $_SESSION['error'], $outputs['error']);
     unset($_SESSION['error']);
   }
   // display success
-  if(isset($_SESSION['success'])){
-    $config['tags']['messages'] .= str_replace('{message}', $_SESSION['success'], $outputs['success']);
+  if(isset($_SESSION['success'])) {
+    $messages .= str_replace('{message}', $_SESSION['success'], $outputs['success']);
     unset($_SESSION['success']);
   }
+  $outputs['body top'] = str_replace('{messages}', $messages, $outputs['body top']);
+  unset($messages);
 // removed in-line listing - now handled by ajax
 //  // list auctions
 //  $auctions = QueryAuctions::QueryCurrent();
@@ -198,10 +199,10 @@ function RenderPage_auctions(){global $config,$html;
 //    $outputRows .= $htmlRow;
 //  }
 //  unset($auctions, $Item);
-$outputRows='';
-  return($outputs['body top']."\n".
-         $outputRows."\n".
-         $outputs['body bottom']);
+  return(
+    $outputs['body top'].
+    $outputs['body bottom']
+  );
 }
 
 

@@ -26,19 +26,20 @@ function RenderPage_myitems(){global $config,$html;
   // load javascript
   $html->addToHeader($outputs['header']);
   // display error
-  $msg = '';
+  $messages = '';
   if(isset($config['error']))
-    $msg .= str_replace('{message}', $config['error'], $outputs['error']);
+    $messages .= str_replace('{message}', $config['error'], $outputs['error']);
   if(isset($_SESSION['error'])){
-    $msg .= str_replace('{message}', $_SESSION['error'], $outputs['error']);
+    $messages .= str_replace('{message}', $_SESSION['error'], $outputs['error']);
     unset($_SESSION['error']);
   }
   // display success
   if(isset($_SESSION['success'])){
-  	$msg .= str_replace('{message}', $_SESSION['success'], $outputs['success']);
+    $messages .= str_replace('{message}', $_SESSION['success'], $outputs['success']);
     unset($_SESSION['success']);
   }
-  $outputs['body top'] = str_replace('{messages}', $msg, $outputs['body top']);
+  $outputs['body top'] = str_replace('{messages}', $messages, $outputs['body top']);
+  unset($messages);
   // list items
   $Items = QueryItems::QueryInventory($config['user']->getId());
   if($Items == FALSE) {echo 'Unable to query items!'; exit();}
@@ -65,12 +66,15 @@ function RenderPage_myitems(){global $config,$html;
     );
     $htmlRow = $outputs['body row'];
     RenderHTML::RenderTags($htmlRow, $tags);
+    unset($tags);
     $outputRows .= $htmlRow;
   }
   unset($Items, $Item);
-  return($outputs['body top']."\n".
-         $outputRows."\n".
-         $outputs['body bottom']);
+  return(
+    $outputs['body top']."\n".
+    $outputRows."\n".
+    $outputs['body bottom']
+  );
 }
 
 

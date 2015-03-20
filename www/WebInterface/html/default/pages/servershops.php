@@ -28,6 +28,7 @@ $(document).ready(function() {
 
 
 $outputs['body top']='
+{messages}
 <table border="0" cellpadding="0" cellspacing="0" class="display" id="mainTable">
   <thead>
     <tr style="text-align: center; vertical-align: bottom;">

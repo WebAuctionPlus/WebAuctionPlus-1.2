@@ -37,43 +37,43 @@ if($config['action']=='cancel'){
 }
 
 
-function RenderPage_myauctions(){global $config,$html; $output='';
+function RenderPage_myauctions(){global $config,$html;
   $UseAjaxSource = FALSE;
   $config['title'] = 'My Auctions';
   // load page html
   $outputs = RenderHTML::LoadHTML('pages/myauctions.php');
-  $html->addTags(array(
-    'messages' => ''
-  ));
   // load javascript
   $html->addToHeader($outputs['header']);
   // display error
+  $messages = '';
   if(isset($config['error']))
-    $config['tags']['messages'] .= str_replace('{message}', $config['error'], $outputs['error']);
-  if(isset($_SESSION['error'])){
-    $config['tags']['messages'] .= str_replace('{message}', $_SESSION['error'], $outputs['error']);
+    $messages .= str_replace('{message}', $config['error'], $outputs['error']);
+  if(isset($_SESSION['error'])) {
+    $messages .= str_replace('{message}', $_SESSION['error'], $outputs['error']);
     unset($_SESSION['error']);
   }
   // display success
-  if(isset($_SESSION['success'])){
-    $config['tags']['messages'] .= str_replace('{message}', $_SESSION['success'], $outputs['success']);
+  if(isset($_SESSION['success'])) {
+    $messages .= str_replace('{message}', $_SESSION['success'], $outputs['success']);
     unset($_SESSION['success']);
   }
+  $outputs['body top'] = str_replace('{message}', $messages, $outputs['body top']);
+  unset($messages);
   // list auctions
   $auctions = QueryAuctions::QueryMy();
   $outputRows = '';
   while(TRUE){
-  	$auction = $auctions->getNext();
-  	if(!$auction) break;
-  	$Item = $auction->getItem();
-  	if(!$Item) continue;
+    $auction = $auctions->getNext();
+    if(!$auction) break;
+    $Item = $auction->getItem();
+    if(!$Item) continue;
     $tags = array(
       'auction id'  => (int)$auction->getTableRowId(),
       'seller name' => $auction->getSeller(),
       'item'        => $Item->getDisplay(),
       'qty'         => (int)$Item->getItemQty(),
-      'price each'	=> FormatPrice($auction->getPrice()),
-      'price total'	=> FormatPrice($auction->getPriceTotal()),
+      'price each'  => FormatPrice($auction->getPrice()),
+      'price total' => FormatPrice($auction->getPriceTotal()),
       'created'     => $auction->getCreated(),
       'expire'      => $auction->getExpire(),
       'market price percent' => FormatPorzent(CalcPorzent($auction->getPrice(), $Item->getMarketPrice())),
@@ -108,9 +108,11 @@ function RenderPage_myauctions(){global $config,$html; $output='';
     $outputRows .= $htmlRow;
   }
   unset($auctions, $Item);
-  return($outputs['body top']."\n".
-         $outputRows."\n".
-         $outputs['body bottom']);
+  return(
+    $outputs['body top']."\n".
+    $outputRows."\n".
+    $outputs['body bottom']
+  );
 }
 
 

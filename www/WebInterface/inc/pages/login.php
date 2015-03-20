@@ -46,17 +46,18 @@ function RenderPage_login(){global $config,$html;
   // load page html
   $html->LoadCss('login.css');
   $outputs = RenderHTML::LoadHTML('pages/login.php');
-  $html->addTags(array(
-    'messages' => '',
+  if(!is_array($outputs)) {echo 'Failed to load html!'; exit();}
+  // display error
+  $messages = '';
+  if(getVar('error') != '')
+    $messages .= str_replace('{message}', 'Login Failed', $outputs['error']);
+  $tags = array(
+    'messages' => $messages,
     'username' => $config['demo'] ? 'demo' : getVar(LOGIN_FORM_USERNAME),
     'password' => $config['demo'] ? 'demo' : '',
-  ));
-  // display error
-  if(getVar('error') != '') {
-    $html->addTags(array(
-      'messages' => str_replace('{message}', 'Login Failed', $outputs['error'])
-    ));
-  }
+  );
+  RenderHTML::RenderTags($outputs['body'], $tags);
+  unset($tags, $messages);
   return($outputs['body']);
 }
 
