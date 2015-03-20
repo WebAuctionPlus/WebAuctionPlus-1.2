@@ -34,16 +34,16 @@ public static function QuerySingle($id){global $config;
   return($class->getNext());
 }
 // query
-protected function doQuery($WHERE='', $adminshops=FALSE){global $config;
+protected function doQuery($WHERE='', $servershops=FALSE){global $config;
   // admin shop
-  if($adminshops) {
-    $query = "SELECT ".(getVar('ajax','bool')?"SQL_CALC_FOUND_ROWS ":'').
+  if($servershops) {
+    $query = "SELECT ".(getVar('ajax','bool') ? "SQL_CALC_FOUND_ROWS " : '').
              "`id`, `itemId`, `itemDamage`, `itemData`, `qty`, `enchantments`, ".
              "`priceBuy`, `priceSell`, UNIX_TIMESTAMP(`created`) AS `created` ".
-             "FROM `".$config['table prefix']."AdminShops` ";
+             "FROM `".$config['table prefix']."ServerShops` ";
   // normal auction
   } else {
-    $query = "SELECT ".(getVar('ajax','bool')?"SQL_CALC_FOUND_ROWS ":'').
+    $query = "SELECT ".(getVar('ajax','bool') ? "SQL_CALC_FOUND_ROWS " : '').
              "`".$config['table prefix']."Auctions`.`id`, `playerId`, `playerName`, `uuid`, `itemId`, `itemDamage`, `itemData`, `qty`, `enchantments`, ".
              "`price`, UNIX_TIMESTAMP(`created`) AS `created`, `allowBids`, `currentBid`, `currentWinner` ".
              "FROM `".$config['table prefix']."Auctions` ".
@@ -85,7 +85,7 @@ protected function doQuery($WHERE='', $adminshops=FALSE){global $config;
     }
   }
   if(empty($query_order)) {
-    if($adminshops) {
+    if($servershops) {
       $query_order = "`id` ASC";
     } else {
       $query_order = "`".$config['table prefix']."Auctions`.`id` ASC";
