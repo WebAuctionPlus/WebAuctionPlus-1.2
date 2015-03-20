@@ -18,62 +18,56 @@ if($config['user']->isTempPass()) {
 
 
 // buy from server shop
-if(strtolower($config['action']) == 'buy'){
+if(strtolower($config['action']) == 'buy') {
   CSRF::ValidateToken();
   // inventory is locked
-  if($config['user']->isLocked()){
-    echo '<center><h2>Your inventory is currently locked.<br />Please close your in game inventory and try again.</h2><br /><a href="'.getLastPage().'">Back to last page</a></center>';
-    ForwardTo(getLastPage(), 4);
-    exit();
+  if($config['user']->isLocked()) {
+    $_SESSION['error'] = 'Your inventory is currently locked.<br />Please close your in game inventory and try again.';
+  } else {
+    // buy from server shop
+    if(AuctionFuncs::BuyServerShop(
+      getVar('shopid', 'int', 'post'),
+      getVar('qty',    'int', 'post')
+    )){
+      $_SESSION['success'] = 'Item purchased successfully!';
+      ForwardTo(getLastPage(), 0);
+      exit();
+    }
   }
-  // buy from server shop
-  if(AuctionFuncs::BuyServerShop(
-    getVar('shopid', 'int', 'post'),
-    getVar('qty',    'int', 'post')
-  )){
-    echo '<center><h2>Item purchased successfully!</h2><br /><a href="'.getLastPage().'">Back to last page</a></center>';
-    ForwardTo(getLastPage(), 2);
-    exit();
-  }
-  echo $config['error']; exit();
 }
 // sell to server shop
-if(strtolower($config['action']) == 'sell'){
+if(strtolower($config['action']) == 'sell') {
   CSRF::ValidateToken();
   // inventory is locked
-  if($config['user']->isLocked()){
-    echo '<center><h2>Your inventory is currently locked.<br />Please close your in game inventory and try again.</h2><br /><a href="'.getLastPage().'">Back to last page</a></center>';
-    ForwardTo(getLastPage(), 4);
-    exit();
+  if($config['user']->isLocked()) {
+    $_SESSION['error'] = 'Your inventory is currently locked.<br />Please close your in game inventory and try again.';
+  } else {
+    // sell to server shop
+    if(AuctionFuncs::SellServerShop(
+      getVar('shopid', 'int', 'post'),
+      getVar('qty',    'int', 'post')
+    )){
+      $_SESSION['success'] = 'Item sold successfully!';
+      ForwardTo(getLastPage(), 0);
+      exit();
+    }
   }
-  // sell to server shop
-  if(AuctionFuncs::SellServerShop(
-    getVar('shopid', 'int', 'post'),
-    getVar('qty',    'int', 'post')
-  )){
-    echo '<center><h2>Item sold successfully!</h2><br /><a href="'.getLastPage().'">Back to last page</a></center>';
-    ForwardTo(getLastPage(), 2);
-    exit();
-  }
-  echo $config['error']; exit();
 }
 if($config['action']=='cancel'){
   CSRF::ValidateToken();
   // inventory is locked
   if($config['user']->isLocked()){
-    echo '<center><h2>Your inventory is currently locked.<br />Please close your in game inventory and try again.</h2><br /><a href="'.getLastPage().'">Back to last page</a></center>';
-    ForwardTo(getLastPage(), 4);
-    exit();
+    $_SESSION['error'] = 'Your inventory is currently locked.<br />Please close your in game inventory and try again.';
+  } else {
+    // cancel server shop
+    if(AuctionFuncs::CancelServerShop(
+      getVar('shopid', 'int', 'post')
+    )){
+      $_SESSION['success'] = 'Server Shop canceled!';
+      ForwardTo(getLastPage(), 0);
+      exit();
+    }
   }
-  // cancel server shop
-  if(AuctionFuncs::CancelServerShop(
-    getVar('shopid', 'int', 'post')
-  )){
-    echo '<center><h2>Server Shop canceled!</h2><br /><a href="'.getLastPage().'">Back to last page</a></center>';
-    ForwardTo(getLastPage(), 2);
-    exit();
-  }
-  echo $config['error']; exit();
 }
 
 

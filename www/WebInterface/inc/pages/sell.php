@@ -17,31 +17,32 @@ if($config['user']->isTempPass()) {
 }
 
 
-if($config['action']=='newauction'){
-  CSRF::ValidateToken();
-  // inventory is locked
-  if($config['user']->isLocked()){
-    echo '<center><h2>Your inventory is currently locked.<br />Please close your in game inventory and try again.</h2><br /><a href="'.getLastPage().'">Back to last page</a></center>';
-    ForwardTo(getLastPage(), 4);
-    exit();
+// locked inventory
+if($config['user']->isLocked()) {
+  $_SESSION['error'] = 'Your inventory is currently locked.<br />Please close your in game inventory and try again.';
+} else {
+  // fixed price
+  if($config['action']=='Sell Fixed Price') {
+    CSRF::ValidateToken();
+    if(AuctionFuncs::Sell(
+      getVar('id'   ,'int'   ,'post'),
+      getVar('qty'  ,'int'   ,'post'),
+      getVar('price','double','post'),
+      getVar('desc' ,'string','post')
+    )){
+      $_SESSION['success'] = 'Auction created successfully!';
+      ForwardTo(getLastPage(), 0);
+      exit();
+    }
+  } else
+  // auction
+  if($config['action']=='Create Auction') {
+    //TODO:
+  } else
+  // server shop
+  if($config['action']=='Server Shop') {
+    //TODO:
   }
-  if(AuctionFuncs::Sell(
-    getVar('id'   ,'int'   ,'post'),
-    getVar('qty'  ,'int'   ,'post'),
-    getVar('price','double','post'),
-    getVar('desc' ,'string','post')
-  )){
-    echo '<center><h2>Auction created successfully!</h2><br /><a href="'.getLastPage().'">Back to last page</a></center>';
-    ForwardTo(getLastPage(), 2);
-    exit();
-  }
-}
-
-// inventory is locked
-if($config['user']->isLocked()){
-  echo '<center><h2>Your inventory is currently locked.<br />Please close your in game inventory and try again.</h2><br /><a href="'.getLastPage().'">Back to last page</a></center>';
-  ForwardTo(getLastPage(), 4);
-  exit();
 }
 
 

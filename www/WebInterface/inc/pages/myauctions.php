@@ -17,23 +17,21 @@ if($config['user']->isTempPass()) {
 }
 
 
-if($config['action']=='cancel'){
+if($config['action']=='cancel') {
   CSRF::ValidateToken();
   // inventory is locked
-  if($config['user']->isLocked()){
-    echo '<center><h2>Your inventory is currently locked.<br />Please close your in game inventory and try again.</h2><br /><a href="'.getLastPage().'">Back to last page</a></center>';
-    ForwardTo(getLastPage(), 4);
-    exit();
+  if($config['user']->isLocked()) {
+    $_SESSION['error'] = 'Your inventory is currently locked.<br />Please close your in game inventory and try again.';
+  } else {
+    // cancel auction
+    if(AuctionFuncs::CancelAuction(
+      getVar('auctionid','int','post')
+    )){
+      $_SESSION['success'] = 'Auction canceled!';
+      ForwardTo(getLastPage(), 0);
+      exit();
+    }
   }
-  // cancel auction
-  if(AuctionFuncs::CancelAuction(
-    getVar('auctionid','int','post')
-  )){
-    echo '<center><h2>Auction canceled!</h2><br /><a href="'.getLastPage().'">Back to last page</a></center>';
-    ForwardTo(getLastPage(), 2);
-    exit();
-  }
-  echo $config['error']; exit();
 }
 
 
@@ -57,7 +55,7 @@ function RenderPage_myauctions(){global $config,$html;
     $messages .= str_replace('{message}', $_SESSION['success'], $outputs['success']);
     unset($_SESSION['success']);
   }
-  $outputs['body top'] = str_replace('{message}', $messages, $outputs['body top']);
+  $outputs['body top'] = str_replace('{messages}', $messages, $outputs['body top']);
   unset($messages);
   // list auctions
   $auctions = QueryAuctions::QueryMy();

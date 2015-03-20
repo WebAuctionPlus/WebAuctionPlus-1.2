@@ -31,12 +31,12 @@ function doChangePassword(){global $config;
   CSRF::ValidateToken();
   // check passwords match
   if($password !== $confirm) {
-    $_GET['error'] = 'passwords dont match';
+    $_SESSION['error'] = 'Passwords don\'t match. Please try again.';
     return FALSE;
   }
   // check password length
   if(strlen($password) < 6) {
-    $_GET['error'] = 'password to short';
+    $_SESSION['error'] = 'Password is to short, must be at least 6 characters long.';
     return FALSE;
   }
   // update password in database
@@ -64,11 +64,13 @@ function RenderPage_changepass(){global $config,$html;
   $outputs = RenderHTML::LoadHTML('pages/changepass.php');
   if(!is_array($outputs)) {echo 'Failed to load html!'; exit();}  // display error
   $messages = '';
-  if(@$_GET['error'] == 'passwords dont match')
-    $messages .= str_replace('{message}', 'Passwords don\'t match. Please try again.', $outputs['error']);
-  if(@$_GET['error'] == 'password to short')
-    $messages .= str_replace('{message}', 'Password is to short, must be at least 6 characters long.', $outputs['error']);
-  $messages = str_replace('{messages}', $messages, $outputs['body']);
+  if(isset($config['error']))
+    $messages .= str_replace('{message}', $config['error'], $outputs['error']);
+  if(isset($_SESSION['error'])) {
+    $messages .= str_replace('{message}', $_SESSION['error'], $outputs['error']);
+    unset($_SESSION['error']);
+  }
+  $outputs['body'] = str_replace('{messages}', $messages, $outputs['body']);
   unset($messages);
   return($outputs['body']);
 }
