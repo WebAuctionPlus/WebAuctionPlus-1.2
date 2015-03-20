@@ -24,7 +24,7 @@ if($config['user']->isLocked()) {
   // fixed price
   if($config['action']=='Sell Fixed Price') {
     CSRF::ValidateToken();
-    if(AuctionFuncs::Sell(
+    if(AuctionFuncs::SellFixed(
       getVar('id'   ,'int'   ,'post'),
       getVar('qty'  ,'int'   ,'post'),
       getVar('price','double','post'),

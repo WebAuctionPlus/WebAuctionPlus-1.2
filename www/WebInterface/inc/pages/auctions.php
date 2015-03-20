@@ -25,7 +25,7 @@ if($config['action']=='buy') {
     $_SESSION['error'] = 'Your inventory is currently locked.<br />Please close your in game inventory and try again.';
   } else {
     // buy auction
-    if(AuctionFuncs::BuyAuction(
+    if(AuctionFuncs::BuyFixed(
       getVar('auctionid','int','post'),
       getVar('qty',      'int','post')
     )){

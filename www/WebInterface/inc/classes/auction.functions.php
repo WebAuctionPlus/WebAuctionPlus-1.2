@@ -4,7 +4,7 @@ class AuctionFuncs{
 
 
 // create new auction/buynow
-public static function Sell($id, $qty, $price, $desc){global $config, $user;
+public static function SellFixed($id, $qty, $price, $desc){global $config, $user;
   // has canSell permissions
   if(!$user->hasPerms('canSell')) {
     $_SESSION['error'] = 'You don\'t have permission to sell.';
@@ -82,7 +82,7 @@ public static function Sell($id, $qty, $price, $desc){global $config, $user;
 
 
 // buy auction/buynow
-public static function BuyAuction($auctionId, $qty){global $config, $user;
+public static function BuyFixed($auctionId, $qty){global $config, $user;
   // validate args
   $auctionId = (int) $auctionId;
   $qty = (int) $qty;
