@@ -60,5 +60,13 @@ $outputs['body bottom']='
 ';
 
 
+$outputs['error']='
+<h2 style="color: #ff0000; text-align: center;">{message}</h2>
+';
+$outputs['success']='
+<h2 style="color: #00ff00; text-align: center;">{message}</h2>
+';
+
+
 return($outputs);
 ?>
