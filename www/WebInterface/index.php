@@ -19,7 +19,7 @@ function getVar($name,$type='',$order=array('get','post')){$output='';
   // convert type if set
   if(    $type=='str'   || $type=='string' ) return( (string)  $output  );
   elseif($type=='int'   || $type=='integer') return( (integer) $output  );
-  elseif($type=='float' || $type=='double' ) return( (float)   $output  );
+  elseif($type=='float' || $type=='double' ) return( (double)  $output  );
   elseif($type=='bool'  || $type=='boolean') return( toBoolean($output) );
   return($output);
 }

@@ -25,7 +25,7 @@ public static function addLog($logType, $saleType, $sellerId, $buyerId, $Item, $
            ($sellerId == NULL ? 'NULL' : "'".mysql_san($sellerId)."'").", ".
            ($buyerId  == NULL ? 'NULL' : "'".mysql_san($buyerId)."'").", ".
            ((int) $Item->getItemQty()).", ".
-           ((float) $price).", ".
+           ((double) $price).", ".
            ((int) $alert)." )";
   $result = RunQuery($query, __file__, __line__);
   if(!$result || mysql_affected_rows()==0){echo '<p style="color: red;">Error logging sale!</p>'; exit();}

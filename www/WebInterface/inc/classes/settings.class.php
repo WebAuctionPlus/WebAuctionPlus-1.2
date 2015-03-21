@@ -38,7 +38,7 @@ public static function setDefault($name, $default='', $setIfEmpty=TRUE){global $
   if(    $type=='string' ) $config['settings'][$name]['value'] = (string)  $config['settings'][$name]['value'];
   elseif($type=='boolean') $config['settings'][$name]['value'] = toBoolean($config['settings'][$name]['value']);
   elseif($type=='integer') $config['settings'][$name]['value'] = (integer) $config['settings'][$name]['value'];
-  elseif($type=='double' ) $config['settings'][$name]['value'] = (float)   $config['settings'][$name]['value'];
+  elseif($type=='double' ) $config['settings'][$name]['value'] = (double)   $config['settings'][$name]['value'];
   $config['settings'][$name]['changed'] = (boolean)@$config['settings'][$name]['changed'];
 }
 
@@ -67,7 +67,7 @@ public static function getInteger($name){
 public static function getDouble($name){
   $value = self::getSetting($name);
   if($value === NULL) return(NULL);
-  else                return((float)$value);
+  else                return((double)$value);
 }
 
 

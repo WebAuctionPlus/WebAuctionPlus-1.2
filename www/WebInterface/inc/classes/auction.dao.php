@@ -36,12 +36,12 @@ function __construct(
   $this->playerUUID = (string) $playerUUID;
   $this->playerId   = (int)    $playerId;
   $this->Item       = $Item;
-  $this->price      = ($price     < 0.0 ? 0.0 : (float) $price);
-  $this->priceBuy   = ($priceBuy  < 0.0 ? 0.0 : (float) $priceBuy);
-  $this->priceSell  = ($priceSell < 0.0 ? 0.0 : (float) $priceSell);
+  $this->price      = ($price     < 0.0 ? 0.0 : (double) $price);
+  $this->priceBuy   = ($priceBuy  < 0.0 ? 0.0 : (double) $priceBuy);
+  $this->priceSell  = ($priceSell < 0.0 ? 0.0 : (double) $priceSell);
   $this->created    = ($created   < 0   ?  -1 : (int)   $created);
   $this->allowBids  = (boolean)$allowBids;
-  $this->currentBid = ($currentBid < 0.0 ? 0.0 : (float) $currentBid);
+  $this->currentBid = ($currentBid < 0.0 ? 0.0 : (double) $currentBid);
   $this->currentWinner = (string) $currentWinner;
 }
 
@@ -72,32 +72,32 @@ public function getItemCopy(){
 
 // get price
 public function getPrice(){
-  return( (float)$this->price );
+  return( (double)$this->price );
 }
 public function getPriceTotal(){
   if(!$this->Item) return('ERROR');
   $qty = $this->Item->getItemQty();
-  return( ((float)$this->price) * ((float)$qty) );
+  return( ((double)$this->price) * ((double)$qty) );
 }
 
 // get price buy
 public function getPriceBuy(){
-  return( (float)$this->priceBuy );
+  return( (double)$this->priceBuy );
 }
 public function getPriceBuyTotal(){
   if(!$this->Item) return('ERROR');
   $qty = $this->Item->getItemQty();
-  return( ((float)$this->priceBuy) * ((float)$qty) );
+  return( ((double)$this->priceBuy) * ((double)$qty) );
 }
 
 // get price sell
 public function getPriceSell(){
-  return( (float)$this->priceSell );
+  return( (double)$this->priceSell );
 }
 public function getPriceSellTotal(){
   if(!$this->Item) return('ERROR');
   $qty = $this->Item->getItemQty();
-  return( ((float)$this->priceSell) * ((float)$qty) );
+  return( ((double)$this->priceSell) * ((double)$qty) );
 }
 
 // get date created

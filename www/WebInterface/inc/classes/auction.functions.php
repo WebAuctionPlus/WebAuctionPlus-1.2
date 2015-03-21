@@ -59,7 +59,7 @@ public static function SellFixed($id, $qty, $price, $desc){global $config, $user
            ((int)$qty).", ".
            "'".mysql_san($Item->getEnchantmentsCompressed())."', ".
            "'".mysql_san($Item->getItemTitle())."', ".
-           ((float)$price).", NOW() )";
+           ((double)$price).", NOW() )";
   $result = RunQuery($query, __file__, __line__);
   if(!$result) {echo '<p style="color: red;">Error creating auction!</p>'; exit();}
   $auctionId = mysql_insert_id();
@@ -122,7 +122,7 @@ public static function BuyFixed($auctionId, $qty){global $config, $user;
   }
   $maxSellPrice = SettingsClass::getDouble('Max Sell Price');
   $sellPrice = $auction->getPrice();
-  $priceQty = $sellPrice * ((float)$qty);
+  $priceQty = $sellPrice * ((double)$qty);
   if($maxSellPrice > 0.0 && $sellPrice > $maxSellPrice) {
     $_SESSION['error'] = 'Over max sell price of '.
       SettingsClass::getBoolean('Currency Prefix').$maxSellPrice.

@@ -212,8 +212,8 @@ public static function getDamagedChargedStr($itemId=0, $itemDamage=0){
 
 // get percent damaged
 private static function getPercentDamaged($itemDamage, $maxDamage){
-  $a = (float)$itemDamage;
-  $b = (float)$maxDamage;
+  $a = (double)$itemDamage;
+  $b = (double)$maxDamage;
   if($b != 0) {
       $damaged = ($a / $b) * 100.0;
   } else {
@@ -238,8 +238,8 @@ private static function getPercentPaintedStr($itemDamage, $maxDamage){
 
 // get percent charged
 private static function getPercentCharged($itemDamage, $maxDamage){
-  $a = ((float)$maxDamage) - ((float)$itemDamage);
-  $b = ((float)$maxDamage) - 1.0;
+  $a = ((double)$maxDamage) - ((double)$itemDamage);
+  $b = ((double)$maxDamage) - 1.0;
   $charged = ($a / $b) * 100.0;
   if($charged > 0 && (string)round($charged,1) == '0') return( (string) round($charged, 2) );
   else                                                 return( (string) round($charged, 1) );
