@@ -2,9 +2,10 @@ package me.lorenzop.webauctionplus;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -102,16 +103,32 @@ public class Language {
 		this.isOk = true;
 	}
 	private List<String> loadWordsFile(final String lang) {
+		BufferedReader reader = null;
 		// load from plugins folder
 		try {
 			final File wordsFile = new File(
 					this.plugin.getDataFolder()+
 					File.separator+"words.txt"
 			);
-			final List<String> words = Files.readAllLines(wordsFile.toPath());
+			// read file lines
+			final FileInputStream stream = new FileInputStream(wordsFile);
+			reader = new BufferedReader(new InputStreamReader(stream));
+			final List<String> words = new ArrayList<String>();
+			String line = null;
+			while( (line = reader.readLine()) != null )
+				words.add(line);
+			// this works on java 1.8 and newer
+			//final List<String> words = Files.readAllLines(wordsFile.toPath());
 			if(words != null && !words.isEmpty())
 				return words;
-		} catch (Exception ignore) {}
+		} catch (Exception ignore) {
+		} finally {
+			if(reader != null) {
+				try {
+					reader.close();
+				} catch (IOException ignore) {}
+			}
+		}
 		// load from plugins words/ folder
 		try {
 			final File wordsFile = new File(
@@ -119,17 +136,32 @@ public class Language {
 					File.separator+"words"+
 					File.separator+lang+".txt"
 			);
-			final List<String> words = Files.readAllLines(wordsFile.toPath());
+			// read file lines
+			final FileInputStream stream = new FileInputStream(wordsFile);
+			reader = new BufferedReader(new InputStreamReader(stream));
+			final List<String> words = new ArrayList<String>();
+			String line = null;
+			while( (line = reader.readLine()) != null )
+				words.add(line);
+			// this works on java 1.8 and newer
+			//final List<String> words = Files.readAllLines(wordsFile.toPath());
 			if(words != null && !words.isEmpty())
 				return words;
-		} catch (Exception ignore) {}
+		} catch (Exception ignore) {
+		} finally {
+			if(reader != null) {
+				try {
+					reader.close();
+				} catch (IOException ignore) {}
+			}
+		}
 		// load from jar
 		try {
 			final InputStream stream = this.plugin.getClass().getClassLoader().getResourceAsStream(
 					"words/"+lang+".txt"
 			);
 			if(stream != null) {
-				final BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
+				reader = new BufferedReader(new InputStreamReader(stream));
 				final List<String> lines = new ArrayList<String>();
 				while(true) {
 					final String line = reader.readLine();
@@ -140,7 +172,14 @@ public class Language {
 				if(!lines.isEmpty())
 					return lines;
 			}
-		} catch (Exception ignore) {}
+		} catch (Exception ignore) {
+		} finally {
+			if(reader != null) {
+				try {
+					reader.close();
+				} catch (IOException ignore) {}
+			}
+		}
 		WebAuctionPlus.log.severe(WebAuctionPlus.logPrefix+"Failed to load words.txt file from jar!");
 		return null;
 	}

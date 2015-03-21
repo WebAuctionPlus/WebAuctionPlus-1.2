@@ -112,8 +112,8 @@ public class WebAuctionPlus extends JavaPlugin {
 
 
 	public void onEnable() {
-		if(!CheckJavaVersion("1.8"))
-			throw new RuntimeException("This plugin requires java 1.8 or newer!");
+//		if(!CheckJavaVersion("1.7"))
+//			throw new RuntimeException("This plugin requires java 1.7 or newer!");
 		if(isOk) {
 			getServer().getConsoleSender().sendMessage(ChatColor.RED+"********************************************");
 			getServer().getConsoleSender().sendMessage(ChatColor.RED+"*** WebAuctionPlus is already running!!! ***");
