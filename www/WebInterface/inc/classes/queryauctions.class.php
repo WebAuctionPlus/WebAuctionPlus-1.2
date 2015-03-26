@@ -12,11 +12,6 @@ public static function QueryCurrent(){
   if(!$class->result) return(FALSE);
   return($class);
 }
-public static function QueryServerShops(){
-  $class = new QueryAuctions();
-  $class->doQuery('', TRUE);
-  return($class);
-}
 // get my auctions
 public static function QueryMy(){global $user;
   if(!$user->isOk()) {$this->result = FALSE; return(FALSE);}
@@ -33,6 +28,25 @@ public static function QuerySingle($id){global $config;
   if(!$class->result) return(FALSE);
   return($class->getNext());
 }
+
+// query server shops
+public static function QueryShops(){
+  $class = new QueryAuctions();
+  $class->doQuery('', TRUE);
+  return($class);
+}
+// query single shop
+public static function QuerySingleShop($shopId) {global $config;
+  if($shopId < 1) {
+    $this->result = FALSE;
+    return(FALSE);
+  }
+  $class = new QueryAuctions();
+  $class->doQuery( "`id` = ".((int)$shopId), TRUE );
+  if(!$class->result) return(FALSE);
+  return($class->getNext());
+}
+
 // query
 protected function doQuery($WHERE='', $servershops=FALSE){global $config;
   // admin shop
