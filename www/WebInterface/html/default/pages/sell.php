@@ -7,9 +7,9 @@ global $config;
 if($config['action'] == 'fixedprice')
   $StartTabIndex = 0;
 else
-if($config['action'] == 'auction')
-  $StartTabIndex = 1;
-else
+//if($config['action'] == 'auction')
+//  $StartTabIndex = 1;
+//else
 if($config['action'] == 'servershop')
   $StartTabIndex = 2;
 else
@@ -60,11 +60,11 @@ function SelectSellType(selected) {
       document.getElementById(\'FixedTypePriceEach\').style.display  = (isselected ? \'\' : \'none\');
       document.getElementById(\'FixedTypePriceTotal\').style.display = (isselected ? \'\' : \'none\');
     }
-    if(name == \'TypeAuction\') {
-      if(isselected)
-        document.getElementById(\'selltype\').setAttribute(\'value\', \'auction\');
-      document.getElementById(\'AuctionTypePriceStart\').style.display = (isselected ? \'\' : \'none\');
-    }
+//    if(name == \'TypeAuction\') {
+//      if(isselected)
+//        document.getElementById(\'selltype\').setAttribute(\'value\', \'auction\');
+//      document.getElementById(\'AuctionTypePriceStart\').style.display = (isselected ? \'\' : \'none\');
+//    }
 {if permission[isAdmin]}
     if(name == \'TypeServer\') {
       if(isselected)
@@ -116,7 +116,7 @@ $outputs['body']='
 <tr><td><table border="0" cellpadding="0" cellspacing="0" id="CreateSellTypeTable">
 <tr>
   <td class="SellTypeTab" id="TypeFixed"><a href="#" onClick="javascript: SelectSellType(this); return false;">Fixed Price</a></td>
-  <td class="SellTypeTab" id="TypeAuction"><a href="#" onClick="javascript: SelectSellType(this); return false;">Auction</a></td>
+<!--  <td class="SellTypeTab" id="TypeAuction"><a href="#" onClick="javascript: SelectSellType(this); return false;">Auction</a></td> -->
 {if permission[isAdmin]}
   <td class="SellTypeTab" id="TypeServer"><a href="#" onClick="javascript: SelectSellType(this); return false;">Server Shop</a></td>
 {endif}
@@ -126,7 +126,7 @@ $outputs['body']='
 <tr><td align="center">{messages}</td></tr>
 
 <tr><td align="center" style="display: none;" id="TypeFixedTitle"><h2>Sell Fixed Price</h2></td></tr>
-<tr><td align="center" style="display: none;" id="TypeAuctionTitle"><h2>Create a New Auction</h2></td></tr>
+<!-- <tr><td align="center" style="display: none;" id="TypeAuctionTitle"><h2>Create a New Auction</h2></td></tr> -->
 {if permission[isAdmin]}
 <tr><td align="center" style="display: none;" id="TypeServerTitle"><h2>Create Server Shop</h2></td></tr>
 {endif}
@@ -162,6 +162,7 @@ $outputs['body']='
 </tr>
 
 <!-- auction price -->
+<!--
 <tr style="display: none;" id="AuctionTypePriceStart">
   <td align="right"><b>Start Price:</b></td>
   <td><div style="position: absolute; margin-top: 8px; margin-left: 8px; font-size: larger; font-weight: bold;">{currency prefix}</div>'.
@@ -169,6 +170,7 @@ $outputs['body']='
     'onkeypress="return numbersonly(this, event);" />'.
     '<b>&nbsp;{currency postfix}</b></td>
 </tr>
+-->
 
 {if permission[isAdmin]}
 <!-- server shop price -->
@@ -193,7 +195,7 @@ $outputs['body']='
 
 <tr><td colspan="2" align="center">
   <input type="submit" value="Sell Fixed Price"   class="input" id="TypeFixedSubmit"   style="display: none;" />
-  <input type="submit" value="Start Auction"      class="input" id="TypeAuctionSubmit" style="display: none;" />
+<!--  <input type="submit" value="Start Auction"      class="input" id="TypeAuctionSubmit" style="display: none;" /> -->
 {if permission[isAdmin]}
   <input type="submit" value="Create Server Shop" class="input" id="TypeServerSubmit"  style="display: none;" />
 {endif}
