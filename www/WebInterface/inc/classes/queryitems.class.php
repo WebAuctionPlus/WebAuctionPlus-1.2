@@ -6,10 +6,17 @@ protected $result_price = FALSE;
 
 
 // query inventory item stacks
-public static function QueryInventory($playerId){
+public static function QueryInventory($playerId, $Item=NULL){
   if(empty($playerId)) {$this->result = FALSE; return(FALSE);}
   $class = new QueryItems();
-  $class->doQuery("`playerId` = '".mysql_san($playerId)."'");
+  $where = "`playerId` = ".((int)$playerId);
+  // specific item type
+  if($Item != NULL && $Item != FALSE) {
+    $where .= " AND `itemId` = ".((int)$Item->getItemId()).
+              " AND `itemDamage` = ".((int)$Item->getItemDamage()).
+              " AND `enchantments` = '".mysql_san($Item->getEnchantmentsCompressed())."'";
+  }
+  $class->doQuery($where);
   if(!$class->result) return(FALSE);
   return($class);
 }
