@@ -22,9 +22,12 @@ public static function QueryMy(){global $user;
 }
 // query single auction
 public static function QuerySingle($id){global $config;
-  if($id < 1) {$this->result = FALSE; return(FALSE);}
+  if($id < 1) {
+    $this->result = FALSE;
+    return(FALSE);
+  }
   $class = new QueryAuctions();
-  $class->doQuery( "".$config['table prefix']."Auctions.id = ".((int)$id) );
+  $class->doQuery( "`".$config['table prefix']."Auctions`.`id` = ".((int)$id) );
   if(!$class->result) return(FALSE);
   return($class->getNext());
 }
@@ -81,14 +84,14 @@ protected function doQuery($WHERE='', $servershops=FALSE){global $config;
   // ajax sorting
   $query_order = '';
   if(isset($_GET['iSortCol_0'])){
-  	$order_cols = array(
-  	  0 => "`itemTitle`",
-  	  1 => "`playerName`",
-  	  2 => "`price`",
-  	  3 => "(`price` * `qty`)",
-  	  4 => "1", // market
-  	  5 => "`qty`",
-  	);
+    $order_cols = array(
+      0 => "`itemTitle`",
+      1 => "`playerName`",
+      2 => "`price`",
+      3 => "(`price` * `qty`)",
+      4 => "1", // market
+      5 => "`qty`",
+    );
     $iSortingCols = getVar('iSortingCols', 'int');
     for($i = 0; $i < $iSortingCols; $i++){
       $iSortCol = getVar('iSortCol_'.$i, 'int');

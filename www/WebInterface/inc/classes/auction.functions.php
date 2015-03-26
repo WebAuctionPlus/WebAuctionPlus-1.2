@@ -165,7 +165,8 @@ public static function BuyFixed($auctionId, $qty){global $config, $user;
     $sellPrice,
     FALSE,
     '',
-    TRUE);
+    TRUE
+  );
   return(TRUE);
 }
 

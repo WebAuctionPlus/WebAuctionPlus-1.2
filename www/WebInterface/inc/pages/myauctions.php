@@ -12,8 +12,8 @@ if(!$config['user']->isOk()) {
 
 // need to change temp pass
 if($config['user']->isTempPass()) {
-	ForwardTo('./?page=changepass', 0);
-	exit();
+  ForwardTo('./?page=changepass', 0);
+  exit();
 }
 
 
@@ -182,7 +182,7 @@ function RenderPage_myauctions(){global $config,$html;
 //"aaSorting": [[ 0, "desc" ]],
 //"fnDrawCallback": function() {
 //  //bind the click handler script to the newly created elements held in the table
-//	$('.flagsmileysad').bind('click',auctioncancelclick);
+//  $('.flagsmileysad').bind('click',auctioncancelclick);
 //}
 //});
 

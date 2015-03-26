@@ -9,8 +9,8 @@ public static function LoadSettings(){global $config, $db;
   if(!$result) {echo '<p>Failed to load settings from the database! The plugin may not have been loaded for the first time yet.</p>'; exit();}
   if(mysql_num_rows($result) == 0) return;
   while(TRUE) {
-  	$row = mysql_fetch_assoc($result);
-  	if(!$row) break;
+    $row = mysql_fetch_assoc($result);
+    if(!$row) break;
     $config['settings'][$row['name']] = array(
       'value'   => $row['value'],
       'changed' => FALSE,

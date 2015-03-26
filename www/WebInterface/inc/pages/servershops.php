@@ -5,8 +5,8 @@
 global $config;
 // render ajax
 if(getVar('ajax', 'boolean')){
-	RenderPage_servershops_ajax();
-	exit();
+  RenderPage_servershops_ajax();
+  exit();
 }
 
 

@@ -53,8 +53,8 @@ function RenderPage_myitems(){global $config,$html;
   if($Items == FALSE) {echo 'Unable to query items!'; exit();}
   $outputRows = '';
   while(TRUE) {
-  	$Item = $Items->getNext();
-  	if(!$Item) break;
+    $Item = $Items->getNext();
+    if(!$Item) break;
     $tags = array(
       'item display'       => $Item->getDisplay(),
       'item row id'        => $Item->getTableRowId(),

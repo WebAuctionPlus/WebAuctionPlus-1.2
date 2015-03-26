@@ -74,8 +74,8 @@ function RenderPage_auctions_ajax(){global $config,$html;
     while(TRUE){
       $auction = $auctions->getNext();
       if(!$auction) break;
-    	$Item = $auction->getItem();
-  	  if(!$Item) continue;
+        $Item = $auction->getItem();
+      if(!$Item) continue;
       if($count != 0) $outputRows .= "\t},\n\t{\n";
       $count++;
       $data = array(
@@ -128,7 +128,7 @@ function RenderPage_auctions_ajax(){global $config,$html;
 //gradeC
 //gradeX
 //gradeU
-      $outputRows .= "\t\t".'"DT_RowClass":"'.$rowClass.'",'	."\n";
+      $outputRows .= "\t\t".'"DT_RowClass":"'.$rowClass.'",'."\n";
       $i = -1;
       foreach($data as $v){$i++;
         if($i != 0) $outputRows .= ",\n";
@@ -180,15 +180,15 @@ function RenderPage_auctions(){global $config,$html;
 //  $auctions = QueryAuctions::QueryCurrent();
 //  $outputRows = '';
 //  while($auction = $auctions->getNext()){
-//  	$Item = $auction->getItem();
-//  	if(!$Item) continue;
+//    $Item = $auction->getItem();
+//    if(!$Item) continue;
 //    $tags = array(
 //      'auction id'  => (int)$auction->getTableRowId(),
 //      'seller name' => $auction->getSeller(),
 //      'item'        => $Item->getDisplay(),
 //      'qty'         => (int)$Item->getItemQty(),
-//      'price each'	=> FormatPrice($auction->getPrice()),
-//      'price total'	=> FormatPrice($auction->getPriceTotal()),
+//      'price each'  => FormatPrice($auction->getPrice()),
+//      'price total' => FormatPrice($auction->getPriceTotal()),
 //      'created'     => $auction->getCreated(),
 //      'expire'      => $auction->getExpire(),
 //      'market price percent' => '--',
