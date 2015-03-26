@@ -123,14 +123,14 @@ public static function BuyFixed($auctionId, $qty){global $config, $user;
   }
   $maxSellPrice = SettingsClass::getDouble('Max Sell Price');
   $sellPrice = $auction->getPrice();
-  $priceQty = $sellPrice * ((double)$qty);
+  $priceTotal = $sellPrice * ((double)$qty);
   if($maxSellPrice > 0.0 && $sellPrice > $maxSellPrice) {
     $_SESSION['error'][] = 'Over max sell price of '.
       SettingsClass::getBoolean('Currency Prefix').$maxSellPrice.
       SettingsClass::getBoolean('Currency Prefix').' !';
     return(FALSE);
   }
-  if($priceQty > $user->getMoney()) {
+  if($priceTotal > $user->getMoney()) {
     $_SESSION['error'][] = 'You don\'t have enough money!';
     return(FALSE);
   }
@@ -140,7 +140,7 @@ public static function BuyFixed($auctionId, $qty){global $config, $user;
     $user->getUUID(),
     $auction->getSeller(),
     $auction->getSellerUUID(),
-    $priceQty,
+    $priceTotal,
     'Bought auction '.((int)$auction->getTableRowId()).' '.$Item->getItemTitle().' x'.((int)$Item->getItemQty())
   );
   // remove auction
