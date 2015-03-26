@@ -71,7 +71,7 @@ function RenderPage_myauctions(){global $config,$html;
       'price each'  => FormatPrice($auction->getPrice()),
       'price total' => FormatPrice($auction->getPriceTotal()),
       'created'     => $auction->getCreated(),
-      'expire'      => $auction->getExpire(),
+//      'expire'      => $auction->getExpire(),
       'market price percent' => FormatPorzent(CalcPorzent($auction->getPrice(), $Item->getMarketPrice())),
       'rowclass'    => 'gradeU',
 //TODO:

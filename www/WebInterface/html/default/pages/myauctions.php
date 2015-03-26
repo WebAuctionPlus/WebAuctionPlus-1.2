@@ -34,7 +34,7 @@ $outputs['body top']='
   <thead>
     <tr style="text-align: center; vertical-align: bottom;">
       <th>Item</th>
-      <th>Expires</th>
+<!--      <th>Expires</th> -->
       <th>Qty</th>
       <th>Price (Each)</th>
       <th>Price (Total)</th>
@@ -49,7 +49,7 @@ $outputs['body top']='
 $outputs['body row']='
     <tr class="{rowclass}" style="height: 120px;">
       <td style="padding-bottom: 10px; text-align: center;">{item}</td>
-      <td style="text-align: center;">{expire}</td>
+<!--      <td style="text-align: center;">{expire}</td> -->
       <td style="text-align: center;"><b>{qty}</b></td>
       <td style="text-align: center;">{price each}</td>
       <td style="text-align: center;">{price total}</td>
