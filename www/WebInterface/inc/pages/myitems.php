@@ -27,13 +27,23 @@ function RenderPage_myitems(){global $config,$html;
   $html->addToHeader($outputs['header']);
   // display error
   $messages = '';
-  if(isset($_SESSION['error'])){
-    $messages .= str_replace('{message}', $_SESSION['error'], $outputs['error']);
+  if(isset($_SESSION['error'])) {
+    if(is_array($_SESSION['error'])) {
+      foreach($_SESSION['error'] as $msg)
+        $messages .= str_replace('{message}', $msg, $outputs['error']);
+    } else {
+      $messages .= str_replace('{message}', $_SESSION['error'], $outputs['error']);
+    }
     unset($_SESSION['error']);
   }
   // display success
-  if(isset($_SESSION['success'])){
-    $messages .= str_replace('{message}', $_SESSION['success'], $outputs['success']);
+  if(isset($_SESSION['success'])) {
+    if(is_array($_SESSION['success'])) {
+      foreach($_SESSION['success'] as $msg)
+        $messages .= str_replace('{message}', $msg, $outputs['success']);
+    } else {
+      $messages .= str_replace('{message}', $_SESSION['success'], $outputs['success']);
+    }
     unset($_SESSION['success']);
   }
   $outputs['body top'] = str_replace('{messages}', $messages, $outputs['body top']);

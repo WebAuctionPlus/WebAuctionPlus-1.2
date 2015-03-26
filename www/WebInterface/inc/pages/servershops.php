@@ -22,14 +22,13 @@ if(strtolower($config['action']) == 'buy') {
   CSRF::ValidateToken();
   // inventory is locked
   if($config['user']->isLocked()) {
-    $_SESSION['error'] = 'Your inventory is currently locked.<br />Please close your in game inventory and try again.';
+    $_SESSION['error'][] = 'Your inventory is currently locked.<br />Please close your in game inventory and try again.';
   } else {
     // buy from server shop
     if(AuctionFuncs::BuyServerShop(
       getVar('shopid', 'int', 'post'),
       getVar('qty',    'int', 'post')
     )){
-      $_SESSION['success'] = 'Item purchased successfully!';
       ForwardTo(getLastPage(), 0);
       exit();
     }
@@ -40,14 +39,13 @@ if(strtolower($config['action']) == 'sell') {
   CSRF::ValidateToken();
   // inventory is locked
   if($config['user']->isLocked()) {
-    $_SESSION['error'] = 'Your inventory is currently locked.<br />Please close your in game inventory and try again.';
+    $_SESSION['error'][] = 'Your inventory is currently locked.<br />Please close your in game inventory and try again.';
   } else {
     // sell to server shop
     if(AuctionFuncs::SellServerShop(
       getVar('shopid', 'int', 'post'),
       getVar('qty',    'int', 'post')
     )){
-      $_SESSION['success'] = 'Item sold successfully!';
       ForwardTo(getLastPage(), 0);
       exit();
     }
@@ -57,13 +55,13 @@ if($config['action']=='cancel'){
   CSRF::ValidateToken();
   // inventory is locked
   if($config['user']->isLocked()){
-    $_SESSION['error'] = 'Your inventory is currently locked.<br />Please close your in game inventory and try again.';
+    $_SESSION['error'][] = 'Your inventory is currently locked.<br />Please close your in game inventory and try again.';
   } else {
     // cancel server shop
     if(AuctionFuncs::CancelServerShop(
       getVar('shopid', 'int', 'post')
     )){
-      $_SESSION['success'] = 'Server Shop canceled!';
+      $_SESSION['success'][] = 'Server Shop canceled!';
       ForwardTo(getLastPage(), 0);
       exit();
     }
@@ -168,12 +166,22 @@ function RenderPage_servershops(){global $config,$html;
   // display error
   $messages = '';
   if(isset($_SESSION['error'])) {
-    $messages .= str_replace('{message}', $_SESSION['error'], $outputs['error']);
+    if(is_array($_SESSION['error'])) {
+      foreach($_SESSION['error'] as $msg)
+        $messages .= str_replace('{message}', $msg, $outputs['error']);
+    } else {
+      $messages .= str_replace('{message}', $_SESSION['error'], $outputs['error']);
+    }
     unset($_SESSION['error']);
   }
   // display success
   if(isset($_SESSION['success'])) {
-    $messages .= str_replace('{message}', $_SESSION['success'], $outputs['success']);
+    if(is_array($_SESSION['success'])) {
+      foreach($_SESSION['success'] as $msg)
+        $messages .= str_replace('{message}', $msg, $outputs['success']);
+    } else {
+      $messages .= str_replace('{message}', $_SESSION['success'], $outputs['success']);
+    }
     unset($_SESSION['success']);
   }
   $outputs['body top'] = str_replace('{messages}', $messages, $outputs['body top']);

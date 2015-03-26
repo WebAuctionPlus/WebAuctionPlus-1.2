@@ -19,7 +19,7 @@ if($config['user']->isTempPass()) {
 
 // locked inventory
 if($config['user']->isLocked()) {
-  $_SESSION['error'] = 'Your inventory is currently locked.<br />Please close your in game inventory and try again.';
+  $_SESSION['error'][] = 'Your inventory is currently locked.<br />Please close your in game inventory and try again.';
 } else {
   // fixed price
   if($config['action']=='Sell Fixed Price') {
@@ -30,7 +30,7 @@ if($config['user']->isLocked()) {
       getVar('price','double','post'),
       getVar('desc' ,'string','post')
     )){
-      $_SESSION['success'] = 'Auction created successfully!';
+      $_SESSION['success'][] = 'Auction created successfully!';
       ForwardTo(getLastPage(), 0);
       exit();
     }
@@ -191,7 +191,12 @@ function RenderPage_sell(){global $config,$html,$user;
   unset($Item);
   // input errors
   if(isset($_SESSION['error'])) {
-    $messages .= str_replace('{message}', $_SESSION['error'], $outputs['error']);
+    if(is_array($_SESSION['error'])) {
+      foreach($_SESSION['error'] as $msg)
+        $messages .= str_replace('{message}', $msg, $outputs['error']);
+    } else {
+      $messages .= str_replace('{message}', $_SESSION['error'], $outputs['error']);
+    }
     unset($_SESSION['error']);
   }
   if(!$user->hasPerms('canSell'))

@@ -7,23 +7,23 @@ class AuctionFuncs{
 public static function SellFixed($id, $qty, $price, $desc){global $config, $user;
   // has canSell permissions
   if(!$user->hasPerms('canSell')) {
-    $_SESSION['error'] = 'You don\'t have permission to sell.';
+    $_SESSION['error'][] = 'You don\'t have permission to sell.';
     return(FALSE);
   }
   // sanitize args
   $id  = (int) $id;
   if($id < 1) {
-    $_SESSION['error'] = 'Invalid item id!';
+    $_SESSION['error'][] = 'Invalid item id!';
     return(FALSE);
   }
   $qty = floor((int)$qty);
   $price = floor($price * 100.0) / 100.0;
   if($qty <= 0) {
-    $_SESSION['error'] = 'Invalid qty!';
+    $_SESSION['error'][] = 'Invalid qty!';
     return(FALSE);
   }
   if($price <= 0.0) {
-    $_SESSION['error'] = 'Invalid price!';
+    $_SESSION['error'][] = 'Invalid price!';
     return(FALSE);
   }
   if(!empty($desc)){
@@ -31,22 +31,23 @@ public static function SellFixed($id, $qty, $price, $desc){global $config, $user
     $desc = preg_replace('/\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|$!:,.;]*[A-Z0-9+&@#\/%=~_|$]/i', '', strip_tags($desc) );
   }
 //  if (!itemAllowed($item->name, $item->damage)){
-//    $_SESSION['error'] = $item->fullname.' is not allowed to be sold.';
+//    $_SESSION['error'][] = $item->fullname.' is not allowed to be sold.';
 //    header("Location: ../myauctions.php");
 //  }
   $maxSellPrice = SettingsClass::getDouble('Max Sell Price');
   if($maxSellPrice > 0.0 && $price > $maxSellPrice) {
-    $_SESSION['error'] = 'Over max sell price of '.SettingsClass::getBoolean('Currency Prefix').$maxSellPrice.SettingsClass::getBoolean('Currency Postfix').' !';
+    $_SESSION['error'][] = 'Over max sell price of '.SettingsClass::getString('Currency Prefix').
+                         $maxSellPrice.SettingsClass::getString('Currency Postfix').' !';
     return(FALSE);
   }
   // query item
   $Item = QueryItems::QuerySingle($user->getId(), $id);
   if(!$Item) {
-    $_SESSION['error'] = 'Item not found!';
+    $_SESSION['error'][] = 'Item not found!';
     return(FALSE);
   }
   if($qty > $Item->getItemQty()) {
-    $_SESSION['error'] = 'You don\'t have that many!';
+    $_SESSION['error'][] = 'You don\'t have that many!';
     return(FALSE);
   }
   // create auction  
@@ -87,50 +88,50 @@ public static function BuyFixed($auctionId, $qty){global $config, $user;
   $auctionId = (int) $auctionId;
   $qty = (int) $qty;
   if($auctionId < 1) {
-    $_SESSION['error'] = 'Invalid auction id!';
+    $_SESSION['error'][] = 'Invalid auction id!';
     return(FALSE);
   }
   if($qty < 1) {
-    $_SESSION['error'] = 'Invalid qty!';
+    $_SESSION['error'][] = 'Invalid qty!';
     return(FALSE);
   }
   // has canBuy permissions
   if(!$user->hasPerms('canBuy')) {
-    $_SESSION['error'] = 'You don\'t have permission to buy.';
+    $_SESSION['error'][] = 'You don\'t have permission to buy.';
     return(FALSE);
   }
   // query auction
   $auction = QueryAuctions::QuerySingle($auctionId);
   if(!$auction) {
-    $_SESSION['error'] = 'Auction not found!';
+    $_SESSION['error'][] = 'Auction not found!';
     return(FALSE);
   }
   $Item = $auction->getItemCopy();
 //  // is item allowed
 //  if (!itemAllowed($item->name, $item->damage)){
-//    $_SESSION['error'] = $item->fullname.' is not allowed to be sold.';
+//    $_SESSION['error'][] = $item->fullname.' is not allowed to be sold.';
 //    header("Location: ../myauctions.php");
 //  }
   // buying validation
   if($auction->getSellerId() == $user->getId()) {
-    $_SESSION['error'] = 'Can\'t buy from yourself!';
+    $_SESSION['error'][] = 'Can\'t buy from yourself!';
     return(FALSE);
   }
-  if($qty > $auction->getItem()->getItemQty()) {
-    $_SESSION['error'] = 'Not that many for sale!';
+  if($qty > $Item->getItemQty()) {
+    $_SESSION['error'][] = 'Not that many for sale!';
     return(FALSE);
   }
   $maxSellPrice = SettingsClass::getDouble('Max Sell Price');
   $sellPrice = $auction->getPrice();
   $priceQty = $sellPrice * ((double)$qty);
   if($maxSellPrice > 0.0 && $sellPrice > $maxSellPrice) {
-    $_SESSION['error'] = 'Over max sell price of '.
+    $_SESSION['error'][] = 'Over max sell price of '.
       SettingsClass::getBoolean('Currency Prefix').$maxSellPrice.
       SettingsClass::getBoolean('Currency Prefix').' !';
     return(FALSE);
   }
   if($priceQty > $user->getMoney()) {
-    $_SESSION['error'] = 'You don\'t have enough money!';
+    $_SESSION['error'][] = 'You don\'t have enough money!';
     return(FALSE);
   }
   // make payment from buyer to seller
@@ -174,18 +175,18 @@ public static function CancelAuction($auctionId){global $config, $user;
   // validate args
   $auctionId = floor((int)$auctionId);
   if($auctionId < 1) {
-    $_SESSION['error'] = 'Invalid auction id!';
+    $_SESSION['error'][] = 'Invalid auction id!';
     return(FALSE);
   }
   // query auction
   $auction = QueryAuctions::QuerySingle($auctionId);
   if(!$auction) {
-    $_SESSION['error'] = 'Auction not found!';
+    $_SESSION['error'][] = 'Auction not found!';
     return(FALSE);
   }
   // isAdmin or owns auction
   if( !$user->hasPerms('isAdmin') && $auction->getSellerId() != $user->getId() ) {
-    $_SESSION['error'] = 'You don\'t own that auction!';
+    $_SESSION['error'][] = 'You don\'t own that auction!';
     return(FALSE);
   }
   // remove auction
@@ -210,7 +211,7 @@ public static function CancelAuction($auctionId){global $config, $user;
 // update qty / remove auction/buynow
 protected static function RemoveAuction($auctionId, $qty=-1) {global $config;
   if($auctionId < 1) {
-    $_SESSION['error'] = 'Invalid auction id!';
+    $_SESSION['error'][] = 'Invalid auction id!';
     return(FALSE);
   }
   // remove auction
