@@ -10,6 +10,7 @@ require($lpaths['classes'].'item.dao.php');
 require($lpaths['classes'].'auction.dao.php');
 require($lpaths['classes'].'item.functions.php');
 require($lpaths['classes'].'auction.functions.php');
+require($lpaths['classes'].'servershop.functions.php');
 require($lpaths['classes'].'queryitems.class.php');
 require($lpaths['classes'].'queryauctions.class.php');
 require($lpaths['classes'].'logSales.class.php');

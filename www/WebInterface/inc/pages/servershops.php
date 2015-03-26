@@ -25,7 +25,7 @@ if(strtolower($config['action']) == 'buy') {
     $_SESSION['error'][] = 'Your inventory is currently locked.<br />Please close your in game inventory and try again.';
   } else {
     // buy from server shop
-    if(AuctionFuncs::BuyServerShop(
+    if(ServerShopFuncs::BuyShop(
       getVar('shopid', 'int', 'post'),
       getVar('qty',    'int', 'post')
     )){
@@ -42,7 +42,7 @@ if(strtolower($config['action']) == 'sell') {
     $_SESSION['error'][] = 'Your inventory is currently locked.<br />Please close your in game inventory and try again.';
   } else {
     // sell to server shop
-    if(AuctionFuncs::SellServerShop(
+    if(ServerShopFuncs::SellShop(
       getVar('shopid', 'int', 'post'),
       getVar('qty',    'int', 'post')
     )){
@@ -58,7 +58,7 @@ if($config['action']=='cancel'){
     $_SESSION['error'][] = 'Your inventory is currently locked.<br />Please close your in game inventory and try again.';
   } else {
     // cancel server shop
-    if(AuctionFuncs::CancelServerShop(
+    if(ServerShopFuncs::CancelShop(
       getVar('shopid', 'int', 'post')
     )){
       $_SESSION['success'][] = 'Server Shop canceled!';
@@ -74,7 +74,7 @@ function RenderPage_servershops_ajax(){global $config,$html;
   //file_put_contents('ajax_get.txt',print_r($_GET,TRUE));
   header('Content-Type: text/plain');
   // list server shops
-  $shops = QueryAuctions::QueryServerShops();
+  $shops = QueryAuctions::QueryShops();
   $TotalDisplaying = QueryAuctions::TotalDisplaying();
   $TotalAllRows    = QueryAuctions::TotalAllRows();
   $outputRows = "{\n".
@@ -94,10 +94,15 @@ function RenderPage_servershops_ajax(){global $config,$html;
       if(!$Item) continue;
       if($count != 0) $outputRows .= "\t},\n\t{\n";
       $count++;
+      $qty = $Item->getItemQty();
+      if($qty == 0) $qty = 'Unlimited';
+      $buyAvailable  = ($shop->getPriceBuy()  > 0.0);
+      $sellAvailable = ($shop->getPriceSell() > 0.0);
       $data = array(
         'item'        => $Item->getDisplay(),
-        'buy price'   => FormatPrice($shop->getPriceBuy()),
-        'sell price'  => FormatPrice($shop->getPriceSell()),
+        'buy price'   => ( $buyAvailable  ? FormatPrice($shop->getPriceBuy())  : '---' ),
+        'sell price'  => ( $sellAvailable ? FormatPrice($shop->getPriceSell()) : '---' ),
+        'qty'         => $qty,
         'buy/sell'    => '',
       );
       // buy/sell button
@@ -107,14 +112,10 @@ function RenderPage_servershops_ajax(){global $config,$html;
 '.CSRF::getTokenForm().'
 <input type="hidden" name="page"      value="'.$config['page'].'" />
 <input type="hidden" name="shopid" value="'.((int)$shop->getTableRowId()).'" />
-<input type="text" name="qty" value="64" onkeypress="return numbersonly(this, event);" '.
-'class="input" style="width: 60px; margin-bottom: 5px; text-align: center;" /><br />
-'.($config['user']->hasPerms('canBuy') ? '
-<input type="submit" name="action" value="Buy"  class="button" />
-':'').
-($config['user']->hasPerms('canSell') ? '
-<input type="submit" name="action" value="Sell" class="button" />
-':'').'
+<input type="text" name="qty" value="'.($qty < 64 && $qty!= 0 ? (int)$qty : 1).'" onkeypress="return numbersonly(this, event);" '.
+'class="input" style="width: 60px; margin-bottom: 5px; text-align: center;" /><br />'."\n".
+($config['user']->hasPerms('canBuy')  && $buyAvailable  ? '<input type="submit" name="action" value="Buy"  class="button" />'."\n" : '').
+($config['user']->hasPerms('canSell') && $sellAvailable ? '<input type="submit" name="action" value="Sell" class="button" />'."\n" : '').'
 </form>
 ';
       }

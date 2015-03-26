@@ -14,7 +14,7 @@ const SALE_SERVER  = 'server';
 public static function addLog($logType, $saleType, $sellerId, $buyerId, $Item, $price, $allowBids, $currentWinner, $alert=0){global $config;
   $query = "INSERT INTO `".$config['table prefix']."LogSales` ( ".
            "`logType`, `saleType`, `timestamp`, `itemType`, `itemId`, `itemDamage`, `itemTitle`, `enchantments`, `sellerId`, `buyerId`, `qty`, `price`, `alert` ) VALUES ( ".
-           (($logType  == self::LOG_NEW     || $logType  == self::LOG_SALE || $logType == self::LOG_CANCEL) ? "'".mysql_san($logType )."'" : 'NULL' ).", ".
+           (($logType  == self::LOG_NEW     || $logType  == self::LOG_SALE     || $logType == self::LOG_CANCEL)   ? "'".mysql_san($logType )."'" : 'NULL' ).", ".
            (($saleType == self::SALE_BUYNOW || $saleType == self::SALE_AUCTION || $saleType == self::SALE_SERVER) ? "'".mysql_san($saleType)."'" : 'NULL' ).", ".
            "NOW(), ".
            "'".mysql_san($Item->getItemType())."', ".

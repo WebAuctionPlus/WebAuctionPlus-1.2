@@ -35,6 +35,7 @@ $outputs['body top']='
       <th>Item</th>
       <th>Buy Price</th>
       <th>Sell Price</th>
+      <th>Qty</th>
       <th>Buy / Sell</th>
 {if permission[isAdmin]}
       <th>Cancel</th>
@@ -42,15 +43,6 @@ $outputs['body top']='
     </tr>
   </thead>
   <tbody>
-';
-
-
-$outputs['body row']='
-    <tr class="{rowclass}" style="height: 120px;">
-      <td style="padding-bottom: 10px; text-align: center;">{item display}</td>
-      <td style="text-align: center;"><b>{item qty}</b></td>
-      <td style="text-align: center;"><a href="./?page=sell&amp;id={item row id}&amp;lastpage=page-myitems" class="button">Sell it</a></td>
-    </tr>
 ';
 
 
