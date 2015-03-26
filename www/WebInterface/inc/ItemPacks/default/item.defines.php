@@ -203,7 +203,7 @@ ItemFuncs::$Items=array(
         ''=>''),
       'emc'=>1,
       'icon'=>'Coarse_Dirt.png'),
-	2 =>array(
+    2 =>array(
       'name'=>array(
         'en'=>'Podzol',
         ''=>'',
@@ -218,7 +218,7 @@ ItemFuncs::$Items=array(
         ''=>'',
         ''=>''),
       'icon'=>'Dirt.png'),
-	), 
+    ), 
   4=>array(
     'name'=>array(
       'en'=>'Cobblestone',
@@ -880,7 +880,7 @@ ItemFuncs::$Items=array(
         ''=>'',
         ''=>''),
       'icon'=>'Flower_Poppy.png'),
-	),
+    ),
   39=>array(
     'name'=>array(
       'en'=>'Brown Mushroom',
@@ -2714,7 +2714,7 @@ ItemFuncs::$Items=array(
         ''=>'',
         ''=>''),
       'icon'=>'Grass_Tall.png'),
-	),
+    ),
 179=>array(
     0 =>array(
       'name'=>array(
@@ -3885,7 +3885,7 @@ ItemFuncs::$Items=array(
         ''=>'',
         ''=>''),
       'icon'=>'Fish_Raw.png'),
-	),
+    ),
   350=>array(
     0 =>array(
       'name'=>array(
@@ -3907,7 +3907,7 @@ ItemFuncs::$Items=array(
         ''=>'',
         ''=>''),
       'icon'=>'Fish_Cooked.png'),
-	),
+    ),
   351=>array(
     0 =>array(
       'name'=>array(
