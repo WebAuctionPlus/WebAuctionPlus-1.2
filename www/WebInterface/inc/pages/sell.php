@@ -21,13 +21,14 @@ if($config['user']->isTempPass()) {
 if($config['user']->isLocked()) {
   $_SESSION['error'][] = 'Your inventory is currently locked.<br />Please close your in game inventory and try again.';
 } else {
+
   // fixed price
-  if($config['action']=='Sell Fixed Price') {
+  if($config['action']=='fixedprice') {
     CSRF::ValidateToken();
     if(AuctionFuncs::SellFixed(
       getVar('id'   ,'int'   ,'post'),
       getVar('qty'  ,'int'   ,'post'),
-      getVar('price','double','post'),
+      getVar('priceFixed','double','post'),
       getVar('desc' ,'string','post')
     )){
       $_SESSION['success'][] = 'Auction created successfully!';
@@ -35,14 +36,29 @@ if($config['user']->isLocked()) {
       exit();
     }
   } else
+
   // auction
-  if($config['action']=='Create Auction') {
+  if($config['action']=='auction') {
     //TODO:
+    echo 'Sorry, this feature isn\'t ready yet';
+    exit();
   } else
+
   // server shop
-  if($config['action']=='Server Shop') {
-    //TODO:
+  if($config['action']=='servershop') {
+    CSRF::ValidateToken();
+    if(ServerShopFuncs::CreateShop(
+      getVar('id'   ,'int'   ,'post'),
+      getVar('qty'  ,'int'   ,'post'),
+      getVar('priceBuy',  'double', 'post'),
+      getVar('priceSell', 'double', 'post')
+    )){
+      $_SESSION['success'][] = 'Server Shop created successfully!';
+      ForwardTo(getLastPage(), 0);
+      exit();
+    }
   }
+
 }
 
 
@@ -169,14 +185,16 @@ function RenderPage_sell(){global $config,$html,$user;
   if(!$Item) {
     return('<h2 style="text-align: center;">The item you\'re trying to sell couldn\'t be found!</h2>');
   }
-  $qty       = getVar('qty');
-  $priceEach = getVar('price', 'double');
-  if(empty($qty))
-    $qty = $Item->getItemQty();
-  if($priceEach < 0.0)
-    $priceEach = '';
-
-
+  $qty        = getVar('qty');
+  $priceFixed = getVar('priceFixed', 'double');
+  $priceStart = getVar('priceStart', 'double');
+  $priceBuy   = getVar('priceBuy',   'double');
+  $priceSell  = getVar('priceSell',  'double');
+  if(empty($qty)) $qty = $Item->getItemQty();
+  if($priceFixed < 0.0) $priceFixed = 0.0;
+  if($priceStart < 0.0) $priceStart = 0.0;
+  if($priceBuy   < 0.0) $priceBuy   = 0.0;
+  if($priceSell  < 0.0) $priceSell  = 0.0;
   $messages = '';
   $tags = array(
     'messages'     => &$messages,
@@ -184,7 +202,10 @@ function RenderPage_sell(){global $config,$html,$user;
     'item display' => $Item->getDisplay(),
     'have qty'     => (int) $Item->getItemQty(),
     'qty'          => (int) $qty,
-    'price each'   => (double) $priceEach,
+    'price fixed'  => (double) $priceFixed,
+    'price start'  => (double) $priceStart,
+    'price buy'    => (double) $priceBuy,
+    'price sell'   => (double) $priceSell,
     'currency prefix'  => SettingsClass::getString('Currency Prefix'),
     'currency postfix' => SettingsClass::getString('Currency Postfix'),
   );
