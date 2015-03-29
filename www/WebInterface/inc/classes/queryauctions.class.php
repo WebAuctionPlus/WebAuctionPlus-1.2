@@ -149,7 +149,7 @@ public function getNext(){
     $query_price = "SELECT AVG(price) AS MarketPrice FROM `".$config['table prefix']."LogSales` WHERE ".
                "`itemId` = ".    ((int) $row['itemId'])." AND ".
                "`itemDamage` = ".((int) $row['itemDamage'])." AND ".
-               "`enchantments` = '".mysql_san($row['enchantments'])."' AND ".
+               "IFNULL (`enchantments`, '') = '".mysql_san($row['enchantments'])."' AND ".
                "`logType` =      'sale'".
                "ORDER BY `id` DESC LIMIT 10";
     $this->result_price = RunQuery($query_price, __file__, __line__);

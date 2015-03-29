@@ -271,7 +271,7 @@ public static function AddCreateItem($playerId, $Item){global $config;
            "`itemId` = ".    ((int)$Item->getItemId())." AND ".
            "`itemDamage` = ".((int)$Item->getItemDamage())." AND ".
            "`itemData` = '".mysql_san($Item->getItemData())."' AND ".
-           "`enchantments` = '".mysql_san($Item->getEnchantmentsCompressed())."' ".
+           "IFNULL (`enchantments`, '') = '".mysql_san($Item->getEnchantmentsCompressed())."' ".
            "LIMIT 1";
   $result = RunQuery($query, __file__, __line__);
   if(!$result){echo '<p style="color: red;">Error finding item stack!</p>'; exit();}
