@@ -31,9 +31,9 @@ public class MySQLUpdate {
 		if(WebAuctionPlus.compareVersions(fromVersion, "1.2.7").equals("<")){
 			UpdateItemData1_2_7();
 		}
-		// update db fields  (< 1.2.17)
-		if(WebAuctionPlus.compareVersions(fromVersion, "1.2.17").equals("<")){
-			UpdateItemData1_2_17();
+		// update db fields  (< 1.2.24)
+		if(WebAuctionPlus.compareVersions(fromVersion, "1.2.24").equals("<")){
+			UpdateItemData1_2_24();
 		}
 	}
 
@@ -56,13 +56,15 @@ public class MySQLUpdate {
 	}
 
 
-	private static void UpdateItemData1_2_17() {
+	private static void UpdateItemData1_2_24() {
 		final Connection conn = WebAuctionPlus.dataQueries.getConnection();
 		try {
-			WebAuctionPlus.log.warning(WebAuctionPlus.logPrefix+"Updating db fields for 1.2.17");
+			WebAuctionPlus.log.warning(WebAuctionPlus.logPrefix+"Updating db fields for 1.2.24");
 			final String[] queries = new String[] {
 					"ALTER TABLE `"+WebAuctionPlus.dataQueries.dbPrefix()+"LogSales` CHANGE `saleType` `saleType` ENUM('','buynow','auction','server') "+
-							"CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL;"
+							"CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL;",
+					"ALTER TABLE `"+WebAuctionPlus.dataQueries.dbPrefix()+"LogSales` CHANGE `sellerId` `sellerId` INT(11) NULL DEFAULT '0';",
+					"ALTER TABLE `"+WebAuctionPlus.dataQueries.dbPrefix()+"LogSales` CHANGE `buyerId`  `buyerId`  INT(11) NULL DEFAULT '0';"
 			};
 			// execute queries
 			for(final String sql : queries) {
