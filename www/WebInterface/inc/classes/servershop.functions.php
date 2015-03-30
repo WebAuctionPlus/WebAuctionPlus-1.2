@@ -169,6 +169,10 @@ public static function SellShop($shopId, $qty) {global $config, $user;
     return(FALSE);
   }
   $shopItem = $shop->getItem();
+  if(!$shopItem) {
+    $_SESSION['error'][] = 'Failed to get item info for server shop!';
+    return(FALSE);
+  }
   // query player items
   $Items = QueryItems::QueryInventory($user->getId(), $shopItem);
   if(!$Items) {
@@ -188,6 +192,11 @@ public static function SellShop($shopId, $qty) {global $config, $user;
     $Item = $Items->getNext();
     // no more stacks found
     if(!$Item) break;
+    // remove empty stack
+    if($Item->getItemQty() <= 0) {
+      ItemFuncs::RemoveItem($Item->getTableRowId(), -1);
+      continue;
+    }
     // sold enough
     if($soldCount >= $qty) break;
     $hasFound = TRUE;
@@ -202,31 +211,30 @@ public static function SellShop($shopId, $qty) {global $config, $user;
     // sell full stack
     } else {
       $soldCount += $Item->getItemQty();
-      if(!ItemFuncs::RemoveItem($Item->getTableRowId(), $Items->getItemQty())) {
+      if(!ItemFuncs::RemoveItem($Item->getTableRowId(), -1)) {
         $_SESSION['error'][] = 'Failed to remove sold item!';
         return(FALSE);
       }
     }
   }
-  // price for sold items
-  $priceTotal = $shopPrice * ((double)$qty);
-  // make payment to seller
-  UserClass::PaymentQuery($user->getName(), $user->getUUID(), $priceTotal);
-  // success
-  if($hasFound && $soldCount > 0) {
-    $_SESSION['success'][] = 'Sold '.$soldCount.' items for '.SettingsClass::getString('Currency Prefix').
-                             $priceTotal.SettingsClass::getString('Currency Postfix');
-  // no items
-  } else {
+  // no items sold
+  if(!$hasFound || $soldCount <= 0) {
     $_SESSION['error'][] = 'You don\'t have any of this item!';
     return(FALSE);
   }
+  // price for sold items
+  $priceTotal = $shopPrice * ((double)$soldCount);
+  // success
+  $_SESSION['success'][] = 'Sold '.$soldCount.' items for '.SettingsClass::getString('Currency Prefix').
+                           $priceTotal.SettingsClass::getString('Currency Postfix');
+  // make payment to seller
+  UserClass::PaymentQuery($user->getName(), $user->getUUID(), $priceTotal);
   // sold less than requested
   if($qty > $soldCount) {
     $_SESSION['error'][] = 'You don\'t have that many!';
-    return(FALSE);
   }
   // add sale log
+  $Item->setItemQty($soldCount);
   LogSales::addLog(
     LogSales::LOG_SALE,
     LogSales::SALE_SERVER,
