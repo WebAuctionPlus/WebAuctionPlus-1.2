@@ -44,7 +44,7 @@ function doChangePassword(){global $config;
   // successful change
   if($result !== FALSE) {
     // password has been changed
-    $config['user']->isTempPass(FALSE);
+    $_SESSION['Temp Pass'] = FALSE;
     $lastpage = getLastPage();
     if(strpos($lastpage,'login') !== FALSE || strpos($lastpage,'changepass') !== FALSE)
       $lastpage = './';

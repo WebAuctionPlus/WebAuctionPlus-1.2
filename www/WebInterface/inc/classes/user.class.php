@@ -31,7 +31,8 @@ function __construct(){global $config;
 
 // do login
 public function doLogin($username, $password){
-  if($password===FALSE) $password = '';
+  if(empty($password))
+    return FALSE;
   return($this->doValidate($username, $password));
 }
 // validate session
@@ -49,7 +50,7 @@ private function doValidate($username, $password=FALSE){global $config;
   if($result){
     if(mysql_num_rows($result)==0){
       $_SESSION[$config['session name']] = '';
-      $_GET['error'] = 'bad login';
+      $_SESSION['error']['login failed'] = 'Login Failed';
       return(FALSE);
     }
     $row = mysql_fetch_assoc($result);
@@ -156,13 +157,11 @@ private function VerifyPasswordChanged($password) {global $config;
 }
 
 
-public function isTempPass($value=NULL) {
+public function isTempPass() {
   if(!$this->isOk())
     return FALSE;
   if(!isset($_SESSION['Temp Pass']))
     return FALSE;
-  if($value !== NULL)
-    $_SESSION['Temp Pass'] = ($value !== FALSE);
   return ($_SESSION['Temp Pass'] != FALSE);
 }
 

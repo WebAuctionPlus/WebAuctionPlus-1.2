@@ -19,11 +19,12 @@ function doCheckLogin(){global $config;
   // check hashed password
   $result = $config['user']->doLogin($username, md5($password));
   // try temporary password
-  if($result !== TRUE && $_GET['error'] == 'bad login' && strlen($password) < 32) {
-    unset($_GET['error']);
+  if($result !== TRUE && strlen($password) < 32) {
+//    unset($_GET['error']);
     $result = $config['user']->doLogin($username, $password);
     if($result === TRUE && $config['user']->isOk() && getVar('error')=='') {
-      $config['user']->isTempPass(TRUE);
+      $_SESSION['Temp Pass'] = TRUE;
+      unset($_SESSION['error']);
     }
   }
   // successful login
@@ -49,8 +50,15 @@ function RenderPage_login(){global $config,$html;
   if(!is_array($outputs)) {echo 'Failed to load html!'; exit();}
   // display error
   $messages = '';
-  if(getVar('error') != '')
-    $messages .= str_replace('{message}', 'Login Failed', $outputs['error']);
+  if(isset($_SESSION['error'])) {
+    if(is_array($_SESSION['error'])) {
+      foreach($_SESSION['error'] as $msg)
+        $messages .= str_replace('{message}', $msg, $outputs['error']);
+    } else {
+      $messages .= str_replace('{message}', $_SESSION['error'], $outputs['error']);
+    }
+    unset($_SESSION['error']);
+  }
   $tags = array(
     'messages' => $messages,
     'username' => $config['demo'] ? 'demo' : getVar(LOGIN_FORM_USERNAME),
