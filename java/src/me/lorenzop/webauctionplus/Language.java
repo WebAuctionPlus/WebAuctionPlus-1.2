@@ -141,8 +141,11 @@ public class Language {
 			reader = new BufferedReader(new InputStreamReader(stream));
 			final List<String> words = new ArrayList<String>();
 			String line = null;
-			while( (line = reader.readLine()) != null )
+			while( (line = reader.readLine()) != null ) {
+				if(line == null || line.length() < 4 || line.length() > 8)
+					continue;
 				words.add(line);
+			}
 			// this works on java 1.8 and newer
 			//final List<String> words = Files.readAllLines(wordsFile.toPath());
 			if(words != null && !words.isEmpty())
