@@ -159,28 +159,46 @@ public final class utils {
 	public static String compareVersions(final String versionA, final String versionB) {
 		if(utils.isEmpty(versionA) || utils.isEmpty(versionB))
 			throw new NullPointerException();
-		final String normA = normalisedVersion(versionA);
-		final String normB = normalisedVersion(versionB);
-		final int cmp = normA.compareTo(normB);
+		final String[] norms = normalisedVersions(versionA, versionB);
+		final int cmp = norms[0].compareTo(norms[1]);
 		if(cmp < 0)
 			return "<";
 		if(cmp > 0)
 			return ">";
 		return "=";
 	}
-	public static String normalisedVersion(final String version) {
-		final int maxWidth = 5;
-		final String[] split = Pattern.compile(".", Pattern.LITERAL).split(version);
-		final StringBuilder output = new StringBuilder();
-//TODO: check maxWidth here
-		for(final String s : split) {
-//			final String str = String.format("%"+maxWidth+'s', s);
-//			if(str.length() > maxWidth)
-			output.append(
-					String.format("%"+maxWidth+'s', s)
-			);
+	private static String[] normalisedVersions(final String versionA, final String versionB) {
+		if(utils.isEmpty(versionA)) throw new NullPointerException();
+		if(utils.isEmpty(versionB)) throw new NullPointerException();
+		// split string by .
+		final String[] splitA = Pattern.compile(".", Pattern.LITERAL).split(versionA);
+		final String[] splitB = Pattern.compile(".", Pattern.LITERAL).split(versionB);
+		if(utils.isEmpty(splitA)) throw new NullPointerException();
+		if(utils.isEmpty(splitB)) throw new NullPointerException();
+		// find longest part
+		int width = -1;
+		for(final String part : splitA) {
+			if(width == -1 || width < part.length())
+				width = part.length();
 		}
-		return output.toString();
+		for(final String part : splitB) {
+			if(width == -1 || width < part.length())
+				width = part.length();
+		}
+		if(width == -1) throw new NullPointerException();
+		// build padded string
+		final StringBuilder outA = new StringBuilder();
+		for(final String part : splitA) {
+			outA.append( utilsString.padFront(width, part, '0') );
+		}
+		final StringBuilder outB = new StringBuilder();
+		for(final String part : splitB) {
+			outB.append( utilsString.padFront(width, part, '0') );
+		}
+		return new String[] {
+			outA.toString(),
+			outB.toString()
+		};
 	}
 	public static boolean checkJavaVersion(final String requiredVersion) {
 		final String javaVersion;
