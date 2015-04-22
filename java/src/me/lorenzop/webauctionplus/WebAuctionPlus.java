@@ -684,15 +684,15 @@ public class WebAuctionPlus extends JavaPlugin {
 		return output;
 	}
 
-	private static boolean CheckJavaVersion(final String requiredVersion) {
-		final String javaVersion;
-		{
-			final String vers = System.getProperty("java.version");
-			if(vers == null || vers.isEmpty()) throw new NullPointerException("Failed to get java version");
-			javaVersion = vers.replace('_', '.');
-		}
-		return !(compareVersions(javaVersion, requiredVersion).equals("<"));
-	}
+//	private static boolean CheckJavaVersion(final String requiredVersion) {
+//		final String javaVersion;
+//		{
+//			final String vers = System.getProperty("java.version");
+//			if(vers == null || vers.isEmpty()) throw new NullPointerException("Failed to get java version");
+//			javaVersion = vers.replace('_', '.');
+//		}
+//		return !(compareVersions(javaVersion, requiredVersion).equals("<"));
+//	}
 
 	// check for an updated version
 	private void checkUpdateAvailable() {
