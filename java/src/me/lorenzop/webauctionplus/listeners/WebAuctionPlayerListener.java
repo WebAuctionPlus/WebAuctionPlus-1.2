@@ -42,7 +42,7 @@ public class WebAuctionPlayerListener implements Listener {
 		if (player == null) return;
 		// login code runs multi-threaded with a delay
 		// run after 2 seconds
-		Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(plugin, new PlayerAlertTask(player), 30);
+		Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(this.plugin, new PlayerAlertTask(player), 30);
 	}
 
 
@@ -56,7 +56,7 @@ public class WebAuctionPlayerListener implements Listener {
 				WebInventory.onInventoryClose(p);
 			}
 		});
-		plugin.lastSignUse.remove(event.getPlayer().getName());
+		this.plugin.lastSignUse.remove(event.getPlayer().getName());
 	}
 
 
@@ -114,12 +114,12 @@ public class WebAuctionPlayerListener implements Listener {
 		String player = p.getName();
 
 		// prevent click spamming signs
-		if(plugin.lastSignUse.containsKey(player))
-			if( plugin.lastSignUse.get(player)+(long)plugin.signDelay > WebAuctionPlus.getCurrentMilli() ) {
+		if(this.plugin.lastSignUse.containsKey(player))
+			if( this.plugin.lastSignUse.get(player)+(long)this.plugin.signDelay > WebAuctionPlus.getCurrentMilli() ) {
 				p.sendMessage(WebAuctionPlus.chatPrefix + WebAuctionPlus.Lang.getString("please_wait"));
 				return;
 			}
-		plugin.lastSignUse.put(player, WebAuctionPlus.getCurrentMilli());
+		this.plugin.lastSignUse.put(player, WebAuctionPlus.getCurrentMilli());
 
 		// Shout sign
 		if(lines[1].equals("Shout")) {

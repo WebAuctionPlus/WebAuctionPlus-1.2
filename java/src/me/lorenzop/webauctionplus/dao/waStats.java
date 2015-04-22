@@ -27,12 +27,12 @@ public class waStats {
 
 
 	private boolean Update() {
-		synchronized(lock) {
+		synchronized(this.lock) {
 			final long tim = WebAuctionPlus.getCurrentMilli();
-			final long sinceLast = tim - lastUpdate;
+			final long sinceLast = tim - this.lastUpdate;
 			// update no more than every 5 seconds
-			if(lastUpdate == -1 || sinceLast >= 5000) {
-				lastUpdate = tim;
+			if(this.lastUpdate == -1 || sinceLast >= 5000) {
+				this.lastUpdate = tim;
 				doUpdate();
 				return true;
 			}
@@ -180,23 +180,23 @@ public class waStats {
 	// data access layer
 	public int getTotalBuyNows() {
 		Update();
-		return totalBuyNowCount;
+		return this.totalBuyNowCount;
 	}
 	public int getTotalAuctions() {
 		Update();
-		return totalAuctionCount;
+		return this.totalAuctionCount;
 	}
 	public int getMaxAuctionID() {
 		Update();
-		return maxAuctionId;
+		return this.maxAuctionId;
 	}
 	public int getNewAuctionsCount() {
 		Update();
-		return newAuctionsCount;
+		return this.newAuctionsCount;
 	}
 	public int getEndedAuctionsCount() {
 		Update();
-		return endAuctionsCount;
+		return this.endAuctionsCount;
 	}
 
 

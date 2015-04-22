@@ -73,7 +73,7 @@ public class WebAuctionBlockListener implements Listener {
 			} catch (NumberFormatException ignore) {}
 			event.setLine(2, Integer.toString(radius));
 			event.setLine(3, "");
-			plugin.shoutSigns.put(sign.getLocation(), radius);
+			this.plugin.shoutSigns.put(sign.getLocation(), radius);
 			WebAuctionPlus.dataQueries.createShoutSign(world, radius, sign.getX(), sign.getY(), sign.getZ());
 			p.sendMessage(WebAuctionPlus.chatPrefix + WebAuctionPlus.Lang.getString("created_shout_sign"));
 			return;
@@ -106,7 +106,7 @@ public class WebAuctionBlockListener implements Listener {
 				event.setLine(2, Integer.toString(offset));
 				event.setLine(3, "<New Sign>");
 //			}
-			plugin.recentSigns.put(sign.getLocation(), offset);
+			this.plugin.recentSigns.put(sign.getLocation(), offset);
 			WebAuctionPlus.dataQueries.createRecentSign(world, offset, sign.getX(), sign.getY(), sign.getZ());
 			p.sendMessage(WebAuctionPlus.chatPrefix + WebAuctionPlus.Lang.getString("created_recent_sign"));
 			return;

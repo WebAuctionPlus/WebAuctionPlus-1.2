@@ -21,16 +21,16 @@ public class ShoutSignTask implements Runnable {
 	public ShoutSignTask(WebAuctionPlus plugin) {
 		this.plugin = plugin;
 		// Get current auction ID
-		lastAuction = WebAuctionPlus.stats.getMaxAuctionID();
-		if(WebAuctionPlus.isDebug()) WebAuctionPlus.log.info(WebAuctionPlus.logPrefix+"Current Auction id = "+lastAuction);
+		this.lastAuction = WebAuctionPlus.stats.getMaxAuctionID();
+		if(WebAuctionPlus.isDebug()) WebAuctionPlus.log.info(WebAuctionPlus.logPrefix+"Current Auction id = "+this.lastAuction);
 	}
 
 	public void run() {
 		// check for new auctions
 		int latestAuctionID = WebAuctionPlus.stats.getMaxAuctionID();
-		if(lastAuction >= latestAuctionID) return;
-		lastAuction = latestAuctionID;
-		if(WebAuctionPlus.isDebug()) WebAuctionPlus.log.info(WebAuctionPlus.logPrefix+"Current Auction id = "+lastAuction);
+		if(this.lastAuction >= latestAuctionID) return;
+		this.lastAuction = latestAuctionID;
+		if(WebAuctionPlus.isDebug()) WebAuctionPlus.log.info(WebAuctionPlus.logPrefix+"Current Auction id = "+this.lastAuction);
 		if(WebAuctionPlus.getOnlinePlayers().length == 0) return;
 
 		Auction auction = WebAuctionPlus.dataQueries.getAuction(latestAuctionID);
@@ -58,7 +58,7 @@ public class ShoutSignTask implements Runnable {
 
 			// Loop each shout sign, sending the New Auction message to each
 			List<Location> SignsToRemove = new ArrayList<Location>();
-			for(Map.Entry<Location, Integer> entry : plugin.shoutSigns.entrySet()) {
+			for(Map.Entry<Location, Integer> entry : this.plugin.shoutSigns.entrySet()) {
 				Location loc = entry.getKey();
 				int radius = entry.getValue();
 				if(loc.getBlock().getType() != Material.SIGN && loc.getBlock().getType() != Material.WALL_SIGN) {
@@ -69,7 +69,7 @@ public class ShoutSignTask implements Runnable {
 			}
 			try {
 				for(Location signLoc : SignsToRemove) {
-					plugin.shoutSigns.remove(signLoc);
+					this.plugin.shoutSigns.remove(signLoc);
 					WebAuctionPlus.dataQueries.removeShoutSign(signLoc);
 					WebAuctionPlus.log.info(WebAuctionPlus.logPrefix+"Removed invalid sign at location: "+signLoc);
 				}

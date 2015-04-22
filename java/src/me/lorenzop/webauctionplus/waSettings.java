@@ -15,12 +15,12 @@ public class waSettings {
 
 	public waSettings(WebAuctionPlus plugin) {
 		this.plugin = plugin;
-		isOk = false;
+		this.isOk = false;
 	}
 
 
 	public synchronized void LoadSettings(){
-		isOk = false;
+		this.isOk = false;
 		Connection conn = WebAuctionPlus.dataQueries.getConnection();
 		PreparedStatement st = null;
 		ResultSet rs = null;
@@ -30,7 +30,7 @@ public class waSettings {
 			rs = st.executeQuery();
 			while (rs.next()) {
 				if(rs.getString(1) != null)
-					settingsMap.put(rs.getString(1), rs.getString(2));
+					this.settingsMap.put(rs.getString(1), rs.getString(2));
 			}
 			updateSettingsTable();
 		} catch (SQLException e) {
@@ -41,15 +41,15 @@ public class waSettings {
 			WebAuctionPlus.dataQueries.closeResources(conn, st, rs);
 		}
 		addDefaults();
-		WebAuctionPlus.log.info(WebAuctionPlus.logPrefix + "Loaded " + Integer.toString(settingsMap.size()) + " settings from db");
-		isOk = (settingsMap.size()!=0);
+		WebAuctionPlus.log.info(WebAuctionPlus.logPrefix + "Loaded " + Integer.toString(this.settingsMap.size()) + " settings from db");
+		this.isOk = (this.settingsMap.size()!=0);
 	}
 	public boolean isOk() {return this.isOk;}
 
 
 	// set default settings
 	private void addDefaults() {
-		addDefault("Version",            plugin.getDescription().getVersion().toString());
+		addDefault("Version",            this.plugin.getDescription().getVersion().toString());
 		addDefault("Language",           "en");
 		addDefault("Require Login",      false);
 		addDefault("CSRF Protection",    true);
@@ -66,7 +66,7 @@ public class waSettings {
 //		addDefault("Storage add per item",  0.1);
 	}
 	private void addDefault(String name, String value) {
-		if(!settingsMap.containsKey(name)) {
+		if(!this.settingsMap.containsKey(name)) {
 //			if (plugin.dataQueries.debugSQL) WebAuctionPlus.log.info("WA Query: Insert setting: " + name);
 			WebAuctionPlus.log.info(WebAuctionPlus.logPrefix + "Adding default setting for: " + name);
 			Connection conn = WebAuctionPlus.dataQueries.getConnection();
@@ -77,7 +77,7 @@ public class waSettings {
 				st.setString(1, name);
 				st.setString(2, value);
 				st.executeUpdate();
-				settingsMap.put(name, value);
+				this.settingsMap.put(name, value);
 			} catch (SQLException e) {
 				WebAuctionPlus.log.warning(WebAuctionPlus.logPrefix + "Unable to add setting: " + name);
 				e.printStackTrace();
@@ -102,18 +102,18 @@ public class waSettings {
 
 
 	private void updateSettingsTable() {
-		if(settingsMap.containsKey("jquery ui pack")) {
+		if(this.settingsMap.containsKey("jquery ui pack")) {
 			WebAuctionPlus.log.warning(WebAuctionPlus.logPrefix+"Updating Settings table: jQuery UI Pack");
 			WebAuctionPlus.dataQueries.executeRawSQL("UPDATE `"+WebAuctionPlus.dataQueries.dbPrefix()+"Settings` SET `name` = 'jQuery UI Pack' WHERE `name` = 'jquery ui pack' LIMIT 1");
-			settingsMap.put("jQuery UI Pack", "");
+			this.settingsMap.put("jQuery UI Pack", "");
 		}
 	}
 
 
 	// get setting
 	public synchronized String getString(String name) {
-		if(settingsMap.containsKey(name))
-			return settingsMap.get(name);
+		if(this.settingsMap.containsKey(name))
+			return this.settingsMap.get(name);
 		else
 			return null;
 	}
@@ -135,15 +135,15 @@ public class waSettings {
 
 	// change setting
 	public synchronized void setString(String name, String value) {
-		if(!settingsMap.containsKey(name)) {
+		if(!this.settingsMap.containsKey(name)) {
 			WebAuctionPlus.log.warning(WebAuctionPlus.logPrefix+"Setting not found! "+name);
 			return;
 		}
-		if(settingsMap.get(name).equals(value)) {
+		if(this.settingsMap.get(name).equals(value)) {
 			WebAuctionPlus.log.info(WebAuctionPlus.logPrefix+"Setting unchanged, matches existing. "+name);
 			return;
 		}
-		settingsMap.put(name, value);
+		this.settingsMap.put(name, value);
 		Connection conn = WebAuctionPlus.dataQueries.getConnection();
 		PreparedStatement st = null;
 		ResultSet rs = null;

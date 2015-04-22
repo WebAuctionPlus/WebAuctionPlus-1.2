@@ -26,7 +26,7 @@ public class AuctionPlayer {
 
 	// player id
 	public int getPlayerId() {
-		return playerId;
+		return this.playerId;
 	}
 	public void setPlayerId(int playerId) {
 		this.playerId = playerId;
@@ -34,7 +34,7 @@ public class AuctionPlayer {
 
 	// player name
 	public String getPlayerName() {
-		return player;
+		return this.player;
 	}
 
 	public void setPlayerName(String player) {
@@ -43,7 +43,7 @@ public class AuctionPlayer {
 
 	// player uuid
 	public UUID getPlayerUUID() {
-		return uuid;
+		return this.uuid;
 	}
 	public void setPlayerUUID(UUID uuid) {
 		this.uuid = uuid;
@@ -51,8 +51,8 @@ public class AuctionPlayer {
 
 	// player object
 	public Player getPlayer() {
-		if(p == null) p = Bukkit.getPlayer(this.uuid);
-		return p;
+		if(this.p == null) this.p = Bukkit.getPlayer(this.uuid);
+		return this.p;
 	}
 	public void setPlayer(Player p) {
 		this.p = p;
@@ -61,7 +61,7 @@ public class AuctionPlayer {
 
 	// money
 	public double getMoney() {
-		return money;
+		return this.money;
 	}
 	public void setMoney(double money) {
 		this.money = money;
@@ -69,7 +69,7 @@ public class AuctionPlayer {
 
 	// can buy
 	public boolean getCanBuy() {
-		return canBuy;
+		return this.canBuy;
 	}
 //	public void setCanBuy(boolean canBuy) {
 //		this.canBuy = canBuy;
@@ -77,7 +77,7 @@ public class AuctionPlayer {
 
 	// can sell
 	public boolean getCanSell() {
-		return canSell;
+		return this.canSell;
 	}
 //	public void setCanSell(boolean canSell) {
 //		this.canSell = canSell;
@@ -85,7 +85,7 @@ public class AuctionPlayer {
 
 	// is admin
 	public boolean getIsAdmin() {
-		return isAdmin;
+		return this.isAdmin;
 	}
 //	public void setIsAdmin(boolean isAdmin) {
 //		this.isAdmin = isAdmin;
@@ -94,9 +94,9 @@ public class AuctionPlayer {
 	// player permissions
 	public String getPermsString() {
 		String tempPerms = "";
-		if(canBuy)  tempPerms = this.addStringSet(tempPerms, "canBuy",  ",");
-		if(canSell) tempPerms = this.addStringSet(tempPerms, "canSell", ",");
-		if(isAdmin) tempPerms = this.addStringSet(tempPerms, "isAdmin", ",");
+		if(this.canBuy)  tempPerms = this.addStringSet(tempPerms, "canBuy",  ",");
+		if(this.canSell) tempPerms = this.addStringSet(tempPerms, "canSell", ",");
+		if(this.isAdmin) tempPerms = this.addStringSet(tempPerms, "isAdmin", ",");
 		if(tempPerms.isEmpty()) return null;
 		return tempPerms;
 	}
@@ -108,9 +108,9 @@ public class AuctionPlayer {
 	public void setPerms(String Perms) {
 		if(Perms == null) Perms = "";
 		Perms = ","+Perms+",";
-		canBuy  = Perms.contains(",canBuy,");
-		canSell = Perms.contains(",canSell,");
-		isAdmin = Perms.contains(",isAdmin,");
+		this.canBuy  = Perms.contains(",canBuy,");
+		this.canSell = Perms.contains(",canSell,");
+		this.isAdmin = Perms.contains(",isAdmin,");
 	}
 	public boolean comparePerms(boolean canBuy, boolean canSell, boolean isAdmin) {
 		return	canBuy  == this.canBuy  &&

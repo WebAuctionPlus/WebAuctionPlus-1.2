@@ -49,7 +49,7 @@ public class WebAuctionCommands implements CommandExecutor {
 				if(sender instanceof Player)
 					sender.sendMessage(WebAuctionPlus.chatPrefix+WebAuctionPlus.Lang.getString("reloading"));
 				WebAuctionPlus.log.info(WebAuctionPlus.logPrefix+WebAuctionPlus.Lang.getString("reloading"));
-				plugin.onReload();
+				this.plugin.onReload();
 				if(WebAuctionPlus.isOk()) {
 					if(sender instanceof Player)
 						sender.sendMessage(WebAuctionPlus.chatPrefix+WebAuctionPlus.Lang.getString("finished_reloading"));
@@ -64,11 +64,11 @@ public class WebAuctionCommands implements CommandExecutor {
 			// wa version
 			if (args[0].equalsIgnoreCase("version")) {
 				if(sender instanceof Player) {
-					sender.sendMessage(WebAuctionPlus.chatPrefix+"v"+plugin.getDescription().getVersion());
+					sender.sendMessage(WebAuctionPlus.chatPrefix+"v"+this.plugin.getDescription().getVersion());
 					if(WebAuctionPlus.newVersionAvailable && sender.hasPermission("wa.webadmin"))
 						sender.sendMessage(WebAuctionPlus.chatPrefix+"A new version is available! " + WebAuctionPlus.newVersion);
 				} else {
-					WebAuctionPlus.log.info(WebAuctionPlus.logPrefix+"v"+plugin.getDescription().getVersion());
+					WebAuctionPlus.log.info(WebAuctionPlus.logPrefix+"v"+this.plugin.getDescription().getVersion());
 					if(WebAuctionPlus.newVersionAvailable) {
 						WebAuctionPlus.log.info(WebAuctionPlus.logPrefix+"A new version is available! " + WebAuctionPlus.newVersion);
 						WebAuctionPlus.log.info(WebAuctionPlus.logPrefix+"http://dev.bukkit.org/server-mods/webauctionplus");

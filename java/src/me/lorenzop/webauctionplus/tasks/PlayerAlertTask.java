@@ -35,7 +35,7 @@ public class PlayerAlertTask implements Runnable {
 		String whereSql = "";
 		int i = 0;
 		// build players online hashmap
-		if(playerJoined == null) {
+		if(this.playerJoined == null) {
 			final Player[] playersList = WebAuctionPlus.getOnlinePlayers();
 			// no players online
 			if (playersList.length == 0) return;
@@ -50,12 +50,12 @@ public class PlayerAlertTask implements Runnable {
 			}
 		// only running for a single joined player
 		} else {
-			waPlayer = WebAuctionPlus.dataQueries.getPlayer(playerJoined.getUniqueId());
-			p = Bukkit.getPlayer(playerJoined.getUniqueId());
+			waPlayer = WebAuctionPlus.dataQueries.getPlayer(this.playerJoined.getUniqueId());
+			p = Bukkit.getPlayer(this.playerJoined.getUniqueId());
 			if (waPlayer == null || p==null) return;
 			// update name
 			if (!waPlayer.getPlayerName().equals(p.getName())){
-				WebAuctionPlus.log.info(WebAuctionPlus.logPrefix + "Name of player - " + playerJoined + " has changed. " +
+				WebAuctionPlus.log.info(WebAuctionPlus.logPrefix + "Name of player - " + this.playerJoined + " has changed. " +
 						"The old name was: " + waPlayer.getPlayerName());
 				WebAuctionPlus.dataQueries.updatePlayerName(waPlayer, p.getName());
 				waPlayer.setPlayerName(p.getName());
@@ -64,7 +64,7 @@ public class PlayerAlertTask implements Runnable {
 			boolean canBuy  = p.hasPermission("wa.canbuy");
 			boolean canSell = p.hasPermission("wa.cansell");
 			boolean isAdmin = p.hasPermission("wa.webadmin");
-			WebAuctionPlus.log.info(WebAuctionPlus.logPrefix + "Player found - " + playerJoined + " with perms:" +
+			WebAuctionPlus.log.info(WebAuctionPlus.logPrefix + "Player found - " + this.playerJoined + " with perms:" +
 					(canBuy ?" canBuy" :"") +
 					(canSell?" canSell":"") +
 					(isAdmin?" isAdmin":"") );
@@ -88,7 +88,7 @@ public class PlayerAlertTask implements Runnable {
 			rs = st.executeQuery();
 			String markSeenSql = "";
 			while (rs.next()) {
-				if(playerJoined == null)
+				if(this.playerJoined == null)
 					p = Bukkit.getPlayer(WebAuctionPlus.dataQueries.getPlayer(rs.getInt("sellerid")).getPlayerUUID());
 				if(p != null) {
 // TODO: language here
@@ -111,7 +111,7 @@ public class PlayerAlertTask implements Runnable {
 					WebAuctionPlus.log.warning(WebAuctionPlus.logPrefix+"Failed to mark sale alerts seen!");
 			}
 			// alert joined player
-			if(playerJoined!=null && p!=null) {
+			if(this.playerJoined!=null && p!=null) {
 				// alert admin of new version
 				if(WebAuctionPlus.newVersionAvailable && ( p.hasPermission("wa.webadmin") || p.isOp() ))
 					p.sendMessage(WebAuctionPlus.chatPrefix + "A new version is available! " + WebAuctionPlus.newVersion);

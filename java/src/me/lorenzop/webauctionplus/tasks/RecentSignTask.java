@@ -79,7 +79,7 @@ public class RecentSignTask implements Runnable {
 			st = conn.prepareStatement("SELECT `playerName`, `itemId`, `itemDamage`, `qty`, `enchantments`, `itemTitle`, "+
 				"`price`, UNIX_TIMESTAMP(`created`) AS `created`, `allowBids`, `currentWinner` " +
 				"FROM "+WebAuctionPlus.dataQueries.dbPrefix()+"Auctions JOIN "+WebAuctionPlus.dataQueries.dbPrefix()+"Players ON "+WebAuctionPlus.dataQueries.dbPrefix()+"Auctions.PlayerId = "+WebAuctionPlus.dataQueries.dbPrefix()+"Auctions.Id  ORDER BY "+WebAuctionPlus.dataQueries.dbPrefix()+"Auctions.id DESC LIMIT ?");
-			st.setInt(1, plugin.numberOfRecentLink);
+			st.setInt(1, this.plugin.numberOfRecentLink);
 			rs = st.executeQuery();
 			int offset = 0;
 			while(rs.next()) {
@@ -151,7 +151,7 @@ public class RecentSignTask implements Runnable {
 
 	private void UpdateRecentSigns(int offset, String[] lines) {
 		List<Location> SignsToRemove = new ArrayList<Location>();
-		for(Entry<Location, Integer> entry : plugin.recentSigns.entrySet()) {
+		for(Entry<Location, Integer> entry : this.plugin.recentSigns.entrySet()) {
 			try {
 				if(entry.getValue() != offset) continue;
 				Location loc = entry.getKey();
@@ -180,7 +180,7 @@ public class RecentSignTask implements Runnable {
 			if(SignsToRemove.size() > 0)
 				// Remove any signs flagged for removal
 				for(Location signLoc : SignsToRemove) {
-					plugin.recentSigns.remove(signLoc);
+					this.plugin.recentSigns.remove(signLoc);
 					WebAuctionPlus.dataQueries.removeRecentSign(signLoc);
 					WebAuctionPlus.log.info(WebAuctionPlus.logPrefix+"Removed invalid sign at location: "+signLoc);
 				}
@@ -202,7 +202,7 @@ public class RecentSignTask implements Runnable {
 			}
 		};
 		try {
-			return Bukkit.getScheduler().callSyncMethod(plugin, task).get();
+			return Bukkit.getScheduler().callSyncMethod(this.plugin, task).get();
 		} catch (InterruptedException ignore) {
 		} catch (ExecutionException ignore) {}
 		return null;

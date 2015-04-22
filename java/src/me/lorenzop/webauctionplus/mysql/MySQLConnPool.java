@@ -33,36 +33,36 @@ public class MySQLConnPool {
 	// get a db connection from pool
 	public Connection getConnection() {
 		// find an available connection
-		synchronized (inuse) {
-			for(int i = 0; i != inuse.size(); i++) {
-				if(!inuse.get(i)) {
-					inuse.set(i, true);
+		synchronized (this.inuse) {
+			for(int i = 0; i != this.inuse.size(); i++) {
+				if(!this.inuse.get(i)) {
+					this.inuse.set(i, true);
 					try {
-						if(connections.get(i).isValid(2) == false) {
-							inuse.remove(i);
-							connections.remove(i);
+						if(this.connections.get(i).isValid(2) == false) {
+							this.inuse.remove(i);
+							this.connections.remove(i);
 							break;
 						}
 					} catch (SQLException e) {
 						e.printStackTrace();
 					}
-					return connections.get(i);
+					return this.connections.get(i);
 				}
 			}
 		}
 		// check max pool size
-		if(connections.size() >= ConnPoolSizeHard) {
-			log.severe(logPrefix+"DB connection pool is full! Hard limit reached!  Size:"+Integer.toString(connections.size()));
+		if(this.connections.size() >= this.ConnPoolSizeHard) {
+			log.severe(logPrefix+"DB connection pool is full! Hard limit reached!  Size:"+Integer.toString(this.connections.size()));
 			return null;
-		} else if(connections.size() >= ConnPoolSizeWarn) {
-			log.warning(logPrefix+"DB connection pool is full! Warning limit reached.  Size: "+Integer.toString(connections.size()));
+		} else if(this.connections.size() >= this.ConnPoolSizeWarn) {
+			log.warning(logPrefix+"DB connection pool is full! Warning limit reached.  Size: "+Integer.toString(this.connections.size()));
 		}
 		// make a new connection
 		try {
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
-			Connection conn = DriverManager.getConnection("jdbc:mysql://"+dbHost+":"+Integer.toString(dbPort)+"/"+dbName, dbUser, dbPass);
-			connections.add(conn);
-			inuse.add(true);
+			Connection conn = DriverManager.getConnection("jdbc:mysql://"+this.dbHost+":"+Integer.toString(this.dbPort)+"/"+this.dbName, this.dbUser, this.dbPass);
+			this.connections.add(conn);
+			this.inuse.add(true);
 			return conn;
 		} catch (ClassNotFoundException e) {
 			WebAuctionPlus.log.severe(WebAuctionPlus.logPrefix+"Unable to load database driver!");
@@ -84,14 +84,14 @@ public class MySQLConnPool {
 
 	// set connection pool size
 	public void setConnPoolSizeWarn(int size) {
-		ConnPoolSizeWarn = size;
+		this.ConnPoolSizeWarn = size;
 	}
 	public void setConnPoolSizeHard(int size) {
-		ConnPoolSizeHard = size;
+		this.ConnPoolSizeHard = size;
 	}
 	public int getCountInUse() {
 		int count = 0;
-		for(boolean used : inuse)
+		for(boolean used : this.inuse)
 			if(used) count++;
 		return count;
 	}
@@ -114,13 +114,13 @@ public class MySQLConnPool {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		synchronized(inuse) {
-			int i = connections.indexOf(conn);
+		synchronized(this.inuse) {
+			int i = this.connections.indexOf(conn);
 			if (valid) {
-				inuse.set(i, false);
+				this.inuse.set(i, false);
 			} else {
-				inuse.remove(i);
-				connections.remove(i);
+				this.inuse.remove(i);
+				this.connections.remove(i);
 			}
 		}
 	}
@@ -140,8 +140,8 @@ public class MySQLConnPool {
 	}
 	public void forceCloseConnections() {
 		try {
-			for(int i=0; i<inuse.size(); i++)
-				connections.get(i).close();
+			for(int i=0; i<this.inuse.size(); i++)
+				this.connections.get(i).close();
 		} catch (SQLException ignore) {}
 	}
 
@@ -170,7 +170,7 @@ public class MySQLConnPool {
 		ResultSet rs = null;
 		try {
 			st = conn.prepareStatement("SHOW TABLES LIKE ?");
-			st.setString(1, dbPrefix+tableName);
+			st.setString(1, this.dbPrefix+tableName);
 			rs = st.executeQuery();
 			while (rs.next())
 				exists = true;
@@ -186,7 +186,7 @@ public class MySQLConnPool {
 	protected boolean setTableExists(String tableName, String Sql) {
 		if (tableExists(tableName)) return false;
 		log.info(logPrefix+"Creating table "+tableName);
-		executeRawSQL("CREATE TABLE `"+dbPrefix+tableName+"` ( "+Sql+" );");
+		executeRawSQL("CREATE TABLE `"+this.dbPrefix+tableName+"` ( "+Sql+" );");
 		return true;
 	}
 
@@ -197,7 +197,7 @@ public class MySQLConnPool {
 		PreparedStatement st = null;
 		ResultSet rs = null;
 		try {
-			st = conn.prepareStatement("SHOW COLUMNS FROM `"+dbPrefix+tableName+"` LIKE ?");
+			st = conn.prepareStatement("SHOW COLUMNS FROM `"+this.dbPrefix+tableName+"` LIKE ?");
 			st.setString(1, columnName);
 			rs = st.executeQuery();
 			while (rs.next()) {
@@ -205,7 +205,7 @@ public class MySQLConnPool {
 				break;
 			}
 		} catch (SQLException e) {
-			log.warning(logPrefix+"Unable to check if table column exists: "+dbPrefix+tableName+"::"+columnName);
+			log.warning(logPrefix+"Unable to check if table column exists: "+this.dbPrefix+tableName+"::"+columnName);
 		} finally {
 			closeResources(conn, st, rs);
 		}
@@ -213,8 +213,8 @@ public class MySQLConnPool {
 	}
 	protected boolean setColumnExists(String tableName, String columnName, String Attr) {
 		if (columnExists(tableName, columnName)) {return false;}
-		log.info("Adding column "+columnName+" to table "+dbPrefix+tableName);
-		executeRawSQL("ALTER TABLE `"+dbPrefix+tableName+"` ADD `"+columnName+"` "+Attr);
+		log.info("Adding column "+columnName+" to table "+this.dbPrefix+tableName);
+		executeRawSQL("ALTER TABLE `"+this.dbPrefix+tableName+"` ADD `"+columnName+"` "+Attr);
 		return true;
 	}
 
@@ -224,7 +224,7 @@ public class MySQLConnPool {
 		return WebAuctionPlus.isDebug();
 	}
 	public String dbPrefix() {
-		return dbPrefix;
+		return this.dbPrefix;
 	}
 
 

@@ -20,7 +20,7 @@ public class Auction {
 
 	// auction id
 	public int getOffset() {
-		return Offset;
+		return this.Offset;
 	}
 	public void setOffset(int Offset) {
 		this.Offset = Offset;
@@ -28,7 +28,7 @@ public class Auction {
 
 	// item stack
 	public ItemStack getItemStack() {
-		return stack;
+		return this.stack;
 	}
 	public void setItemStack(ItemStack stack) {
 		this.stack = stack;
@@ -36,9 +36,9 @@ public class Auction {
 
 	// item title
 	public String getItemTitle() {
-		if(itemTitle == null || itemTitle.isEmpty())
-			if(stack != null) return stack.getType().name();
-		return itemTitle;
+		if(this.itemTitle == null || this.itemTitle.isEmpty())
+			if(this.stack != null) return this.stack.getType().name();
+		return this.itemTitle;
 	}
 	public void setItemTitle(String itemTitle) {
 		this.itemTitle = itemTitle;
@@ -46,7 +46,7 @@ public class Auction {
 
 	// player name
 	public String getPlayerName() {
-		return player;
+		return this.player;
 	}
 	public void setPlayerName(String player) {
 		this.player = player;
@@ -54,7 +54,7 @@ public class Auction {
 
 	// player Id
 	public int getPlayerId() {
-		return playerId;
+		return this.playerId;
 	}
 	public void setPlayerId(int playerId) {
 		this.playerId = playerId;
@@ -62,7 +62,7 @@ public class Auction {
 
 	// price
 	public double getPrice() {
-		return price;
+		return this.price;
 	}
 	public void setPrice(double price) {
 		this.price = price;
@@ -78,7 +78,7 @@ public class Auction {
 
 	// allow bids ?
 	public Boolean getAllowBids() {
-		return allowBids;
+		return this.allowBids;
 	}
 	public void setAllowBids(Boolean bid) {
 		this.allowBids = bid;
@@ -86,7 +86,7 @@ public class Auction {
 
 	// current bid ?
 	public Double getCurrentBid() {
-		return currentBid;
+		return this.currentBid;
 	}
 	public void setCurrentBid(Double bid) {
 		this.currentBid = bid;
@@ -94,7 +94,7 @@ public class Auction {
 
 	// current winner ?
 	public String getCurrentWinner() {
-		return currentWinner;
+		return this.currentWinner;
 	}
 	public void setCurrentWinner(String player) {
 		this.currentWinner = player;

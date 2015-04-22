@@ -20,8 +20,8 @@ public class MySQLTables {
 	public MySQLTables(WebAuctionPlus plugin) {
 		this.plugin = plugin;
 		this.dataQueries = WebAuctionPlus.dataQueries;
-		this.dbPrefix = dataQueries.dbPrefix;
-		isOk = false;
+		this.dbPrefix = this.dataQueries.dbPrefix;
+		this.isOk = false;
 
 		// create new tables
 		sqlTables("Auctions");
@@ -57,7 +57,7 @@ public class MySQLTables {
 		setColumnExists("Auctions", "itemTitle", "varchar(32) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL");
 		setColumnExists("Items",    "itemTitle", "varchar(32) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL");
 
-		isOk = true;
+		this.isOk = true;
 	}
 	public boolean isOk() {return this.isOk;}
 
@@ -72,15 +72,15 @@ public class MySQLTables {
 		// auctions
 		if (tableName.equals("Auctions")) {
 			if (alter) {
-				executeRawSQL("ALTER TABLE `"+dbPrefix+"Auctions`   CHANGE      `player`        `playerName`    VARCHAR(16)     CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL");
-				executeRawSQL("ALTER TABLE `"+dbPrefix+"Auctions`   CHANGE      `name`          `itemId`        INT    (11)     NOT NULL    DEFAULT '0'");
-				executeRawSQL("ALTER TABLE `"+dbPrefix+"Auctions`   CHANGE      `damage`        `itemDamage`    INT    (11)     NOT NULL    DEFAULT '0'");
-				executeRawSQL("ALTER TABLE `"+dbPrefix+"Auctions`   CHANGE      `quantity`      `qty`           INT    (11)     NOT NULL    DEFAULT '0'");
-				executeRawSQL("ALTER TABLE `"+dbPrefix+"Auctions`   CHANGE      `price`         `price`         DECIMAL(11,2)   NOT NULL    DEFAULT '0.00'");
-				executeRawSQL("ALTER TABLE `"+dbPrefix+"Auctions`   CHANGE      `created`       `created`       DATETIME        NOT NULL    DEFAULT '0000-00-00 00:00:00'");
-				executeRawSQL("ALTER TABLE `"+dbPrefix+"Auctions`   CHANGE      `allowBids`     `allowBids`     TINYINT(1)      NOT NULL    DEFAULT '0'");
-				executeRawSQL("ALTER TABLE `"+dbPrefix+"Auctions`   CHANGE      `currentBid`    `currentBid`    DECIMAL(11,2)   NOT NULL    DEFAULT '0.00'");
-				executeRawSQL("ALTER TABLE `"+dbPrefix+"Auctions`   CHANGE      `currentWinner` `currentWinner` VARCHAR(16)     CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL");
+				executeRawSQL("ALTER TABLE `"+this.dbPrefix+"Auctions`   CHANGE      `player`        `playerName`    VARCHAR(16)     CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL");
+				executeRawSQL("ALTER TABLE `"+this.dbPrefix+"Auctions`   CHANGE      `name`          `itemId`        INT    (11)     NOT NULL    DEFAULT '0'");
+				executeRawSQL("ALTER TABLE `"+this.dbPrefix+"Auctions`   CHANGE      `damage`        `itemDamage`    INT    (11)     NOT NULL    DEFAULT '0'");
+				executeRawSQL("ALTER TABLE `"+this.dbPrefix+"Auctions`   CHANGE      `quantity`      `qty`           INT    (11)     NOT NULL    DEFAULT '0'");
+				executeRawSQL("ALTER TABLE `"+this.dbPrefix+"Auctions`   CHANGE      `price`         `price`         DECIMAL(11,2)   NOT NULL    DEFAULT '0.00'");
+				executeRawSQL("ALTER TABLE `"+this.dbPrefix+"Auctions`   CHANGE      `created`       `created`       DATETIME        NOT NULL    DEFAULT '0000-00-00 00:00:00'");
+				executeRawSQL("ALTER TABLE `"+this.dbPrefix+"Auctions`   CHANGE      `allowBids`     `allowBids`     TINYINT(1)      NOT NULL    DEFAULT '0'");
+				executeRawSQL("ALTER TABLE `"+this.dbPrefix+"Auctions`   CHANGE      `currentBid`    `currentBid`    DECIMAL(11,2)   NOT NULL    DEFAULT '0.00'");
+				executeRawSQL("ALTER TABLE `"+this.dbPrefix+"Auctions`   CHANGE      `currentWinner` `currentWinner` VARCHAR(16)     CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL");
 			} else {
 				setTableExists("Auctions",
 					"`id`               INT    (11)     NOT NULL    AUTO_INCREMENT  , PRIMARY KEY(`id`), " +
@@ -100,10 +100,10 @@ public class MySQLTables {
 		// Items
 		if (tableName.equals("Items")) {
 			if (alter) {
-				executeRawSQL("ALTER TABLE `"+dbPrefix+"Items`      CHANGE      `player`        `playerName`    VARCHAR(16)     CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL");
-				executeRawSQL("ALTER TABLE `"+dbPrefix+"Items`      CHANGE      `name`          `itemId`        INT    (11)     NOT NULL    DEFAULT '0'");
-				executeRawSQL("ALTER TABLE `"+dbPrefix+"Items`      CHANGE      `damage`        `itemDamage`    INT    (11)     NOT NULL    DEFAULT '0'");
-				executeRawSQL("ALTER TABLE `"+dbPrefix+"Items`      CHANGE      `quantity`      `qty`           INT    (11)     NOT NULL    DEFAULT '0'");
+				executeRawSQL("ALTER TABLE `"+this.dbPrefix+"Items`      CHANGE      `player`        `playerName`    VARCHAR(16)     CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL");
+				executeRawSQL("ALTER TABLE `"+this.dbPrefix+"Items`      CHANGE      `name`          `itemId`        INT    (11)     NOT NULL    DEFAULT '0'");
+				executeRawSQL("ALTER TABLE `"+this.dbPrefix+"Items`      CHANGE      `damage`        `itemDamage`    INT    (11)     NOT NULL    DEFAULT '0'");
+				executeRawSQL("ALTER TABLE `"+this.dbPrefix+"Items`      CHANGE      `quantity`      `qty`           INT    (11)     NOT NULL    DEFAULT '0'");
 			} else {
 				setTableExists("Items",
 					"`id`           INT    (11)     NOT NULL    AUTO_INCREMENT  , PRIMARY KEY(`id`), " +
@@ -155,22 +155,22 @@ public class MySQLTables {
 					"`price`        DECIMAL(11,2)   NOT NULL    DEFAULT 0.00    , " +
 					"`alert`        TINYINT(1)      NOT NULL    DEFAULT 0       ");
 				if(sucess){
-					executeRawSQL("ALTER TABLE `"+dbPrefix+"LogSales` ADD CONSTRAINT `"+dbPrefix+"_fk_seller_id1` FOREIGN KEY (`sellerId`) REFERENCES `"+dbPrefix+"Players` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION");
-					executeRawSQL("ALTER TABLE `"+dbPrefix+"LogSales` ADD CONSTRAINT `"+dbPrefix+"_fk_buyer_id1`  FOREIGN KEY (`buyerId`)  REFERENCES `"+dbPrefix+"Players` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION");
+					executeRawSQL("ALTER TABLE `"+this.dbPrefix+"LogSales` ADD CONSTRAINT `"+this.dbPrefix+"_fk_seller_id1` FOREIGN KEY (`sellerId`) REFERENCES `"+this.dbPrefix+"Players` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION");
+					executeRawSQL("ALTER TABLE `"+this.dbPrefix+"LogSales` ADD CONSTRAINT `"+this.dbPrefix+"_fk_buyer_id1`  FOREIGN KEY (`buyerId`)  REFERENCES `"+this.dbPrefix+"Players` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION");
 				}
 			}
 		} else
 		// Players
 		if (tableName.equals("Players")) {
 			if (alter) {
-				executeRawSQL("ALTER TABLE        `"+dbPrefix+"Players`  CHANGE  `name`          `playerName`    VARCHAR(16)     CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL");
-				executeRawSQL("ALTER TABLE        `"+dbPrefix+"Players`  CHANGE  `pass`          `password`      VARCHAR(32)     CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL");
-				executeRawSQL("ALTER TABLE        `"+dbPrefix+"Players`  CHANGE  `money`         `money`         DECIMAL(11,2)   NOT NULL    DEFAULT '0.00'");
-				executeRawSQL("ALTER IGNORE TABLE `"+dbPrefix+"Players`  CHANGE  `itemsSold`     `itemsSold`     INT    (11)     NOT NULL    DEFAULT '0'");
-				executeRawSQL("ALTER IGNORE TABLE `"+dbPrefix+"Players`  CHANGE  `itemsBought`   `itemsBought`   INT    (11)     NOT NULL    DEFAULT '0'");
-				executeRawSQL("ALTER IGNORE TABLE `"+dbPrefix+"Players`  CHANGE  `earnt`         `earnt`         DECIMAL(11,2)   NOT NULL    DEFAULT '0.00'");
-				executeRawSQL("ALTER IGNORE TABLE `"+dbPrefix+"Players`  CHANGE  `spent`         `spent`         DECIMAL(11,2)   NOT NULL    DEFAULT '0.00'");
-				executeRawSQL("ALTER TABLE        `"+dbPrefix+"Players`  ADD     `Permissions`   SET( '', 'canBuy', 'canSell', 'isAdmin' )   NULL    DEFAULT NULL");
+				executeRawSQL("ALTER TABLE        `"+this.dbPrefix+"Players`  CHANGE  `name`          `playerName`    VARCHAR(16)     CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL");
+				executeRawSQL("ALTER TABLE        `"+this.dbPrefix+"Players`  CHANGE  `pass`          `password`      VARCHAR(32)     CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL");
+				executeRawSQL("ALTER TABLE        `"+this.dbPrefix+"Players`  CHANGE  `money`         `money`         DECIMAL(11,2)   NOT NULL    DEFAULT '0.00'");
+				executeRawSQL("ALTER IGNORE TABLE `"+this.dbPrefix+"Players`  CHANGE  `itemsSold`     `itemsSold`     INT    (11)     NOT NULL    DEFAULT '0'");
+				executeRawSQL("ALTER IGNORE TABLE `"+this.dbPrefix+"Players`  CHANGE  `itemsBought`   `itemsBought`   INT    (11)     NOT NULL    DEFAULT '0'");
+				executeRawSQL("ALTER IGNORE TABLE `"+this.dbPrefix+"Players`  CHANGE  `earnt`         `earnt`         DECIMAL(11,2)   NOT NULL    DEFAULT '0.00'");
+				executeRawSQL("ALTER IGNORE TABLE `"+this.dbPrefix+"Players`  CHANGE  `spent`         `spent`         DECIMAL(11,2)   NOT NULL    DEFAULT '0.00'");
+				executeRawSQL("ALTER TABLE        `"+this.dbPrefix+"Players`  ADD     `Permissions`   SET( '', 'canBuy', 'canSell', 'isAdmin' )   NULL    DEFAULT NULL");
 			} else {
 				sucess = setTableExists("Players",
 					"`id`           INT    (11)     NOT NULL    AUTO_INCREMENT  , PRIMARY KEY(`id`), " +
@@ -185,19 +185,19 @@ public class MySQLTables {
 					"`Permissions`  SET( '', 'canBuy', 'canSell', 'isAdmin' )   NULL DEFAULT NULL ," +
 					"`Locked`       TINYINT(1)                                  NOT NULL	DEFAULT '0'		");
 				if(sucess){
-					executeRawSQL("ALTER TABLE `"+dbPrefix+"Auctions` ADD CONSTRAINT `"+dbPrefix+"_fk_player_id1` FOREIGN KEY (`playerId`) REFERENCES `"+dbPrefix+"Players` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION");
-					executeRawSQL("ALTER TABLE `"+dbPrefix+"Items`    ADD CONSTRAINT `"+dbPrefix+"_fk_player_id2` FOREIGN KEY (`playerId`) REFERENCES `"+dbPrefix+"Players` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION");
+					executeRawSQL("ALTER TABLE `"+this.dbPrefix+"Auctions` ADD CONSTRAINT `"+this.dbPrefix+"_fk_player_id1` FOREIGN KEY (`playerId`) REFERENCES `"+this.dbPrefix+"Players` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION");
+					executeRawSQL("ALTER TABLE `"+this.dbPrefix+"Items`    ADD CONSTRAINT `"+this.dbPrefix+"_fk_player_id2` FOREIGN KEY (`playerId`) REFERENCES `"+this.dbPrefix+"Players` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION");
 				}
 			}
 		} else
 		// RecentSigns
 		if (tableName.equals("RecentSigns")) {
 			if (alter) {
-				executeRawSQL("ALTER TABLE `"+dbPrefix+"RecentSigns` CHANGE     `world`     `world`     VARCHAR(32)     CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL");
-				executeRawSQL("ALTER TABLE `"+dbPrefix+"RecentSigns` CHANGE     `offset`    `offset`    INT    (11)     NOT NULL    DEFAULT '0'");
-				executeRawSQL("ALTER TABLE `"+dbPrefix+"RecentSigns` CHANGE     `x`         `x`         INT    (11)     NOT NULL    DEFAULT '0'");
-				executeRawSQL("ALTER TABLE `"+dbPrefix+"RecentSigns` CHANGE     `y`         `y`         INT    (11)     NOT NULL    DEFAULT '0'");
-				executeRawSQL("ALTER TABLE `"+dbPrefix+"RecentSigns` CHANGE     `z`         `z`         INT    (11)     NOT NULL    DEFAULT '0'");
+				executeRawSQL("ALTER TABLE `"+this.dbPrefix+"RecentSigns` CHANGE     `world`     `world`     VARCHAR(32)     CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL");
+				executeRawSQL("ALTER TABLE `"+this.dbPrefix+"RecentSigns` CHANGE     `offset`    `offset`    INT    (11)     NOT NULL    DEFAULT '0'");
+				executeRawSQL("ALTER TABLE `"+this.dbPrefix+"RecentSigns` CHANGE     `x`         `x`         INT    (11)     NOT NULL    DEFAULT '0'");
+				executeRawSQL("ALTER TABLE `"+this.dbPrefix+"RecentSigns` CHANGE     `y`         `y`         INT    (11)     NOT NULL    DEFAULT '0'");
+				executeRawSQL("ALTER TABLE `"+this.dbPrefix+"RecentSigns` CHANGE     `z`         `z`         INT    (11)     NOT NULL    DEFAULT '0'");
 			} else {
 				setTableExists("RecentSigns",
 					"`id`       INT    (11)     NOT NULL    AUTO_INCREMENT  , PRIMARY KEY(`id`), " +
@@ -244,11 +244,11 @@ public class MySQLTables {
 		// ShoutSigns
 		if (tableName.equals("ShoutSigns")) {
 			if (alter) {
-				executeRawSQL("ALTER TABLE `"+dbPrefix+"ShoutSigns` CHANGE  `world`     `world`     VARCHAR(32)     CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL");
-				executeRawSQL("ALTER TABLE `"+dbPrefix+"ShoutSigns` CHANGE  `radius`    `radius`    INT(11)         NOT NULL    DEFAULT '0'");
-				executeRawSQL("ALTER TABLE `"+dbPrefix+"ShoutSigns` CHANGE  `x`         `x`         INT(11)         NOT NULL    DEFAULT '0'");
-				executeRawSQL("ALTER TABLE `"+dbPrefix+"ShoutSigns` CHANGE  `y`         `y`         INT(11)         NOT NULL    DEFAULT '0'");
-				executeRawSQL("ALTER TABLE `"+dbPrefix+"ShoutSigns` CHANGE  `z`         `z`         INT(11)         NOT NULL    DEFAULT '0'");
+				executeRawSQL("ALTER TABLE `"+this.dbPrefix+"ShoutSigns` CHANGE  `world`     `world`     VARCHAR(32)     CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL");
+				executeRawSQL("ALTER TABLE `"+this.dbPrefix+"ShoutSigns` CHANGE  `radius`    `radius`    INT(11)         NOT NULL    DEFAULT '0'");
+				executeRawSQL("ALTER TABLE `"+this.dbPrefix+"ShoutSigns` CHANGE  `x`         `x`         INT(11)         NOT NULL    DEFAULT '0'");
+				executeRawSQL("ALTER TABLE `"+this.dbPrefix+"ShoutSigns` CHANGE  `y`         `y`         INT(11)         NOT NULL    DEFAULT '0'");
+				executeRawSQL("ALTER TABLE `"+this.dbPrefix+"ShoutSigns` CHANGE  `z`         `z`         INT(11)         NOT NULL    DEFAULT '0'");
 			} else {
 				setTableExists("ShoutSigns",
 					"`id`       INT(11)         NOT NULL    AUTO_INCREMENT  , PRIMARY KEY(`id`), " +
@@ -299,7 +299,7 @@ public class MySQLTables {
 		// check if already updated
 		try {
 			if(WebAuctionPlus.isDebug()) WebAuctionPlus.log.info("WA Query: Count Database Settings");
-			st = conn.prepareStatement("SELECT COUNT(*) AS `count` FROM `"+dbPrefix+"Settings`");
+			st = conn.prepareStatement("SELECT COUNT(*) AS `count` FROM `"+this.dbPrefix+"Settings`");
 			rs = st.executeQuery();
 			if (!rs.next()) {
 				WebAuctionPlus.log.severe(WebAuctionPlus.logPrefix + "Could not get total settings!");
@@ -311,8 +311,8 @@ public class MySQLTables {
 			}
 			// add a setting
 			if(WebAuctionPlus.isDebug()) WebAuctionPlus.log.info("WA Query: Insert Version Setting");
-			st = conn.prepareStatement("INSERT INTO `"+dbPrefix+"Settings` (`name`,`value`) VALUES ('Version',?)");
-			st.setString(1, plugin.getDescription().getVersion().toString());
+			st = conn.prepareStatement("INSERT INTO `"+this.dbPrefix+"Settings` (`name`,`value`) VALUES ('Version',?)");
+			st.setString(1, this.plugin.getDescription().getVersion().toString());
 			st.executeUpdate();
 		} catch (SQLException e) {
 			WebAuctionPlus.log.warning(WebAuctionPlus.logPrefix + "Unable to update Players table!");
@@ -333,7 +333,7 @@ public class MySQLTables {
 			try {
 				if(WebAuctionPlus.isDebug()) WebAuctionPlus.log.info("WA Query: Convert Database Players");
 				// get total players
-				st = conn.prepareStatement("SELECT COUNT(*) AS `count` FROM `"+dbPrefix+"Players`");
+				st = conn.prepareStatement("SELECT COUNT(*) AS `count` FROM `"+this.dbPrefix+"Players`");
 				rs = st.executeQuery();
 				if (!rs.next()) {
 					WebAuctionPlus.log.severe(WebAuctionPlus.logPrefix + "Could not get total players!");
@@ -342,11 +342,11 @@ public class MySQLTables {
 				totalPlayers = rs.getInt(1);
 				WebAuctionPlus.log.warning(WebAuctionPlus.logPrefix + "Found " + Integer.toString(totalPlayers) + " player accounts");
 				// get old players permissions
-				st = conn.prepareStatement("SELECT `id`,`canBuy`,`canSell`,`isAdmin` FROM `"+dbPrefix+"Players`");
+				st = conn.prepareStatement("SELECT `id`,`canBuy`,`canSell`,`isAdmin` FROM `"+this.dbPrefix+"Players`");
 				rs = st.executeQuery();
 				String tempPerms = "";
 				while (rs.next()) {
-					stNew = conn.prepareStatement("UPDATE `"+dbPrefix+"Players` SET `Permissions` = ? WHERE `id` = ?");
+					stNew = conn.prepareStatement("UPDATE `"+this.dbPrefix+"Players` SET `Permissions` = ? WHERE `id` = ?");
 					tempPerms = "";
 					if (rs.getBoolean("canBuy"))  tempPerms = WebAuctionPlus.addStringSet(tempPerms, "canBuy",  ",");
 					if (rs.getBoolean("canSell")) tempPerms = WebAuctionPlus.addStringSet(tempPerms, "canSell", ",");
@@ -377,7 +377,7 @@ public class MySQLTables {
 			try {
 				if(WebAuctionPlus.isDebug()) WebAuctionPlus.log.info("WA Query: Convert Database Mail");
 				// get total mail
-				st = conn.prepareStatement("SELECT COUNT(*) AS `count` FROM `"+dbPrefix+"Mail`");
+				st = conn.prepareStatement("SELECT COUNT(*) AS `count` FROM `"+this.dbPrefix+"Mail`");
 				rs = st.executeQuery();
 				if (!rs.next()) {
 					WebAuctionPlus.log.severe(WebAuctionPlus.logPrefix + "Could not get total mail!");
@@ -386,10 +386,10 @@ public class MySQLTables {
 				totalMail = rs.getInt(1);
 				WebAuctionPlus.log.warning(WebAuctionPlus.logPrefix + "Found " + Integer.toString(totalMail) + " mail stacks");
 				// get old mail items
-				st = conn.prepareStatement("SELECT `name`,`damage`,`player`,`quantity` FROM `"+dbPrefix+"Mail`");
+				st = conn.prepareStatement("SELECT `name`,`damage`,`player`,`quantity` FROM `"+this.dbPrefix+"Mail`");
 				rs = st.executeQuery();
 				while (rs.next()) {
-					stNew = conn.prepareStatement("INSERT INTO `"+dbPrefix+"Items` " +
+					stNew = conn.prepareStatement("INSERT INTO `"+this.dbPrefix+"Items` " +
 						"(`ItemTable`,`itemId`,`itemDamage`,`playerName`,`qty`) VALUES ('Mail',?,?,?,?)");
 					stNew.setInt   (1, rs.getInt   ("name"));
 					stNew.setInt   (2, rs.getInt   ("damage"));
@@ -408,7 +408,7 @@ public class MySQLTables {
 				closeResources(stNew, rs2);
 			}
 			// make sure nothing's null
-			executeRawSQL("UPDATE `"+dbPrefix+"Items` SET `ItemTable`='Items' WHERE `ItemTable` IS NULL");
+			executeRawSQL("UPDATE `"+this.dbPrefix+"Items` SET `ItemTable`='Items' WHERE `ItemTable` IS NULL");
 		}
 		// move data to new ItemEnchantments table
 		if (tableExists("EnchantLinks")) {
@@ -421,7 +421,7 @@ public class MySQLTables {
 			try {
 				if(WebAuctionPlus.isDebug()) WebAuctionPlus.log.info("WA Query: Convert Database Enchantments");
 				// get total enchantments
-				st = conn.prepareStatement("SELECT COUNT(*) AS `count` FROM `"+dbPrefix+"EnchantLinks`");
+				st = conn.prepareStatement("SELECT COUNT(*) AS `count` FROM `"+this.dbPrefix+"EnchantLinks`");
 				rs = st.executeQuery();
 				if (!rs.next()) {
 					WebAuctionPlus.log.severe(WebAuctionPlus.logPrefix + "Could not get total enchantments!");
@@ -431,10 +431,10 @@ public class MySQLTables {
 				WebAuctionPlus.log.warning(WebAuctionPlus.logPrefix + "Found " + Integer.toString(totalEnchantments) + " enchantments");
 				// get old enchantments table
 				st = conn.prepareStatement("SELECT `enchId`,`itemTableId`,`itemId` " +
-					"FROM `"+dbPrefix+"EnchantLinks` ORDER BY `itemId` ASC");
+					"FROM `"+this.dbPrefix+"EnchantLinks` ORDER BY `itemId` ASC");
 				rs = st.executeQuery();
 				while (rs.next()) {
-					stNew = conn.prepareStatement("INSERT INTO `"+dbPrefix+"ItemEnchantments` (" +
+					stNew = conn.prepareStatement("INSERT INTO `"+this.dbPrefix+"ItemEnchantments` (" +
 						"`ItemTable`, `ItemTableId`, `enchName`, `enchId`, `level`) VALUES (" +
 						"?, ?, ?, ?, ? )");
 					// ItemTable Enum
@@ -451,7 +451,7 @@ public class MySQLTables {
 					stNew.setInt(2, rs.getInt("itemId"));
 					// query Enchantments (old table)
 					st = conn.prepareStatement("SELECT `enchName`, `enchId`, `level` " +
-						"FROM `"+dbPrefix+"Enchantments` WHERE `id` = ?");
+						"FROM `"+this.dbPrefix+"Enchantments` WHERE `id` = ?");
 					st.setInt(1, rs.getInt("enchId"));
 					rs2 = st.executeQuery();
 					if (rs2.next()) {
@@ -502,7 +502,7 @@ public class MySQLTables {
 			try {
 				if(WebAuctionPlus.isDebug()) WebAuctionPlus.log.info("WA Query: Convert ItemEnchantments");
 				// get total enchantments
-				st = conn.prepareStatement("SELECT COUNT(*) AS `count` FROM `"+dbPrefix+"ItemEnchantments`");
+				st = conn.prepareStatement("SELECT COUNT(*) AS `count` FROM `"+this.dbPrefix+"ItemEnchantments`");
 				rs = st.executeQuery();
 				if (!rs.next()) {
 					WebAuctionPlus.log.severe(WebAuctionPlus.logPrefix + "Could not get total item enchantments!");
@@ -511,7 +511,7 @@ public class MySQLTables {
 				totalItemEnchantments = rs.getInt(1);
 				WebAuctionPlus.log.warning(WebAuctionPlus.logPrefix + "Found " + Integer.toString(totalItemEnchantments) + " item enchantments");
 				// get old item enchantments
-				st = conn.prepareStatement("SELECT `ItemTable`, `ItemTableId`, `enchId`, `level`  FROM `"+dbPrefix+"ItemEnchantments` ORDER BY `enchId` ASC");
+				st = conn.prepareStatement("SELECT `ItemTable`, `ItemTableId`, `enchId`, `level`  FROM `"+this.dbPrefix+"ItemEnchantments` ORDER BY `enchId` ASC");
 				rs = st.executeQuery();
 				HashMap<Integer, String> enchTempAuctions = new HashMap<Integer, String>();
 				HashMap<Integer, String> enchTempItems    = new HashMap<Integer, String>();
@@ -524,7 +524,7 @@ public class MySQLTables {
 						enchStr += Integer.toString(rs.getInt("enchId"))+":"+Integer.toString(rs.getInt("level"));
 						enchTempAuctions.put(rs.getInt("ItemTableId"), enchStr);
 						// update row
-						stNew = conn.prepareStatement("UPDATE `"+dbPrefix+"Auctions` SET `enchantments` = ? WHERE `id` = ? LIMIT 1");
+						stNew = conn.prepareStatement("UPDATE `"+this.dbPrefix+"Auctions` SET `enchantments` = ? WHERE `id` = ? LIMIT 1");
 						stNew.setString(1, enchStr);
 						stNew.setInt   (2, rs.getInt("ItemTableId"));
 					// items table
@@ -535,7 +535,7 @@ public class MySQLTables {
 						enchStr += Integer.toString(rs.getInt("enchId"))+":"+Integer.toString(rs.getInt("level"));
 						enchTempItems.put(rs.getInt("ItemTableId"), enchStr);
 						// update row
-						stNew = conn.prepareStatement("UPDATE `"+dbPrefix+"Items` SET `enchantments` = ? WHERE `id` = ? LIMIT 1");
+						stNew = conn.prepareStatement("UPDATE `"+this.dbPrefix+"Items` SET `enchantments` = ? WHERE `id` = ? LIMIT 1");
 						stNew.setString(1, enchStr);
 						stNew.setInt   (2, rs.getInt("ItemTableId"));
 					}
@@ -558,31 +558,31 @@ public class MySQLTables {
 
 
 	public Connection getConnection() {
-		return dataQueries.getConnection();
+		return this.dataQueries.getConnection();
 	}
 	public void closeResources(Connection conn, Statement st, ResultSet rs) {
-		dataQueries.closeResources(conn, st, rs);
+		this.dataQueries.closeResources(conn, st, rs);
 	}
 	public void closeResources(Connection conn) {
-		dataQueries.closeResources(conn);
+		this.dataQueries.closeResources(conn);
 	}
 	public static void closeResources(Statement st, ResultSet rs) {
 		DataQueries.closeResources(st, rs);
 	}
 	public void executeRawSQL(String sql) {
-		dataQueries.executeRawSQL(sql);
+		this.dataQueries.executeRawSQL(sql);
 	}
 	protected boolean tableExists(String tableName) {
-		return dataQueries.tableExists(tableName);
+		return this.dataQueries.tableExists(tableName);
 	}
 	protected boolean setTableExists(String tableName, String Sql) {
-		return dataQueries.setTableExists(tableName, Sql);
+		return this.dataQueries.setTableExists(tableName, Sql);
 	}
 	protected boolean columnExists(String tableName, String columnName) {
-		return dataQueries.columnExists(tableName, columnName);
+		return this.dataQueries.columnExists(tableName, columnName);
 	}
 	protected boolean setColumnExists(String tableName, String columnName, String Attr) {
-		return dataQueries.setColumnExists(tableName, columnName, Attr);
+		return this.dataQueries.setColumnExists(tableName, columnName, Attr);
 	}
 
 

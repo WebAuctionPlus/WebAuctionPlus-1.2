@@ -126,7 +126,7 @@ public class WebAuctionPlus extends JavaPlugin {
 		currentVersion = getDescription().getVersion();
 
 		// Command listener
-		getCommand("wa").setExecutor(WebAuctionCommandsListener);
+		getCommand("wa").setExecutor(this.WebAuctionCommandsListener);
 
 		// load config.yml
 		if(!onLoadConfig())
@@ -154,9 +154,9 @@ public class WebAuctionPlus extends JavaPlugin {
 			getServer().getScheduler().cancelTasks(this);
 		} catch (Exception ignore) {}
 		if(tempPassTimeoutTask != null) tempPassTimeoutTask.shutdown();
-		if(waAnnouncerTask != null) waAnnouncerTask.clearMessages();
-		if(shoutSigns      != null) shoutSigns.clear();
-		if(recentSigns     != null) recentSigns.clear();
+		if(this.waAnnouncerTask != null) this.waAnnouncerTask.clearMessages();
+		if(this.shoutSigns      != null) this.shoutSigns.clear();
+		if(this.recentSigns     != null) this.recentSigns.clear();
 		// close inventories
 		try {
 			WebInventory.ForceCloseAll();
@@ -168,7 +168,7 @@ public class WebAuctionPlus extends JavaPlugin {
 		} catch (Exception ignore) {}
 		// close config
 		try {
-			config = null;
+			this.config = null;
 		} catch (Exception ignore) {}
 		settings = null;
 		Lang = null;
@@ -211,8 +211,8 @@ public class WebAuctionPlus extends JavaPlugin {
 
 	public boolean onLoadConfig() {
 		// init configs
-		if(config != null) config = null;
-		config = getConfig();
+		if(this.config != null) this.config = null;
+		this.config = getConfig();
 		configDefaults();
 
 		// connect MySQL
@@ -252,13 +252,13 @@ public class WebAuctionPlus extends JavaPlugin {
 		}
 
 		try {
-			isDebug = config.getBoolean("Development.Debug");
+			isDebug = this.config.getBoolean("Development.Debug");
 //			addComment("debug_mode", Arrays.asList("# This is where you enable debug mode"))
-			signDelay          = config.getInt    ("Misc.SignClickDelay");
-			timEnabled         = config.getBoolean("Misc.UnsafeEnchantments");
-			announceGlobal     = config.getBoolean("Misc.AnnounceGlobally");
-			numberOfRecentLink = config.getInt    ("SignLink.NumberOfLatestAuctionsToTrack");
-			useSignLink        = config.getBoolean("SignLink.Enabled");
+			this.signDelay          = this.config.getInt    ("Misc.SignClickDelay");
+			timEnabled         = this.config.getBoolean("Misc.UnsafeEnchantments");
+			announceGlobal     = this.config.getBoolean("Misc.AnnounceGlobally");
+			this.numberOfRecentLink = this.config.getInt    ("SignLink.NumberOfLatestAuctionsToTrack");
+			useSignLink        = this.config.getBoolean("SignLink.Enabled");
 			if(useSignLink)
 				if(!Bukkit.getPluginManager().getPlugin("SignLink").isEnabled()) {
 					log.warning(logPrefix+"SignLink is enabled but plugin is not loaded!");
@@ -267,37 +267,37 @@ public class WebAuctionPlus extends JavaPlugin {
 
 			// scheduled tasks
 			BukkitScheduler scheduler = Bukkit.getScheduler();
-			boolean UseMultithreads = config.getBoolean("Development.UseMultithreads");
+			boolean UseMultithreads = this.config.getBoolean("Development.UseMultithreads");
 
 			// temp password timeout task
 			if(tempPassTimeoutTask == null || tempPassTimeoutTask.isStopped())
 				tempPassTimeoutTask = new TempPasswordTimeoutTask(this);
 
 			// announcer
-			announcerEnabled = config.getBoolean("Announcer.Enabled");
-			long announcerMinutes = 20 * 60 * config.getLong("Tasks.AnnouncerMinutes");
-			if(announcerEnabled) waAnnouncerTask = new AnnouncerTask(this);
-			if (announcerEnabled && announcerMinutes>0) {
+			this.announcerEnabled = this.config.getBoolean("Announcer.Enabled");
+			long announcerMinutes = 20 * 60 * this.config.getLong("Tasks.AnnouncerMinutes");
+			if(this.announcerEnabled) this.waAnnouncerTask = new AnnouncerTask(this);
+			if (this.announcerEnabled && announcerMinutes>0) {
 				if(announcerMinutes < 6000) announcerMinutes = 6000; // minimum 5 minutes
-				waAnnouncerTask.chatPrefix     = config.getString ("Announcer.Prefix");
-				waAnnouncerTask.announceRandom = config.getBoolean("Announcer.Random");
-				waAnnouncerTask.addMessages(     config.getStringList("Announcements"));
-				scheduler.runTaskTimerAsynchronously(this, waAnnouncerTask,
+				this.waAnnouncerTask.chatPrefix     = this.config.getString ("Announcer.Prefix");
+				this.waAnnouncerTask.announceRandom = this.config.getBoolean("Announcer.Random");
+				this.waAnnouncerTask.addMessages(     this.config.getStringList("Announcements"));
+				scheduler.runTaskTimerAsynchronously(this, this.waAnnouncerTask,
 					(announcerMinutes/2), announcerMinutes);
 				log.info(logPrefix + "Enabled Task: Announcer (always multi-threaded)");
 			}
 
-			long saleAlertSeconds        = 20 * config.getLong("Tasks.SaleAlertSeconds");
-			long shoutSignUpdateSeconds  = 20 * config.getLong("Tasks.ShoutSignUpdateSeconds");
-			long recentSignUpdateSeconds = 20 * config.getLong("Tasks.RecentSignUpdateSeconds");
-			useOriginalRecent            =      config.getBoolean("Misc.UseOriginalRecentSigns");
+			long saleAlertSeconds        = 20 * this.config.getLong("Tasks.SaleAlertSeconds");
+			long shoutSignUpdateSeconds  = 20 * this.config.getLong("Tasks.ShoutSignUpdateSeconds");
+			long recentSignUpdateSeconds = 20 * this.config.getLong("Tasks.RecentSignUpdateSeconds");
+			useOriginalRecent            =      this.config.getBoolean("Misc.UseOriginalRecentSigns");
 
 			// Build shoutSigns map
 			if (shoutSignUpdateSeconds > 0)
-				shoutSigns.putAll(dataQueries.getShoutSignLocations());
+				this.shoutSigns.putAll(dataQueries.getShoutSignLocations());
 			// Build recentSigns map
 			if (recentSignUpdateSeconds > 0)
-				recentSigns.putAll(dataQueries.getRecentSignLocations());
+				this.recentSigns.putAll(dataQueries.getRecentSignLocations());
 
 			// report sales to players (always multi-threaded)
 			if (saleAlertSeconds > 0) {
@@ -341,7 +341,7 @@ public class WebAuctionPlus extends JavaPlugin {
 
 	// Init database
 	public synchronized boolean ConnectDB() {
-		if(config.getString("MySQL.Password").equals("password123")) {
+		if(this.config.getString("MySQL.Password").equals("password123")) {
 			fail("Please set the database connection info in the config.");
 			return false;
 		}
@@ -351,19 +351,19 @@ public class WebAuctionPlus extends JavaPlugin {
 			return false;
 		}
 		try {
-			int port = config.getInt("MySQL.Port");
-			if(port < 1) port = Integer.valueOf(config.getString("MySQL.Port"));
+			int port = this.config.getInt("MySQL.Port");
+			if(port < 1) port = Integer.valueOf(this.config.getString("MySQL.Port"));
 			if(port < 1) port = 3306;
 			dataQueries = new DataQueries(
-				config.getString("MySQL.Host"),
+				this.config.getString("MySQL.Host"),
 				port,
-				config.getString("MySQL.Username"),
-				config.getString("MySQL.Password"),
-				config.getString("MySQL.Database"),
-				config.getString("MySQL.TablePrefix")
+				this.config.getString("MySQL.Username"),
+				this.config.getString("MySQL.Password"),
+				this.config.getString("MySQL.Database"),
+				this.config.getString("MySQL.TablePrefix")
 			);
-			dataQueries.setConnPoolSizeWarn(config.getInt("MySQL.ConnectionPoolSizeWarn"));
-			dataQueries.setConnPoolSizeHard(config.getInt("MySQL.ConnectionPoolSizeHard"));
+			dataQueries.setConnPoolSizeWarn(this.config.getInt("MySQL.ConnectionPoolSizeWarn"));
+			dataQueries.setConnPoolSizeHard(this.config.getInt("MySQL.ConnectionPoolSizeHard"));
 			// create/update tables
 			MySQLTables dbTables = new MySQLTables(this);
 			if(!dbTables.isOk()) {
@@ -381,32 +381,32 @@ public class WebAuctionPlus extends JavaPlugin {
 	}
 
 	private void configDefaults() {
-		config.addDefault("MySQL.Host",                             "localhost");
-		config.addDefault("MySQL.Username",                         "minecraft");
-		config.addDefault("MySQL.Password",                         "password123");
-		config.addDefault("MySQL.Port",                             3306);
-		config.addDefault("MySQL.Database",                         "minecraft");
-		config.addDefault("MySQL.TablePrefix",                      "WA_");
-		config.addDefault("MySQL.ConnectionPoolSizeWarn",           5);
-		config.addDefault("MySQL.ConnectionPoolSizeHard",           10);
-		config.addDefault("Misc.ReportSales",                       true);
-		config.addDefault("Misc.UseOriginalRecentSigns",            true);
-		config.addDefault("Misc.SignClickDelay",                    500);
-		config.addDefault("Misc.UnsafeEnchantments",                false);
-		config.addDefault("Misc.AnnounceGlobally",                  true);
-		config.addDefault("Tasks.SaleAlertSeconds",                 20L);
-		config.addDefault("Tasks.ShoutSignUpdateSeconds",           20L);
-		config.addDefault("Tasks.RecentSignUpdateSeconds",          60L);
-		config.addDefault("Tasks.AnnouncerMinutes",                 60L);
-		config.addDefault("SignLink.Enabled",                       false);
-		config.addDefault("SignLink.NumberOfLatestAuctionsToTrack", 10);
-		config.addDefault("Development.UseMultithreads",            false);
-		config.addDefault("Development.Debug",                      false);
-		config.addDefault("Announcer.Enabled",                      false);
-		config.addDefault("Announcer.Prefix",                       "&c[Info] ");
-		config.addDefault("Announcer.Random",                       false);
-		config.addDefault("Announcements", new String[] {"This server is running WebAuctionPlus!"} );
-		config.options().copyDefaults(true);
+		this.config.addDefault("MySQL.Host",                             "localhost");
+		this.config.addDefault("MySQL.Username",                         "minecraft");
+		this.config.addDefault("MySQL.Password",                         "password123");
+		this.config.addDefault("MySQL.Port",                             3306);
+		this.config.addDefault("MySQL.Database",                         "minecraft");
+		this.config.addDefault("MySQL.TablePrefix",                      "WA_");
+		this.config.addDefault("MySQL.ConnectionPoolSizeWarn",           5);
+		this.config.addDefault("MySQL.ConnectionPoolSizeHard",           10);
+		this.config.addDefault("Misc.ReportSales",                       true);
+		this.config.addDefault("Misc.UseOriginalRecentSigns",            true);
+		this.config.addDefault("Misc.SignClickDelay",                    500);
+		this.config.addDefault("Misc.UnsafeEnchantments",                false);
+		this.config.addDefault("Misc.AnnounceGlobally",                  true);
+		this.config.addDefault("Tasks.SaleAlertSeconds",                 20L);
+		this.config.addDefault("Tasks.ShoutSignUpdateSeconds",           20L);
+		this.config.addDefault("Tasks.RecentSignUpdateSeconds",          60L);
+		this.config.addDefault("Tasks.AnnouncerMinutes",                 60L);
+		this.config.addDefault("SignLink.Enabled",                       false);
+		this.config.addDefault("SignLink.NumberOfLatestAuctionsToTrack", 10);
+		this.config.addDefault("Development.UseMultithreads",            false);
+		this.config.addDefault("Development.Debug",                      false);
+		this.config.addDefault("Announcer.Enabled",                      false);
+		this.config.addDefault("Announcer.Prefix",                       "&c[Info] ");
+		this.config.addDefault("Announcer.Random",                       false);
+		this.config.addDefault("Announcements", new String[] {"This server is running WebAuctionPlus!"} );
+		this.config.options().copyDefaults(true);
 		saveConfig();
 	}
 

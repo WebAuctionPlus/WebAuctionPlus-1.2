@@ -43,7 +43,7 @@ public class DataQueries extends MySQLConnPool {
 		try {
 			if(isDebug()) log.info("WA Query: getAuction "+Integer.toString(auctionId));
 			st = conn.prepareStatement("SELECT `playerName`, `playerId`, `itemId`, `itemDamage`, `qty`, `enchantments`, `itemTitle`, "+
-				"`price`, `allowBids`, `currentBid`, `currentWinner` FROM `"+dbPrefix+"Auctions` JOIN `"+dbPrefix+"Players` ON "+dbPrefix+"Players.id = "+dbPrefix+"Auctions.playerId WHERE "+dbPrefix+"Auctions.id = ? LIMIT 1");
+				"`price`, `allowBids`, `currentBid`, `currentWinner` FROM `"+this.dbPrefix+"Auctions` JOIN `"+this.dbPrefix+"Players` ON "+this.dbPrefix+"Players.id = "+this.dbPrefix+"Auctions.playerId WHERE "+this.dbPrefix+"Auctions.id = ? LIMIT 1");
 //UNIX_TIMESTANP(`created`) AS `created`,
 			st.setInt(1, auctionId);
 			rs = st.executeQuery();
@@ -87,7 +87,7 @@ public class DataQueries extends MySQLConnPool {
 			if(isDebug()) log.info("WA Query: createShoutSign " +
 				Integer.toString(radius) + " " + Integer.toString(x) + "," +
 				Integer.toString(y) + "," + Integer.toString(z) );
-			st = conn.prepareStatement("INSERT INTO `"+dbPrefix+"ShoutSigns` " +
+			st = conn.prepareStatement("INSERT INTO `"+this.dbPrefix+"ShoutSigns` " +
 				"(`world`, `radius`, `x`, `y`, `z`) VALUES (?, ?, ?, ?, ?)");
 			st.setString(1, world.getName());
 			st.setInt   (2, radius);
@@ -108,7 +108,7 @@ public class DataQueries extends MySQLConnPool {
 		ResultSet rs = null;
 		try {
 			if(isDebug()) log.info("WA Query: removeShoutSign " + location.toString());
-			st = conn.prepareStatement("DELETE FROM `"+dbPrefix+"ShoutSigns` WHERE " +
+			st = conn.prepareStatement("DELETE FROM `"+this.dbPrefix+"ShoutSigns` WHERE " +
 				"`world` = ? AND `x` = ? AND `y` = ? AND `z` = ?");
 			st.setString(1, location.getWorld().getName());
 			st.setInt   (2, (int) location.getX());
@@ -129,7 +129,7 @@ public class DataQueries extends MySQLConnPool {
 		ResultSet rs = null;
 		try {
 			if(isDebug()) log.info("WA Query: getShoutSignLocations");
-			st = conn.prepareStatement("SELECT `world`,`radius`,`x`,`y`,`z` FROM `"+dbPrefix+"ShoutSigns`");
+			st = conn.prepareStatement("SELECT `world`,`radius`,`x`,`y`,`z` FROM `"+this.dbPrefix+"ShoutSigns`");
 			Location location;
 			rs = st.executeQuery();
 			while(rs.next()) {
@@ -156,7 +156,7 @@ public class DataQueries extends MySQLConnPool {
 			if(isDebug()) log.info("WA Query: createRecentSign " +
 				world.getName() + " " + Integer.toString(offset) + " " +
 				Integer.toString(x) + "," + Integer.toString(y) + "," + Integer.toString(z) );
-			st = conn.prepareStatement("INSERT INTO `"+dbPrefix+"RecentSigns` " +
+			st = conn.prepareStatement("INSERT INTO `"+this.dbPrefix+"RecentSigns` " +
 				"(`world`, `offset`, `x`, `y`, `z`) VALUES (?, ?, ?, ?, ?)");
 			st.setString(1, world.getName());
 			st.setInt   (2, offset);
@@ -177,7 +177,7 @@ public class DataQueries extends MySQLConnPool {
 		ResultSet rs = null;
 		try {
 			if(isDebug()) log.info("WA Query: removeRecentSign " + location.toString());
-			st = conn.prepareStatement("DELETE FROM `"+dbPrefix+"RecentSigns` WHERE "+
+			st = conn.prepareStatement("DELETE FROM `"+this.dbPrefix+"RecentSigns` WHERE "+
 				"`world` = ? AND `x` = ? AND `y` = ? AND `z` = ?");
 			st.setString(1, location.getWorld().getName());
 			st.setInt   (2, (int) location.getX());
@@ -198,7 +198,7 @@ public class DataQueries extends MySQLConnPool {
 		ResultSet rs = null;
 		try {
 			if(isDebug()) log.info("WA Query: getRecentSignLocations");
-			st = conn.prepareStatement("SELECT `world`,`offset`,`x`,`y`,`z` FROM `"+dbPrefix+"RecentSigns`");
+			st = conn.prepareStatement("SELECT `world`,`offset`,`x`,`y`,`z` FROM `"+this.dbPrefix+"RecentSigns`");
 			Location location;
 			rs = st.executeQuery();
 			while(rs.next()) {
@@ -224,7 +224,7 @@ public class DataQueries extends MySQLConnPool {
 		try {
 			if(isDebug()) log.info("WA Query: getPlayer " + uuid.toString());
 			st = conn.prepareStatement("SELECT `id`,`playerName`,`uuid`,`money`,`Permissions` " +
-				"FROM `"+dbPrefix+"Players` WHERE `uuid` = ? LIMIT 1");
+				"FROM `"+this.dbPrefix+"Players` WHERE `uuid` = ? LIMIT 1");
 			st.setString(1, uuid.toString());
 			rs = st.executeQuery();
 			if(rs.next()) {
@@ -252,7 +252,7 @@ public class DataQueries extends MySQLConnPool {
 		try {
 			if(isDebug()) log.info("WA Query: getPlayer " + id);
 			st = conn.prepareStatement("SELECT `id`,`playerName`,`uuid`,`money`,`Permissions` " +
-				"FROM `"+dbPrefix+"Players` WHERE `id` = ? LIMIT 1");
+				"FROM `"+this.dbPrefix+"Players` WHERE `id` = ? LIMIT 1");
 			st.setInt(1, id);
 			rs = st.executeQuery();
 			if(rs.next()) {
@@ -280,7 +280,7 @@ public class DataQueries extends MySQLConnPool {
 		try {
 			if(isDebug()) log.info("WA Query: createPlayer " + waPlayer.getPlayerName() +
 				" with perms: " + waPlayer.getPermsString());
-			st = conn.prepareStatement("INSERT INTO `"+dbPrefix+"Players` " +
+			st = conn.prepareStatement("INSERT INTO `"+this.dbPrefix+"Players` " +
 				"(`playerName`,`uuid`, `password`, `Permissions`) VALUES (?, ?, ?, ?)");
 			st.setString(1, waPlayer.getPlayerName());
 			st.setString(2, waPlayer.getPlayerUUID().toString());
@@ -301,7 +301,7 @@ public class DataQueries extends MySQLConnPool {
 		ResultSet rs = null;
 		try {
 			if(isDebug()) log.info("WA Query: updatePlayerName " + waPlayer.getPlayerUUID().toString());
-			st = conn.prepareStatement("UPDATE `"+dbPrefix+"Players` SET `playerName` = ? WHERE `uuid` = ? LIMIT 1");
+			st = conn.prepareStatement("UPDATE `"+this.dbPrefix+"Players` SET `playerName` = ? WHERE `uuid` = ? LIMIT 1");
 			st.setString(1, name);
 			st.setString(2, waPlayer.getPlayerUUID().toString());
 			st.executeUpdate();
@@ -320,7 +320,7 @@ public class DataQueries extends MySQLConnPool {
 		ResultSet rs = null;
 		try {
 			if(isDebug()) log.info("WA Query: updatePlayerPassword " + uuid.toString());
-			st = conn.prepareStatement("UPDATE `"+dbPrefix+"Players` SET `password` = ? WHERE `uuid` = ? LIMIT 1");
+			st = conn.prepareStatement("UPDATE `"+this.dbPrefix+"Players` SET `password` = ? WHERE `uuid` = ? LIMIT 1");
 			st.setString(1, newPass);
 			st.setString(2, uuid.toString());
 			st.executeUpdate();
@@ -344,7 +344,7 @@ public class DataQueries extends MySQLConnPool {
 			waPlayer.setPerms(canBuy, canSell, isAdmin);
 			if(isDebug()) log.info("WA Query: updatePlayerPermissions " + waPlayer.getPlayerName() +
 				" with perms: " + waPlayer.getPermsString());
-			st = conn.prepareStatement("UPDATE `"+dbPrefix+"Players` SET " +
+			st = conn.prepareStatement("UPDATE `"+this.dbPrefix+"Players` SET " +
 				"`Permissions` = ? WHERE `uuid` = ? LIMIT 1");
 			st.setString(1, waPlayer.getPermsString());
 			st.setString(2, waPlayer.getPlayerUUID().toString());
@@ -364,7 +364,7 @@ public class DataQueries extends MySQLConnPool {
 		ResultSet rs = null;
 		try {
 			if(isDebug()) log.info("WA Query: updatePlayerMoney " + uuid.toString());
-			st = conn.prepareStatement("UPDATE `"+dbPrefix+"Players` SET `money` = ? WHERE `uuid` = ?");
+			st = conn.prepareStatement("UPDATE `"+this.dbPrefix+"Players` SET `money` = ? WHERE `uuid` = ?");
 			st.setDouble(1, money);
 			st.setString(2, uuid.toString());
 			st.executeUpdate();

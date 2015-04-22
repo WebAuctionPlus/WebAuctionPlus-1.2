@@ -24,18 +24,18 @@ public class AnnouncerTask implements Runnable {
 
 	public void run() {
 		if (WebAuctionPlus.getOnlinePlayers().length == 0) return;
-		if (announcementMessages.isEmpty()) return;
+		if (this.announcementMessages.isEmpty()) return;
 		// random
-		if (announceRandom) {
-			currentAnnouncement = WebAuctionPlus.getNewRandom(currentAnnouncement, announcementMessages.size() - 1);
-			announce(currentAnnouncement);
+		if (this.announceRandom) {
+			this.currentAnnouncement = WebAuctionPlus.getNewRandom(this.currentAnnouncement, this.announcementMessages.size() - 1);
+			announce(this.currentAnnouncement);
 		// sequential
 		} else {
-			while (currentAnnouncement > announcementMessages.size()-1) {
-				currentAnnouncement -= announcementMessages.size();
+			while (this.currentAnnouncement > this.announcementMessages.size()-1) {
+				this.currentAnnouncement -= this.announcementMessages.size();
 			}
-			announce(currentAnnouncement);
-			currentAnnouncement++;
+			announce(this.currentAnnouncement);
+			this.currentAnnouncement++;
 		}
 //		numberOfAnnouncements++;
 	}
@@ -45,28 +45,28 @@ public class AnnouncerTask implements Runnable {
 			addMessages(msg);
 	}
 	public void addMessages(String addMsg) {
-		announcementMessages.add(addMsg);
+		this.announcementMessages.add(addMsg);
 	}
 	public void clearMessages() {
-		announcementMessages.clear();
+		this.announcementMessages.clear();
 	}
 
 	public void announce(int lineNumber){
-		if (announcementMessages.isEmpty() || lineNumber < 0) return;
+		if (this.announcementMessages.isEmpty() || lineNumber < 0) return;
 		WebAuctionPlus.log.info(WebAuctionPlus.logPrefix + "Announcement # " + Integer.toString(lineNumber));
-		announce(announcementMessages.get(lineNumber));
+		announce(this.announcementMessages.get(lineNumber));
 	}
 
 	public void announce(String line){
 		if (line.isEmpty()) return;
-		Server server = plugin.getServer();
+		Server server = this.plugin.getServer();
 		String[] messages = line.split("&n");
 		for (String message : messages) {
 			// is command
 			if (message.startsWith("/")) {
 				server.dispatchCommand(server.getConsoleSender(), message.substring(1));
 			} else if (WebAuctionPlus.getOnlinePlayers().length > 0) {
-				message = WebAuctionPlus.ReplaceColors(chatPrefix + message);
+				message = WebAuctionPlus.ReplaceColors(this.chatPrefix + message);
 				server.broadcast(message, "wa.announcer.receive");
 			}
 		}
