@@ -49,21 +49,21 @@ public class waSettings {
 
 	// set default settings
 	private void addDefaults() {
-		addDefault("Version",				plugin.getDescription().getVersion().toString());
-		addDefault("Language",				"en");
-		addDefault("Require Login",			false);
-		addDefault("CSRF Protection",		true);
-		addDefault("Currency Prefix",		"$ ");
-		addDefault("Currency Postfix",		"");
-		addDefault("Custom Description",	false);
-		addDefault("Inventory Rows",		6);
-		addDefault("Website Theme",			"");
-		addDefault("jQuery UI Pack",		"");
-		addDefault("Item Packs",			"");
-		addDefault("Max Sell Price",		10000.00);
+		addDefault("Version",            plugin.getDescription().getVersion().toString());
+		addDefault("Language",           "en");
+		addDefault("Require Login",      false);
+		addDefault("CSRF Protection",    true);
+		addDefault("Currency Prefix",    "$ ");
+		addDefault("Currency Postfix",   "");
+		addDefault("Custom Description", false);
+		addDefault("Inventory Rows",     6);
+		addDefault("Website Theme",      "");
+		addDefault("jQuery UI Pack",     "");
+		addDefault("Item Packs",         "");
+		addDefault("Max Sell Price",     10000.00);
 //		addDefault("Max Selling Per Player",20);
 //		addDefault("Storage base per stack",1.0);
-//		addDefault("Storage add per item",	0.1);
+//		addDefault("Storage add per item",  0.1);
 	}
 	private void addDefault(String name, String value) {
 		if(!settingsMap.containsKey(name)) {
@@ -119,11 +119,11 @@ public class waSettings {
 	}
 	public boolean getBoolean(String name) {
 		String value = this.getString(name);
-		if(     value.equalsIgnoreCase("true"))		return true;
-		else if(value.equalsIgnoreCase("false"))	return false;
-		else if(value.equalsIgnoreCase("on"))		return true;
-		else if(value.equalsIgnoreCase("off"))		return false;
-		else										return Boolean.valueOf(value);
+		if(     value.equalsIgnoreCase("true"))  return true;
+		else if(value.equalsIgnoreCase("false")) return false;
+		else if(value.equalsIgnoreCase("on"))    return true;
+		else if(value.equalsIgnoreCase("off"))   return false;
+		else                                     return Boolean.valueOf(value);
 	}
 	public int getInteger(String name) {
 		return Integer.valueOf(this.getString(name));

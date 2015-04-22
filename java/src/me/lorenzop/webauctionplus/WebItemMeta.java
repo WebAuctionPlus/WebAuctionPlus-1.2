@@ -28,7 +28,7 @@ public class WebItemMeta {
 		if(stack  == null) throw new NullPointerException();
 		final Map<Enchantment, Integer> enchants = getItemEnchants(stack, player);
 		final boolean hasEnchants = !enchants.isEmpty();
-                boolean lore_set = false;
+		boolean lore_set = false;
 		final StringBuilder str = new StringBuilder();
 		if(hasEnchants) {
 			// convert enchantments to int id for sorting
@@ -62,7 +62,7 @@ public class WebItemMeta {
 			}
 			// append lore to string
 			if(meta.hasLore()) {
-                                if(str.length() > 0)
+				if(str.length() > 0)
 					str.append(",");
 				str.append("<LORE>:");
 				final String[] lore = meta.getLore().toArray(new String[0]);
@@ -71,7 +71,7 @@ public class WebItemMeta {
 					if(lore_set)
 						str.append("\n");
 					str.append( line.replace(":", "").replace(",", "").replace("\n", "").trim() );
-                                        lore_set = true;
+					lore_set = true;
 				}
 			}
 		}
@@ -214,14 +214,14 @@ public class WebItemMeta {
 		if(WebAuctionPlus.timEnabled()) {
 			if(level > 127) level = 127;
 		} else {
-                        // is the item enchantable?
-                        if(!isContainer) {
-                            if(!ench.canEnchantItem(stack)) {
+			// is the item enchantable?
+			if(!isContainer) {
+				if(!ench.canEnchantItem(stack)) {
 				WebAuctionPlus.log.warning(WebAuctionPlus.logPrefix+"Removed unsafe enchantment: "+stack.toString()+"  "+ench.toString());
 				return FAIL_VALUE;
-                            }   
-                        }
-                    	// level too low
+				}
+			}
+			// level too low
 			if(level < ench.getStartLevel()) {
 				WebAuctionPlus.log.warning(WebAuctionPlus.logPrefix+"Raised unsafe enchantment: "+
 					Integer.toString(level)+"  "+stack.toString()+"  "+ench.toString()+"  to level: "+ench.getStartLevel() );

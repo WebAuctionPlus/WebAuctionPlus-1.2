@@ -19,41 +19,38 @@ public class PlayerConvertTask implements Runnable {
 
 	}
 
-	public synchronized void run() {         
-            Connection conn = WebAuctionPlus.dataQueries.getConnection();
-            PreparedStatement st = null;
-            ResultSet rs = null;
-            String name;
-            String uuid;
-            try {
-                st = conn.prepareStatement("SELECT `playerName` FROM "+WebAuctionPlus.dataQueries.dbPrefix()+"Players WHERE uuid IS NULL");
-                rs = st.executeQuery();
-                
-                ResultSetMetaData meta = rs.getMetaData();
-                int colCount = meta.getColumnCount();
-                while (rs.next())
-                {
-                    for (int col=1; col <= colCount; col++) 
-                    {
-                        Object value = rs.getObject(col);
-                        if (value != null) 
-                        {
-                            name = value.toString();
-                            OfflinePlayer Player = getOfflinePlayer(name);
-                            if(Player.hasPlayedBefore()) {
-                                uuid = Player.getUniqueId().toString();
-                                st = conn.prepareStatement("UPDATE "+WebAuctionPlus.dataQueries.dbPrefix()+"Players SET uuid = '"+uuid+"' WHERE playerName = '"+name+"'");
-                                st.execute();
-                                WebAuctionPlus.log.info(WebAuctionPlus.logPrefix + "Converting Player Name: " + name + " to uuid: "+ uuid);
-                            } else {
-                                WebAuctionPlus.log.info(WebAuctionPlus.logPrefix + "Player " + name + " not found.");
-                            }
-                        }
-                    }
-                }  
-            } catch (SQLException ex) {
-                Logger.getLogger(PlayerConvertTask.class.getName()).log(Level.SEVERE, null, ex);
-            }
+	public synchronized void run() {
+		Connection conn = WebAuctionPlus.dataQueries.getConnection();
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		String name;
+		String uuid;
+		try {
+			st = conn.prepareStatement("SELECT `playerName` FROM "+WebAuctionPlus.dataQueries.dbPrefix()+"Players WHERE uuid IS NULL");
+			rs = st.executeQuery();
+
+			ResultSetMetaData meta = rs.getMetaData();
+			int colCount = meta.getColumnCount();
+			while (rs.next()) {
+				for (int col=1; col <= colCount; col++) {
+					Object value = rs.getObject(col);
+					if (value != null) {
+						name = value.toString();
+						OfflinePlayer Player = getOfflinePlayer(name);
+						if(Player.hasPlayedBefore()) {
+							uuid = Player.getUniqueId().toString();
+							st = conn.prepareStatement("UPDATE "+WebAuctionPlus.dataQueries.dbPrefix()+"Players SET uuid = '"+uuid+"' WHERE playerName = '"+name+"'");
+							st.execute();
+							WebAuctionPlus.log.info(WebAuctionPlus.logPrefix + "Converting Player Name: " + name + " to uuid: "+ uuid);
+						} else {
+							WebAuctionPlus.log.info(WebAuctionPlus.logPrefix + "Player " + name + " not found.");
+						}
+					}
+				}
+			}
+		} catch (SQLException ex) {
+			Logger.getLogger(PlayerConvertTask.class.getName()).log(Level.SEVERE, null, ex);
+		}
 	}
 
 

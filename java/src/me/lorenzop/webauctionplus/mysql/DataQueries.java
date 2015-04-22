@@ -61,7 +61,7 @@ public class DataQueries extends MySQLConnPool {
 				auction.setItemStack(stack);
 				auction.setItemTitle(rs.getString("itemTitle"));
 				auction.setPlayerName(rs.getString("playerName"));
-                                auction.setPlayerName(rs.getString("playerId"));
+				auction.setPlayerName(rs.getString("playerId"));
 				auction.setPrice(rs.getDouble("price"));
 //				auction.setCreated(rs.getInt("created"));
 				auction.setAllowBids(rs.getBoolean("allowBids"));
@@ -231,7 +231,7 @@ public class DataQueries extends MySQLConnPool {
 				waPlayer = new AuctionPlayer();
 				waPlayer.setPlayerId(  rs.getInt   ("id"));
 				waPlayer.setPlayerName(rs.getString("playerName"));
-                                waPlayer.setPlayerUUID(UUID.fromString(rs.getString("uuid")));
+				waPlayer.setPlayerUUID(UUID.fromString(rs.getString("uuid")));
 				waPlayer.setMoney(     rs.getDouble("money"));
 				waPlayer.setPerms(     rs.getString("Permissions"));
 			}
@@ -243,7 +243,7 @@ public class DataQueries extends MySQLConnPool {
 		}
 		return waPlayer;
 	}
-        
+
 	public AuctionPlayer getPlayer(int id) {
 		AuctionPlayer waPlayer = null;
 		Connection conn = getConnection();
@@ -259,7 +259,7 @@ public class DataQueries extends MySQLConnPool {
 				waPlayer = new AuctionPlayer();
 				waPlayer.setPlayerId(  rs.getInt   ("id"));
 				waPlayer.setPlayerName(rs.getString("playerName"));
-                                waPlayer.setPlayerUUID(UUID.fromString(rs.getString("uuid")));
+				waPlayer.setPlayerUUID(UUID.fromString(rs.getString("uuid")));
 				waPlayer.setMoney(     rs.getDouble("money"));
 				waPlayer.setPerms(     rs.getString("Permissions"));
 			}
@@ -283,7 +283,7 @@ public class DataQueries extends MySQLConnPool {
 			st = conn.prepareStatement("INSERT INTO `"+dbPrefix+"Players` " +
 				"(`playerName`,`uuid`, `password`, `Permissions`) VALUES (?, ?, ?, ?)");
 			st.setString(1, waPlayer.getPlayerName());
-                        st.setString(2, waPlayer.getPlayerUUID().toString());
+			st.setString(2, waPlayer.getPlayerUUID().toString());
 			st.setString(3, pass);
 			st.setString(4, waPlayer.getPermsString());
 			st.executeUpdate();
@@ -294,8 +294,8 @@ public class DataQueries extends MySQLConnPool {
 			closeResources(conn, st, rs);
 		}
 	}
-        
-        public void updatePlayerName(AuctionPlayer waPlayer, String name) {
+
+	public void updatePlayerName(AuctionPlayer waPlayer, String name) {
 		Connection conn = getConnection();
 		PreparedStatement st = null;
 		ResultSet rs = null;

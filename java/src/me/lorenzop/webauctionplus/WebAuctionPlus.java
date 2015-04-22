@@ -79,8 +79,8 @@ public class WebAuctionPlus extends JavaPlugin {
 	public Map<Location, Integer> recentSigns = new HashMap<Location, Integer>();
 	public Map<Location, Integer> shoutSigns  = new HashMap<Location, Integer>();
 
-	public int signDelay			= 0;
-	public int numberOfRecentLink	= 0;
+	public int signDelay          = 0;
+	public int numberOfRecentLink = 0;
 
 	// use recent signs
 	private static boolean useOriginalRecent = false;
@@ -381,31 +381,31 @@ public class WebAuctionPlus extends JavaPlugin {
 	}
 
 	private void configDefaults() {
-		config.addDefault("MySQL.Host",						"localhost");
-		config.addDefault("MySQL.Username",					"minecraft");
-		config.addDefault("MySQL.Password",					"password123");
-		config.addDefault("MySQL.Port",						3306);
-		config.addDefault("MySQL.Database",					"minecraft");
-		config.addDefault("MySQL.TablePrefix",				"WA_");
-		config.addDefault("MySQL.ConnectionPoolSizeWarn",	5);
-		config.addDefault("MySQL.ConnectionPoolSizeHard",	10);
-		config.addDefault("Misc.ReportSales",				true);
-		config.addDefault("Misc.UseOriginalRecentSigns",	true);
-		config.addDefault("Misc.SignClickDelay",			500);
-		config.addDefault("Misc.UnsafeEnchantments",		false);
-		config.addDefault("Misc.AnnounceGlobally",			true);
-		config.addDefault("Tasks.SaleAlertSeconds",			20L);
-		config.addDefault("Tasks.ShoutSignUpdateSeconds",	20L);
-		config.addDefault("Tasks.RecentSignUpdateSeconds",	60L);
-		config.addDefault("Tasks.AnnouncerMinutes",			60L);
-		config.addDefault("SignLink.Enabled",				false);
+		config.addDefault("MySQL.Host",                             "localhost");
+		config.addDefault("MySQL.Username",                         "minecraft");
+		config.addDefault("MySQL.Password",                         "password123");
+		config.addDefault("MySQL.Port",                             3306);
+		config.addDefault("MySQL.Database",                         "minecraft");
+		config.addDefault("MySQL.TablePrefix",                      "WA_");
+		config.addDefault("MySQL.ConnectionPoolSizeWarn",           5);
+		config.addDefault("MySQL.ConnectionPoolSizeHard",           10);
+		config.addDefault("Misc.ReportSales",                       true);
+		config.addDefault("Misc.UseOriginalRecentSigns",            true);
+		config.addDefault("Misc.SignClickDelay",                    500);
+		config.addDefault("Misc.UnsafeEnchantments",                false);
+		config.addDefault("Misc.AnnounceGlobally",                  true);
+		config.addDefault("Tasks.SaleAlertSeconds",                 20L);
+		config.addDefault("Tasks.ShoutSignUpdateSeconds",           20L);
+		config.addDefault("Tasks.RecentSignUpdateSeconds",          60L);
+		config.addDefault("Tasks.AnnouncerMinutes",                 60L);
+		config.addDefault("SignLink.Enabled",                       false);
 		config.addDefault("SignLink.NumberOfLatestAuctionsToTrack", 10);
-		config.addDefault("Development.UseMultithreads",	false);
-		config.addDefault("Development.Debug",				false);
-		config.addDefault("Announcer.Enabled",				false);
-		config.addDefault("Announcer.Prefix",				"&c[Info] ");
-		config.addDefault("Announcer.Random",				false);
-		config.addDefault("Announcements", new String[]{"This server is running WebAuctionPlus!"} );
+		config.addDefault("Development.UseMultithreads",            false);
+		config.addDefault("Development.Debug",                      false);
+		config.addDefault("Announcer.Enabled",                      false);
+		config.addDefault("Announcer.Prefix",                       "&c[Info] ");
+		config.addDefault("Announcer.Random",                       false);
+		config.addDefault("Announcements", new String[] {"This server is running WebAuctionPlus!"} );
 		config.options().copyDefaults(true);
 		saveConfig();
 	}

@@ -65,10 +65,10 @@ public class RecentSignTask implements Runnable {
 		if(WebAuctionPlus.getOnlinePlayers().length == 0) return;
 /*
 		// signlink vars
-		String tickTitle	= "";
-		String tickQtyPrice	= "";
-		String tickSeller	= "";
-		String tickType		= "";
+		String tickTitle    = "";
+		String tickQtyPrice = "";
+		String tickSeller   = "";
+		String tickType     = "";
 */
 		// query auctions
 		Connection conn = WebAuctionPlus.dataQueries.getConnection();
@@ -84,17 +84,18 @@ public class RecentSignTask implements Runnable {
 			int offset = 0;
 			while(rs.next()) {
 				offset++;
-				String strTitle		= rs.getString("itemTitle");
+				String strTitle = rs.getString("itemTitle");
 				if(strTitle==null || strTitle.isEmpty()) strTitle = "N/A       ";
-				int    qty			= rs.getInt("qty");
-				String strPrice		= WebAuctionPlus.FormatPrice(rs.getFloat("price"));
-				String strQtyPrice	= Integer.toString(qty)+"x "+strPrice;
-				String strSeller	= rs.getString("playerName");
+				int qty = rs.getInt("qty");
+				String strPrice    = WebAuctionPlus.FormatPrice(rs.getFloat("price"));
+				String strQtyPrice = Integer.toString(qty)+"x "+strPrice;
+				String strSeller   = rs.getString("playerName");
 				if(strSeller==null || strSeller.isEmpty()) strSeller = "N/A       ";
 /*
-				String strType = "";
-				if(rs.getInt("allowBids") == 0)	strType = "Buy Now";
-				else							strType = "Auction";
+				final String strType =
+						(rs.getInt("allowBids") == 0)
+						? "Buy Now"
+						: "Auction";
 */
 
 				// recent signs
@@ -112,14 +113,14 @@ public class RecentSignTask implements Runnable {
 				// sign link
 				if(WebAuctionPlus.useSignLink()) {
 					int size = strTitle.length();
-					if(strQtyPrice.length() > size)	size = strQtyPrice.length();
-					if(strSeller.length() > size)	size = strSeller.length();
-					if(strType.length() > size)		size = strType.length();
+					if(strQtyPrice.length() > size) size = strQtyPrice.length();
+					if(strSeller.length() > size)   size = strSeller.length();
+					if(strType.length() > size)     size = strType.length();
 					size += 10;
-					tickTitle		+= padString(strTitle,		size);
-					tickQtyPrice	+= padString(strQtyPrice,	size);
-					tickSeller		+= padString(strSeller,		size);
-					tickType		+= padString(strType,		size);
+					tickTitle    += padString(strTitle,    size);
+					tickQtyPrice += padString(strQtyPrice, size);
+					tickSeller   += padString(strSeller,   size);
+					tickType     += padString(strType,     size);
 				}
 */
 
@@ -135,10 +136,10 @@ public class RecentSignTask implements Runnable {
 		// set signlink vars
 		if(WebAuctionPlus.useSignLink()) {
 			try {
-				varTitle.set	(tickTitle);
-				varQtyPrice.set	(tickQtyPrice);
-				varSeller.set	(tickSeller);
-				varType.set		(tickType);
+				varTitle.set    (tickTitle);
+				varQtyPrice.set (tickQtyPrice);
+				varSeller.set   (tickSeller);
+				varType.set     (tickType);
 			} catch(Exception e) {
 				e.printStackTrace();
 			}

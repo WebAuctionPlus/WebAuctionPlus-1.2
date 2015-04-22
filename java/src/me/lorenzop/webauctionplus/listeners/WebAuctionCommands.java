@@ -76,29 +76,29 @@ public class WebAuctionCommands implements CommandExecutor {
 				}
 				return true;
 			}
-                        // wa mailbox
+			// wa mailbox
 			if (args[0].equalsIgnoreCase("mailbox")) {
-                            if(sender instanceof Player) {
-                                if(!sender.hasPermission("wa.use.command.mailbox")) {
-                                    sender.sendMessage(WebAuctionPlus.chatPrefix + WebAuctionPlus.Lang.getString("no_permission"));
-                                    return true;
-                                }
-                                // disallow creative
-                                if(((Player)sender).getGameMode() != GameMode.SURVIVAL && !((Player)sender).isOp()) {
-                                    sender.sendMessage(WebAuctionPlus.chatPrefix + WebAuctionPlus.Lang.getString("no_cheating"));
-                                    return true;
-                                }
-                                // load virtual chest
-                                Bukkit.getScheduler().runTaskAsynchronously(this.plugin, new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        WebInventory.onInventoryOpen(((Player)sender));  
-                                    }
-                                });
-                            } else {
-				WebAuctionPlus.log.info(WebAuctionPlus.logPrefix+"You can't use this command from the console!");
-                            }
-                            return true;
+				if(sender instanceof Player) {
+					if(!sender.hasPermission("wa.use.command.mailbox")) {
+						sender.sendMessage(WebAuctionPlus.chatPrefix + WebAuctionPlus.Lang.getString("no_permission"));
+						return true;
+					}
+					// disallow creative
+					if(((Player)sender).getGameMode() != GameMode.SURVIVAL && !((Player)sender).isOp()) {
+						sender.sendMessage(WebAuctionPlus.chatPrefix + WebAuctionPlus.Lang.getString("no_cheating"));
+						return true;
+					}
+					// load virtual chest
+					Bukkit.getScheduler().runTaskAsynchronously(this.plugin, new Runnable() {
+						@Override
+						public void run() {
+							WebInventory.onInventoryOpen(((Player)sender));
+						}
+					});
+				} else {
+					WebAuctionPlus.log.info(WebAuctionPlus.logPrefix+"You can't use this command from the console!");
+				}
+				return true;
 			}
 			// wa update
 			if(args[0].equalsIgnoreCase("update")){
@@ -181,33 +181,33 @@ public class WebAuctionCommands implements CommandExecutor {
 				// is player
 				boolean isPlayer = (sender instanceof Player);
 				if (isPlayer) {
-                                    if (params != 2 || args[1].isEmpty()) return false;
-                                    amount = WebAuctionPlus.ParseDouble(args[1]);
-                                    args[1] = "";
-                                    if (!sender.hasPermission("wa.use.command.deposit")){
-                                        ((Player)sender).sendMessage(WebAuctionPlus.chatPrefix + WebAuctionPlus.Lang.getString("no_permission"));
-                                        return true;
-                                    }
-                                    // player has enough money
-                                    if(!WebAuctionPlus.vaultEconomy.has(((Player)sender), amount)) {
-                                        ((Player)sender).sendMessage(WebAuctionPlus.chatPrefix + WebAuctionPlus.Lang.getString("not_enough_money_pocket"));
-                                        return true;
-                                    }
-                                    // select waPlayer from database
-                                    AuctionPlayer waPlayer = WebAuctionPlus.dataQueries.getPlayer(player.getUniqueId());
-                                    // check if person has an wa account
-                                    if(waPlayer == null) {
-                                        ((Player)sender).sendMessage(WebAuctionPlus.chatPrefix + WebAuctionPlus.Lang.getString("account_not_found"));
-                                        return true;
-                                    }
-                                    double currentMoney = waPlayer.getMoney();
-                                    currentMoney += amount;
-                                    currentMoney = WebAuctionPlus.RoundDouble(currentMoney, 2, BigDecimal.ROUND_HALF_UP);
-                                    ((Player)sender).sendMessage(WebAuctionPlus.chatPrefix + "Added " + amount +
-                                                " to auction account, new auction balance: " + currentMoney);
-                                    WebAuctionPlus.dataQueries.updatePlayerMoney(((Player)sender).getUniqueId(), currentMoney);
-                                    WebAuctionPlus.vaultEconomy.withdrawPlayer(((Player)sender), amount);
-                                    return true;                                                                          
+					if (params != 2 || args[1].isEmpty()) return false;
+					amount = WebAuctionPlus.ParseDouble(args[1]);
+					args[1] = "";
+					if (!sender.hasPermission("wa.use.command.deposit")){
+						((Player)sender).sendMessage(WebAuctionPlus.chatPrefix + WebAuctionPlus.Lang.getString("no_permission"));
+						return true;
+					}
+					// player has enough money
+					if(!WebAuctionPlus.vaultEconomy.has(((Player)sender), amount)) {
+						((Player)sender).sendMessage(WebAuctionPlus.chatPrefix + WebAuctionPlus.Lang.getString("not_enough_money_pocket"));
+						return true;
+					}
+					// select waPlayer from database
+					AuctionPlayer waPlayer = WebAuctionPlus.dataQueries.getPlayer(player.getUniqueId());
+					// check if person has an wa account
+					if(waPlayer == null) {
+						((Player)sender).sendMessage(WebAuctionPlus.chatPrefix + WebAuctionPlus.Lang.getString("account_not_found"));
+						return true;
+					}
+					double currentMoney = waPlayer.getMoney();
+					currentMoney += amount;
+					currentMoney = WebAuctionPlus.RoundDouble(currentMoney, 2, BigDecimal.ROUND_HALF_UP);
+					((Player)sender).sendMessage(WebAuctionPlus.chatPrefix + "Added " + amount +
+							" to auction account, new auction balance: " + currentMoney);
+					WebAuctionPlus.dataQueries.updatePlayerMoney(((Player)sender).getUniqueId(), currentMoney);
+					WebAuctionPlus.vaultEconomy.withdrawPlayer(((Player)sender), amount);
+					return true;
 				// is console
 				} else {
 					if (params != 3) return false;
@@ -219,62 +219,62 @@ public class WebAuctionCommands implements CommandExecutor {
 					}
 					amount = WebAuctionPlus.ParseDouble(args[2]);
 					args[2] = "";
-                                        // player has enough money
-                                        if(!WebAuctionPlus.vaultEconomy.has(player, amount)) {
-                                            WebAuctionPlus.log.info(WebAuctionPlus.chatPrefix + WebAuctionPlus.Lang.getString("not_enough_money_pocket"));
-                                            return true;
-                                        }
-                                        // select waPlayer from database
-                                        AuctionPlayer waPlayer = WebAuctionPlus.dataQueries.getPlayer(player.getUniqueId());
-                                        // check if person has an wa account
-                                        if(waPlayer == null) {
-                                            WebAuctionPlus.log.info(WebAuctionPlus.chatPrefix + WebAuctionPlus.Lang.getString("account_not_found"));
-                                            return true;
-                                        }
-                                        double currentMoney = waPlayer.getMoney();
-                                        currentMoney += amount;
-                                        currentMoney = WebAuctionPlus.RoundDouble(currentMoney, 2, BigDecimal.ROUND_HALF_UP);
-                                        WebAuctionPlus.log.info(WebAuctionPlus.chatPrefix + "Added " + amount +
-                                                    " to auction account, new auction balance: " + currentMoney);
-                                        WebAuctionPlus.dataQueries.updatePlayerMoney(player.getUniqueId(), currentMoney);
-                                        WebAuctionPlus.vaultEconomy.withdrawPlayer(player, amount);
-                                        return true; 
-				}                        
+					// player has enough money
+					if(!WebAuctionPlus.vaultEconomy.has(player, amount)) {
+						WebAuctionPlus.log.info(WebAuctionPlus.chatPrefix + WebAuctionPlus.Lang.getString("not_enough_money_pocket"));
+						return true;
+					}
+					// select waPlayer from database
+					AuctionPlayer waPlayer = WebAuctionPlus.dataQueries.getPlayer(player.getUniqueId());
+					// check if person has an wa account
+					if(waPlayer == null) {
+						WebAuctionPlus.log.info(WebAuctionPlus.chatPrefix + WebAuctionPlus.Lang.getString("account_not_found"));
+						return true;
+					}
+					double currentMoney = waPlayer.getMoney();
+					currentMoney += amount;
+					currentMoney = WebAuctionPlus.RoundDouble(currentMoney, 2, BigDecimal.ROUND_HALF_UP);
+					WebAuctionPlus.log.info(WebAuctionPlus.chatPrefix + "Added " + amount +
+							" to auction account, new auction balance: " + currentMoney);
+					WebAuctionPlus.dataQueries.updatePlayerMoney(player.getUniqueId(), currentMoney);
+					WebAuctionPlus.vaultEconomy.withdrawPlayer(player, amount);
+					return true;
+				}
 			}
-                         // wa withdraw
+			// wa withdraw
 			if (args[0].equalsIgnoreCase("withdraw")) {
 				double amount = 0.0D;
 				// is player
 				boolean isPlayer = (sender instanceof Player);
 				if (isPlayer) {
-                                    if (params != 2 || args[1].isEmpty()) return false;
-                                    amount = WebAuctionPlus.ParseDouble(args[1]);
-                                    args[1] = "";
-                                    if (!sender.hasPermission("wa.use.command.withdraw")){
-                                        ((Player)sender).sendMessage(WebAuctionPlus.chatPrefix + WebAuctionPlus.Lang.getString("no_permission"));
-                                        return true;
-                                    }                                   
-                                    // select waPlayer from database
-                                    AuctionPlayer waPlayer = WebAuctionPlus.dataQueries.getPlayer(player.getUniqueId());
-                                    // check if person has an wa account
-                                    if(waPlayer == null) {
-                                        ((Player)sender).sendMessage(WebAuctionPlus.chatPrefix + WebAuctionPlus.Lang.getString("account_not_found"));
-                                        return true;
-                                    }
-                                    double currentMoney = waPlayer.getMoney();
-                                    if(currentMoney < amount) {
-					((Player)sender).sendMessage(WebAuctionPlus.chatPrefix + WebAuctionPlus.Lang.getString("not_enough_money_account"));
+					if (params != 2 || args[1].isEmpty()) return false;
+					amount = WebAuctionPlus.ParseDouble(args[1]);
+					args[1] = "";
+					if (!sender.hasPermission("wa.use.command.withdraw")){
+						((Player)sender).sendMessage(WebAuctionPlus.chatPrefix + WebAuctionPlus.Lang.getString("no_permission"));
+						return true;
+					}
+					// select waPlayer from database
+					AuctionPlayer waPlayer = WebAuctionPlus.dataQueries.getPlayer(player.getUniqueId());
+					// check if person has an wa account
+					if(waPlayer == null) {
+						((Player)sender).sendMessage(WebAuctionPlus.chatPrefix + WebAuctionPlus.Lang.getString("account_not_found"));
+						return true;
+					}
+					double currentMoney = waPlayer.getMoney();
+					if(currentMoney < amount) {
+						((Player)sender).sendMessage(WebAuctionPlus.chatPrefix + WebAuctionPlus.Lang.getString("not_enough_money_account"));
+						return true;
+					}
+					currentMoney -= amount;
+					currentMoney = WebAuctionPlus.RoundDouble(currentMoney, 2, BigDecimal.ROUND_HALF_UP);
+					((Player)sender).sendMessage(WebAuctionPlus.chatPrefix + "Removed " +
+							amount + " from auction account, new auction balance: " + currentMoney);
+					WebAuctionPlus.dataQueries.updatePlayerMoney(((Player)sender).getUniqueId(), currentMoney);
+					WebAuctionPlus.vaultEconomy.depositPlayer(((Player)sender), amount);
 					return true;
-                                    }
-                                    currentMoney -= amount;
-                                    currentMoney = WebAuctionPlus.RoundDouble(currentMoney, 2, BigDecimal.ROUND_HALF_UP);
-                                    ((Player)sender).sendMessage(WebAuctionPlus.chatPrefix + "Removed " +
-					amount + " from auction account, new auction balance: " + currentMoney);
-                                    WebAuctionPlus.dataQueries.updatePlayerMoney(((Player)sender).getUniqueId(), currentMoney);
-                                    WebAuctionPlus.vaultEconomy.depositPlayer(((Player)sender), amount);
-                                    return true;
-                                // is console
-                                } else {
+					// is console
+				} else {
 					if (params != 3) return false;
 					if (args[1].isEmpty() || args[2].isEmpty()) return false;
 					player = getOfflinePlayer(args[1]);
@@ -284,27 +284,27 @@ public class WebAuctionCommands implements CommandExecutor {
 					}
 					amount = WebAuctionPlus.ParseDouble(args[2]);
 					args[2] = "";
-                                        
-                                        // select waPlayer from database
-                                        AuctionPlayer waPlayer = WebAuctionPlus.dataQueries.getPlayer(player.getUniqueId());
-                                        // check if person has an wa account
-                                        if(waPlayer == null) {
-                                            WebAuctionPlus.log.info(WebAuctionPlus.chatPrefix + WebAuctionPlus.Lang.getString("account_not_found"));
-                                            return true;
-                                        }
-                                        double currentMoney = waPlayer.getMoney();
-                                        if(currentMoney < amount) {
-					WebAuctionPlus.log.info(WebAuctionPlus.chatPrefix + WebAuctionPlus.Lang.getString("not_enough_money_account"));
+
+					// select waPlayer from database
+					AuctionPlayer waPlayer = WebAuctionPlus.dataQueries.getPlayer(player.getUniqueId());
+					// check if person has an wa account
+					if(waPlayer == null) {
+						WebAuctionPlus.log.info(WebAuctionPlus.chatPrefix + WebAuctionPlus.Lang.getString("account_not_found"));
+						return true;
+					}
+					double currentMoney = waPlayer.getMoney();
+					if(currentMoney < amount) {
+						WebAuctionPlus.log.info(WebAuctionPlus.chatPrefix + WebAuctionPlus.Lang.getString("not_enough_money_account"));
+						return true;
+					}
+					currentMoney -= amount;
+					currentMoney = WebAuctionPlus.RoundDouble(currentMoney, 2, BigDecimal.ROUND_HALF_UP);
+					WebAuctionPlus.log.info(WebAuctionPlus.chatPrefix + "Removed " +
+							amount + " from auction account, new auction balance: " + currentMoney);
+					WebAuctionPlus.dataQueries.updatePlayerMoney(player.getUniqueId(), currentMoney);
+					WebAuctionPlus.vaultEconomy.depositPlayer(player, amount);
 					return true;
-                                        }
-                                        currentMoney -= amount;
-                                        currentMoney = WebAuctionPlus.RoundDouble(currentMoney, 2, BigDecimal.ROUND_HALF_UP);
-                                        WebAuctionPlus.log.info(WebAuctionPlus.chatPrefix + "Removed " +
-                                                    amount + " from auction account, new auction balance: " + currentMoney);
-                                        WebAuctionPlus.dataQueries.updatePlayerMoney(player.getUniqueId(), currentMoney);
-                                        WebAuctionPlus.vaultEconomy.depositPlayer(player, amount);
-                                        return true;
-				}                        
+				}
 			}
 			return false;
 		}

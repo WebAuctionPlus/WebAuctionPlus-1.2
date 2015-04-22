@@ -49,13 +49,13 @@ public class WebAuctionPlayerListener implements Listener {
 	// player quit
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerQuit(PlayerQuitEvent event) {
-                final Player p = (Player) event.getPlayer();
-                Bukkit.getScheduler().runTaskAsynchronously(this.plugin, new Runnable() {
-                    @Override
-                    public void run() {
-                        WebInventory.onInventoryClose(p);  
-                    }
-                });
+		final Player p = (Player) event.getPlayer();
+		Bukkit.getScheduler().runTaskAsynchronously(this.plugin, new Runnable() {
+			@Override
+			public void run() {
+				WebInventory.onInventoryClose(p);
+			}
+		});
 		plugin.lastSignUse.remove(event.getPlayer().getName());
 	}
 
@@ -63,13 +63,13 @@ public class WebAuctionPlayerListener implements Listener {
 	// close inventory
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onInventoryClose(InventoryCloseEvent event){
-                final Player p = (Player) event.getPlayer();
-                Bukkit.getScheduler().runTaskAsynchronously(this.plugin, new Runnable() {
-                    @Override
-                    public void run() {
-                        WebInventory.onInventoryClose(p);  
-                    }
-                });	
+		final Player p = (Player) event.getPlayer();
+		Bukkit.getScheduler().runTaskAsynchronously(this.plugin, new Runnable() {
+			@Override
+			public void run() {
+				WebInventory.onInventoryClose(p);
+			}
+		});
 //		if(WebAuctionPlus.dataQueries.debugSQL) WebAuctionPlus.log.info(WebAuctionPlus.dataQueries."CLOSED!");
 //		Bukkit.getServer().broadcastMessage("Close Inventory");
 	}
@@ -98,15 +98,15 @@ public class WebAuctionPlayerListener implements Listener {
 		if(block.getType() != Material.SIGN_POST && block.getType() != Material.WALL_SIGN) return;
 		// it's a sign
 		Sign sign = (Sign) block.getState();
-                
-                //Temporary fix for 1.8
+
+		// Temporary fix for 1.8
 		String[] tmp_lines = sign.getLines();
-                String[] lines = new String[4];
-                lines[0] = ChatColor.stripColor(tmp_lines[0]);
-                lines[1] = ChatColor.stripColor(tmp_lines[1]);
-                lines[2] = ChatColor.stripColor(tmp_lines[2]);
-                lines[3] = ChatColor.stripColor(tmp_lines[3]);
-                
+		String[] lines = new String[4];
+		lines[0] = ChatColor.stripColor(tmp_lines[0]);
+		lines[1] = ChatColor.stripColor(tmp_lines[1]);
+		lines[2] = ChatColor.stripColor(tmp_lines[2]);
+		lines[3] = ChatColor.stripColor(tmp_lines[3]);
+
 		if(!lines[0].equals("[WebAuction+]")) return;
 		event.setCancelled(true);
 		// get player info
@@ -211,12 +211,12 @@ public class WebAuctionPlayerListener implements Listener {
 				return;
 			}
 			// load virtual chest
-                        Bukkit.getScheduler().runTaskAsynchronously(this.plugin, new Runnable() {
-                            @Override
-                            public void run() {
-                                WebInventory.onInventoryOpen(p);  
-                            }
-                        });			
+			Bukkit.getScheduler().runTaskAsynchronously(this.plugin, new Runnable() {
+				@Override
+				public void run() {
+					WebInventory.onInventoryOpen(p);
+				}
+			});
 			return;
 		}
 

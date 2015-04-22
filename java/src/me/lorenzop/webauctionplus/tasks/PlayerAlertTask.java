@@ -41,25 +41,25 @@ public class PlayerAlertTask implements Runnable {
 			if (playersList.length == 0) return;
 			// build query
 			for (Player player : playersList) {
-                                waPlayer = WebAuctionPlus.dataQueries.getPlayer(player.getUniqueId());
-                                if(waPlayer != null) {
-                                    i++; if(i != 1) whereSql += " OR ";
-                                    whereSql += "`sellerid` = ?";
-                                    playersMap.put(i, waPlayer);
-                                }
+				waPlayer = WebAuctionPlus.dataQueries.getPlayer(player.getUniqueId());
+				if(waPlayer != null) {
+					i++; if(i != 1) whereSql += " OR ";
+					whereSql += "`sellerid` = ?";
+					playersMap.put(i, waPlayer);
+				}
 			}
 		// only running for a single joined player
 		} else {
 			waPlayer = WebAuctionPlus.dataQueries.getPlayer(playerJoined.getUniqueId());
 			p = Bukkit.getPlayer(playerJoined.getUniqueId());
 			if (waPlayer == null || p==null) return;
-                        // update name
-                        if (!waPlayer.getPlayerName().equals(p.getName())){
-                            WebAuctionPlus.log.info(WebAuctionPlus.logPrefix + "Name of player - " + playerJoined + " has changed. " +
-                                            "The old name was: " + waPlayer.getPlayerName());
-                            WebAuctionPlus.dataQueries.updatePlayerName(waPlayer, p.getName());
-                            waPlayer.setPlayerName(p.getName());
-                        }                     
+			// update name
+			if (!waPlayer.getPlayerName().equals(p.getName())){
+				WebAuctionPlus.log.info(WebAuctionPlus.logPrefix + "Name of player - " + playerJoined + " has changed. " +
+						"The old name was: " + waPlayer.getPlayerName());
+				WebAuctionPlus.dataQueries.updatePlayerName(waPlayer, p.getName());
+				waPlayer.setPlayerName(p.getName());
+			}
 			// update permissions
 			boolean canBuy  = p.hasPermission("wa.canbuy");
 			boolean canSell = p.hasPermission("wa.cansell");

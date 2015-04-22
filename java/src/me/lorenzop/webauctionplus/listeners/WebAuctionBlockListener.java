@@ -41,15 +41,15 @@ public class WebAuctionBlockListener implements Listener {
 
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onSignChange(SignChangeEvent event) {
-                
-                //Temporary fix for 1.8
+
+		//Temporary fix for 1.8
 		String[] tmp_lines = event.getLines();
-                String[] lines = new String[4];
-                lines[0] = ChatColor.stripColor(tmp_lines[0]);
-                lines[1] = ChatColor.stripColor(tmp_lines[1]);
-                lines[2] = ChatColor.stripColor(tmp_lines[2]);
-                lines[3] = ChatColor.stripColor(tmp_lines[3]);
-                           
+		String[] lines = new String[4];
+		lines[0] = ChatColor.stripColor(tmp_lines[0]);
+		lines[1] = ChatColor.stripColor(tmp_lines[1]);
+		lines[2] = ChatColor.stripColor(tmp_lines[2]);
+		lines[3] = ChatColor.stripColor(tmp_lines[3]);
+
 		Player p = event.getPlayer();
 		Block sign = event.getBlock();
 		World world = sign.getWorld();
