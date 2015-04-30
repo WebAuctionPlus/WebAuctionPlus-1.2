@@ -17,6 +17,9 @@ permissions:
       wa.use.mailbox: true
       wa.use.withdraw.money: true
       wa.use.deposit.money: true
+      wa.use.command.mailbox: true
+      wa.use.command.withdraw.money: true
+      wa.use.command.deposit.money: true
       wa.announcer.receive: true
       wa.create.sign.deposit: true
       wa.create.sign.withdraw: true
@@ -32,9 +35,12 @@ permissions:
       wa.reload: true
       wa.save: true
   wa.use.*:
-    description: Gives access to all WebAuction commands
+    description: Gives access to WebAuction signs and password command
     default: false
     children:
+      wa.use.command.mailbox: false
+      wa.use.command.withdraw.money: false
+      wa.use.command.deposit.money: false
       wa.use.mailbox: true
       wa.use.withdraw.money: true
       wa.use.deposit.money: true
@@ -43,6 +49,13 @@ permissions:
       wa.password.change: true
       wa.canbuy: true
       wa.cansell: true
+  wa.use.command.*:
+    description: Gives access to all WebAuction commands
+    default: false
+    children:
+      wa.use.command.mailbox: true
+      wa.use.command.withdraw.money: true
+      wa.use.command.deposit.money: true
   wa.create.*:
     description: Gives access to all create and remove sign permissions
     default: false
