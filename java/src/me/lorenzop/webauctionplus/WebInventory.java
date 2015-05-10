@@ -73,7 +73,7 @@ public class WebInventory implements Listener {
 		// check item blacklist
 		if(checkBlacklist(stack)) {
 			((Player) event.getWhoClicked())
-				.sendMessage("Sorry, this item is blacklisted.");
+				.sendMessage(WebAuctionPlus.chatPrefix+WebAuctionPlus.Lang.getString("blacklisted_item"));
 			event.setCancelled(true);
 			return;
 		}
@@ -100,7 +100,7 @@ public class WebInventory implements Listener {
 		final UUID playerUUID = player.getUniqueId();
 		final AuctionPlayer Aplayer_tmp = WebAuctionPlus.dataQueries.getPlayer(playerUUID);
 		synchronized(openInvs){
-			// lock inventory                   
+			// lock inventory
 			if(Aplayer_tmp != null) {
 				setLocked(playerUUID, true);
 				if(openInvs.containsKey(playerUUID)) {
@@ -112,16 +112,15 @@ public class WebInventory implements Listener {
 //					p.openInventory(inventory.chest);
 				} else {
 					// create new virtual chest
-					player.sendMessage(WebAuctionPlus.chatPrefix+"Opening Inventory.....");
+					player.sendMessage(WebAuctionPlus.chatPrefix+WebAuctionPlus.Lang.getString("mailbox_opened"));
 					WebAuctionPlus.log.info(WebAuctionPlus.logPrefix+"Inventory opened for: "+playerName);
 					final WebInventory inventory = new WebInventory(player, Aplayer_tmp);
 					openInvs.put(playerUUID, inventory);
 				}
 			} else {
-				player.sendMessage(WebAuctionPlus.chatPrefix+"You have to create an WebAuction account before you can use this sing.");
+				player.sendMessage(WebAuctionPlus.chatPrefix+WebAuctionPlus.Lang.getString("create_an_account_first"));
 			}
 		}
-//		player.sendMessage(WebAuctionPlus.chatPrefix+WebAuctionPlus.Lang.getString("mailbox_opened"));
 	}
 	// close mailbox
 	public static void onInventoryClose(final Player player){

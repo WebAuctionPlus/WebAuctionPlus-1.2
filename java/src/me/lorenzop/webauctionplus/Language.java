@@ -14,6 +14,8 @@ import java.util.Random;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
+// https://translate.google.com/
+// http://unicodelookup.com/
 public class Language {
 
 	protected final HashMap<String, String> langMap = new HashMap<String, String>();
@@ -200,21 +202,21 @@ public class Language {
 	}
 
 	private void loadKeys() {
-		this.langMap.put("no_permission",               "");
-		this.langMap.put("no_cheating",                 "");
-		this.langMap.put("no_item_in_hand",             "");
-		this.langMap.put("item_stack_stored",           "");
-		this.langMap.put("got_mail",                    "");
-		this.langMap.put("no_mail",                     "");
-		this.langMap.put("inventory_full",              "");
-		this.langMap.put("not_enough_money_pocket",     "");
-		this.langMap.put("not_enough_money_account",    "");
-		this.langMap.put("reloading",                   "");
-		this.langMap.put("finished_reloading",          "");
-		this.langMap.put("account_created",             "");
-		this.langMap.put("password_changed",            "");
-		this.langMap.put("password_cmd_changed",        "");
-		this.langMap.put("password_generated",          "");
+		this.langMap.put("no_permission",              "");
+		this.langMap.put("no_cheating",                "");
+		this.langMap.put("no_item_in_hand",            "");
+		this.langMap.put("item_stack_stored",          "");
+		this.langMap.put("got_mail",                   "");
+		this.langMap.put("no_mail",                    "");
+		this.langMap.put("inventory_full",             "");
+		this.langMap.put("not_enough_money_pocket",    "");
+		this.langMap.put("not_enough_money_account",   "");
+		this.langMap.put("reloading",                  "");
+		this.langMap.put("finished_reloading",         "");
+		this.langMap.put("account_created",            "");
+		this.langMap.put("password_changed",           "");
+		this.langMap.put("password_cmd_changed",       "");
+		this.langMap.put("password_generated",         "");
 		this.langMap.put("temp_password_expired",      "");
 		this.langMap.put("account_not_found",          "");
 		this.langMap.put("created_shout_sign",         "");
@@ -230,6 +232,8 @@ public class Language {
 		this.langMap.put("mailbox_closed",             "");
 		this.langMap.put("please_wait",                "");
 		this.langMap.put("removed_enchantments",       "");
+		this.langMap.put("blacklisted_item",           "");
+		this.langMap.put("create_an_account_first",    "");
 	}
 
 
