@@ -320,5 +320,25 @@ public static function RemoveItem($tableRowId, $qty=-1){global $config;
   return(TRUE);
 }
 
+
+
+// check item blacklist
+public static function checkItemBlacklist($item) {
+  if($item == NULL) return;
+  $blacklist = SettingsClass::getItemBlacklist();
+  $id     = $item->getItemId();
+  $damage = $item->getItemDamage();
+  foreach($blacklist as $listed) {
+    if($listed->id == $id) {
+      if($listed->damage == -1 || $listed->damage == $damage) {
+        echo '<br /><center><font size="+2" color="red">Sorry, you cannot sell this type of item.</font></center><br />';
+        exit();
+      }
+    }
+  }
+}
+
+
+
 }
 ?>

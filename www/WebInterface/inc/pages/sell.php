@@ -62,6 +62,7 @@ if($config['user']->isLocked()) {
 }
 
 
+
 function RenderPage_sell(){global $config,$html,$user;
   $config['title'] = 'Sell Items';
   $id = getVar('id', 'int');
@@ -75,6 +76,8 @@ function RenderPage_sell(){global $config,$html,$user;
   if(!$Item) {
     return('<h2 style="text-align: center;">The item you\'re trying to sell couldn\'t be found!</h2>');
   }
+  // check item blacklist
+  ItemFuncs::checkItemBlacklist($Item);
   $qty        = getVar('qty');
   $priceFixed = getVar('priceFixed', 'double');
   $priceStart = getVar('priceStart', 'double');

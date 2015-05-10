@@ -46,6 +46,8 @@ public static function SellFixed($id, $qty, $price, $desc){global $config, $user
     $_SESSION['error'][] = 'Item not found!';
     return(FALSE);
   }
+  // check item blacklist
+  ItemFuncs::checkItemBlacklist($Item);
   if($qty > $Item->getItemQty()) {
     $_SESSION['error'][] = 'You don\'t have that many!';
     return(FALSE);

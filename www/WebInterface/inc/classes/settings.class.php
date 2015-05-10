@@ -2,6 +2,8 @@
 // this class handles settings stored in the database
 class SettingsClass{
 
+	protected static $itemBlacklist = NULL;
+
 
 public static function LoadSettings(){global $config, $db;
   if(!$db) ConnectDB();
@@ -76,6 +78,51 @@ public static function setSetting($name, $value){global $config;
   $config['settings'][$name]['changed'] = TRUE;
 }
 
+
+
+public static function getItemBlacklist() {
+  if(self::$itemBlacklist !== NULL)
+    return self::$itemBlacklist;
+  $str = self::getString('Item Blacklist');
+  if(empty($str)) {
+    self::$itemBlacklist = array();
+    return self::$itemBlacklist;
+  }
+  $list = array();
+  $parts = explode(',', $str);
+  foreach($parts as $part) {
+    $part = trim($part);
+    if(empty($part)) continue;
+    $stack = self::getItemBlacklist_Type($part);
+    if($stack == NULL)
+      continue;
+    $list[] = $stack;
+  }
+  self::$itemBlacklist = $list;
+  return self::$itemBlacklist;
+}
+private static function getItemBlacklist_Type($str) {
+  if(empty($str))
+    return NULL;
+  if(strpos($str, ':') !== FALSE) {
+    list($id, $damage) = explode(':', $str);
+    return new ItemBlacklistDAO($id, $damage);
+  }
+  return new ItemBlacklistDAO($str);
+}
+
+
+
+}
+class ItemBlacklistDAO {
+
+  public $id;
+  public $damage;
+
+  public function __construct($id, $damage=-1) {
+    $this->id     = (int) $id;
+    $this->damage = (int) $damage;
+  }
 
 }
 ?>
