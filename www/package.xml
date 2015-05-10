@@ -13,6 +13,7 @@
 <!--			<lineEnding>crlf</lineEnding> -->
 			<useDefaultExcludes>true</useDefaultExcludes>
 			<excludes>
+				<exclude>target/</exclude>
 				<exclude>/nbproject/*</exclude>
 				<exclude>**/resources/*</exclude>
 				<exclude>**/pom.xml</exclude>
