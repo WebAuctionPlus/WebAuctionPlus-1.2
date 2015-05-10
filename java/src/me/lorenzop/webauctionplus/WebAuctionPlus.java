@@ -185,7 +185,7 @@ public class WebAuctionPlus extends JavaPlugin {
 	}
 
 
-	private static WebAuctionPlus getPlugin() {
+	public static WebAuctionPlus getPlugin() {
 		return instance;
 	}
 	public static boolean isOk()    {return isOk;}

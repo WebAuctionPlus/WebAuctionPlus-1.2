@@ -20,10 +20,15 @@ import org.bukkit.Material;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.HandlerList;
+import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.PluginManager;
 
-public class WebInventory {
+public class WebInventory implements Listener {
 
 	// inventory instances
 	protected static final Map<UUID, WebInventory> openInvs = new HashMap<UUID, WebInventory>();
@@ -37,6 +42,7 @@ public class WebInventory {
 //	protected List<Integer> slotChanged = new ArrayList<Integer>();
 
 
+
 	public WebInventory(final Player player, final AuctionPlayer Aplayer) {
 		if(player == null) throw new NullPointerException();
 		if(Aplayer == null) throw new NullPointerException();
@@ -48,9 +54,43 @@ public class WebInventory {
 			invTitle = "WebAuction+ MailBox";
 		}
 		this.chest = Bukkit.createInventory(null, numSlots, invTitle);
+		// inventory click listener
+		final PluginManager pm = Bukkit.getPluginManager();
+		pm.registerEvents(this, WebAuctionPlus.getPlugin());
+		// load mailbox contents
 		loadInventory();
 		player.openInventory(this.chest);
 	}
+
+
+
+	@EventHandler
+	public void InventoryClickEvent(final InventoryClickEvent event) {
+		if(event.isCancelled()) return;
+		if(event.getSlot() != event.getRawSlot()) return;
+		final ItemStack stack = event.getCursor();
+		if(stack == null) return;
+		// check item blacklist
+		if(checkBlacklist(stack)) {
+			((Player) event.getWhoClicked())
+				.sendMessage("Sorry, this item is blacklisted.");
+			event.setCancelled(true);
+			return;
+		}
+	}
+
+	public static boolean checkBlacklist(final ItemStack stack) {
+		if(stack == null) throw new NullPointerException();
+		final ItemStack[] blacklist = WebAuctionPlus.settings.getItemBlacklist();
+		if(blacklist.length == 0)
+			return false;
+		for(final ItemStack listed : blacklist) {
+			if(stack.isSimilar(listed))
+				return true;
+		}
+		return false;
+	}
+
 
 
 	// open mailbox
@@ -289,6 +329,7 @@ public class WebInventory {
 
 	// save inventory to db
 	protected void saveInventory() {
+		HandlerList.unregisterAll(this);
 		Connection conn = WebAuctionPlus.dataQueries.getConnection();
 		PreparedStatement st = null;
 		int countInserted = 0;
