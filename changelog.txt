@@ -1,14 +1,59 @@
 WebAuctionPlus - Change Log
 
 
-2015-xx-xx WA+ 1.2.x alpha
+2015-06-04 WA+ 1.2.28 alpha
 ==========================
+a162fa21230b21dd58a3cbe38ea9526c8f0393c3
+* updated to bukkit 1.8.3-R0.1
+* added server shops (with optional unlimited inventory)
+* added item blacklist feature
+* added new temporary password generator for better security
+* added change password page
+* fixed backwards compatibility bugs with older mc versions
+* fixes and updates to language files
+* fixes and improvements to success/error messages on the website
+* potential fixes to permission nodes
+* using new xbuild utility to build the project
+* removed support for signlink
+
+
+2015-01-31 WA+ 1.2.6 alpha
+==========================
+47118da8d55ae5861d2d86fe0543f9ef8d8a1e81
+* updated to vault 1.5.2
+* added /wa deposit <amount> and /wa withdraw <amount> commands
+* added wa.use.command.mailbox permission node
+* update player name on website if changed
+note: may break compatibility with older mc versions
+
+
+2015-01-10 WA+ 1.2.5 alpha
+==========================
+01673de3b5e8e527048fa2d37c9003866827274e
+* fixes for CraftConomy support
+* fixes for enchantments
+
+
+2014-12-20 WA+ 1.2.4 alpha
+==========================
+30ebf6073b7e909e67b46589b5c7afb704d24418
+* updated to bukkit 1.8-R0.1
+* updated to vault 1.4.1
 * MarioG1 takes over as lead dev of the project
 * updated plugin to support UUID
+* added new items and enchantments for mc 1.8
+* temp fix for sign colors in mc 1.8
+* fixed support for enchanted books, lore, and custom item names
+* use 1.8 skins on the website
+* added market prices
+* added support for CraftConomy
+* updated to latest metrics class (and reverted from custom pxnMetrics class)
+* fixed a few spelling typos in default item pack
 
 
 2014-01-08 WA+ 1.1.14 beta
 ==========================
+17eac2de5506e4959ceea5813936172725b3d697
 * updated to bukkit 1.7.2-R0.2 beta and fixed depreciated calls
 * added many new items (more than 100)
 * added support for enchanted books, lore, and custom item names
