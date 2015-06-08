@@ -149,7 +149,7 @@ public class MySQLTables {
 					"`itemDamage`   INT    (11)     NOT NULL    DEFAULT 0       , " +
 					"`enchantments` VARCHAR(255)    NULL        DEFAULT NULL    , " +
 					"`itemTitle`    VARCHAR(32)     NULL        DEFAULT NULL    , " +
-					"`sellerId`     INT    (11)     NOT NULL    DEFAULT '0'     , " +
+					"`sellerId`     INT    (11)     NULL        DEFAULT NULL    , " +
 					"`buyerId`      INT    (11)     NULL        DEFAULT NULL    , " +
 					"`qty`          INT    (11)     NOT NULL    DEFAULT 0       , " +
 					"`price`        DECIMAL(11,2)   NOT NULL    DEFAULT 0.00    , " +

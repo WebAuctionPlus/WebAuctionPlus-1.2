@@ -35,6 +35,10 @@ public class MySQLUpdate {
 		if(WebAuctionPlus.compareVersions(fromVersion, "1.2.24").equals("<")){
 			UpdateItemData1_2_24();
 		}
+		// update db fields  (< 1.2.28)
+		if(WebAuctionPlus.compareVersions(fromVersion, "1.2.28").equals("<")){
+			UpdateItemData1_2_28();
+		}
 	}
 
 
@@ -55,6 +59,20 @@ public class MySQLUpdate {
 		return true;
 	}
 
+
+	private static void UpdateItemData1_2_28() {
+		final Connection conn = WebAuctionPlus.dataQueries.getConnection();
+		try {
+			WebAuctionPlus.log.warning(WebAuctionPlus.logPrefix+"Updating db fields for 1.2.28");
+			final String sql = "ALTER TABLE `"+WebAuctionPlus.dataQueries.dbPrefix()+"LogSales` CHANGE `sellerId` `sellerId` INT(11) NULL DEFAULT NULL";
+			if(!execQuery(conn, sql)) {
+				WebAuctionPlus.fail("Failed to update to 1.2.28! Check console log for details.");
+				throw new RuntimeException();
+			}
+		} finally {
+			WebAuctionPlus.dataQueries.closeResources(conn);
+		}
+	}
 
 	private static void UpdateItemData1_2_24() {
 		final Connection conn = WebAuctionPlus.dataQueries.getConnection();
