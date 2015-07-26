@@ -4,6 +4,7 @@ class LogSales{
 
 const LOG_NEW    = 'new';
 const LOG_SALE   = 'sale';
+const LOG_BUY    = 'buy';
 const LOG_CANCEL = 'cancel';
 
 const SALE_BUYNOW  = 'buynow';

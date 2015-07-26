@@ -131,7 +131,7 @@ public static function BuyShop($shopId, $qty) {global $config, $user;
                            $priceTotal.SettingsClass::getString('Currency Postfix');
   // add sale log
   LogSales::addLog(
-    LogSales::LOG_SALE,
+    LogSales::LOG_BUY,
     LogSales::SALE_SERVER,
     NULL,
     $user->getId(),
