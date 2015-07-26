@@ -189,9 +189,13 @@ public static function SellShop($shopId, $qty) {global $config, $user;
   $hasFound = FALSE;
   $soldCount = 0;
   while(TRUE) {
-    $Item = $Items->getNext();
+    $tmp_Item = $Items->getNext();
     // no more stacks found
-    if(!$Item) break;
+    if(!$tmp_Item){
+        break;
+    } else {
+        $Item = $tmp_Item;
+    }
     // remove empty stack
     if($Item->getItemQty() <= 0) {
       ItemFuncs::RemoveItem($Item->getTableRowId(), -1);
@@ -232,6 +236,7 @@ public static function SellShop($shopId, $qty) {global $config, $user;
   // sold less than requested
   if($qty > $soldCount) {
     $_SESSION['error'][] = 'You don\'t have that many!';
+    return(FALSE);
   }
   // add sale log
   $Item->setItemQty($soldCount);
