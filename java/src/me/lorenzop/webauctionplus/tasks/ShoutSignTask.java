@@ -38,17 +38,17 @@ public class ShoutSignTask implements Runnable {
 
 // TODO: language here
 		String msg;
-		if(auction.getAllowBids()) msg = "New auction: ";
-		else                       msg = "For sale: ";
+		if(auction.getAllowBids()) msg = "新拍卖: ";
+		else                       msg = "新上架: ";
 		msg += Integer.toString(stack.getAmount())+"x "+auction.getItemTitle()+" ";
 		if(stack.getEnchantments().size() == 1)
-			msg += "(with 1 enchantment) ";
+			msg += "(拥有  1 项附魔) ";
 		else if(stack.getEnchantments().size() > 1)
-			msg += "(with "+Integer.toString(stack.getEnchantments().size())+" enchantments) ";
+			msg += "(拥有 "+Integer.toString(stack.getEnchantments().size())+" 项附魔) ";
 		if(auction.getAllowBids())
-			msg += "has started!";
+			msg += "已经开始!";
 		else
-			msg += "selling for "+WebAuctionPlus.FormatPrice(auction.getPrice())+" each.";
+			msg += "单价 "+WebAuctionPlus.FormatPrice(auction.getPrice())+".";
 		WebAuctionPlus.log.info(WebAuctionPlus.logPrefix+msg);
 
 		// announce globally

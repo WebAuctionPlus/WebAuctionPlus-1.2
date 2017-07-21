@@ -107,7 +107,7 @@ public class WebAuctionPlayerListener implements Listener {
 		lines[2] = ChatColor.stripColor(tmp_lines[2]);
 		lines[3] = ChatColor.stripColor(tmp_lines[3]);
 
-		if(!lines[0].equals("[WebAuction+]")) return;
+		if(!lines[0].equals("[MineMarket]")) return;
 		event.setCancelled(true);
 		// get player info
 		final Player p = event.getPlayer();
@@ -210,11 +210,36 @@ public class WebAuctionPlayerListener implements Listener {
 				p.sendMessage(WebAuctionPlus.chatPrefix + WebAuctionPlus.Lang.getString("no_cheating"));
 				return;
 			}
+
+			try {
+				AuctionPlayer waPlayer = WebAuctionPlus.dataQueries.getPlayer(player);
+				// create that person in database
+				if(waPlayer == null) {
+					waPlayer = new AuctionPlayer(player);
+					waPlayer.setPerms(
+						p.hasPermission("wa.canbuy"),
+						p.hasPermission("wa.cansell"),
+						p.hasPermission("wa.webadmin")
+					);
+					WebAuctionPlus.dataQueries.createPlayer(waPlayer, player);
+					WebAuctionPlus.log.info(WebAuctionPlus.logPrefix + WebAuctionPlus.Lang.getString("account_created") + " " + player +
+							" with perms: " + waPlayer.getPermsString());
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			int page = 1;
+			try {
+				page = Integer.parseInt(lines[2]);
+			} catch (NumberFormatException ignore) {}
+			if(page < 1)  page = 1;
+			if(page > 16) page = 16;
 			// load virtual chest
 			Bukkit.getScheduler().runTaskAsynchronously(this.plugin, new Runnable() {
 				@Override
 				public void run() {
-					WebInventory.onInventoryOpen(p);
+					WebInventory.onInventoryOpen(p, page);
 				}
 			});
 			return;

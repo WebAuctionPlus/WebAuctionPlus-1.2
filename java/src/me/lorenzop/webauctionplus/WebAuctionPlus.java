@@ -53,8 +53,8 @@ public class WebAuctionPlus extends JavaPlugin {
 	private static volatile boolean isDebug = false;
 	private static volatile String failMsg = null;
 
-	public static final String logPrefix  = "[WebAuction+] ";
-	public static final String chatPrefix = ChatColor.DARK_GREEN+"["+ChatColor.WHITE+"WebAuction+"+ChatColor.DARK_GREEN+"] ";
+	public static final String logPrefix  = "[MineMarket] ";
+	public static final String chatPrefix = ChatColor.DARK_GREEN+"["+ChatColor.WHITE+"MineMarket"+ChatColor.DARK_GREEN+"] ";
 	public static final Logger log = Logger.getLogger("Minecraft");
 
 	public static Metrics metrics;
