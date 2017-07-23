@@ -43,7 +43,7 @@ public class WebInventory implements Listener {
 
 
 
-	public WebInventory(final Player player, final AuctionPlayer Aplayer) {
+	public WebInventory(final Player player, final AuctionPlayer Aplayer, final int page) {
 		if(player == null) throw new NullPointerException();
 		if(Aplayer == null) throw new NullPointerException();
 		this.player  = player;
@@ -51,14 +51,14 @@ public class WebInventory implements Listener {
 		int numSlots = WebAuctionPlus.MinMax( WebAuctionPlus.settings.getInteger("Inventory Rows"), 1, 6) * 9;
 		String invTitle = WebAuctionPlus.Lang.getString("mailbox_title");
 		if(invTitle == null || invTitle.isEmpty()) {
-			invTitle = "WebAuction+ MailBox";
+			invTitle = "MineMarket MailBox";
 		}
 		this.chest = Bukkit.createInventory(null, numSlots, invTitle);
 		// inventory click listener
 		final PluginManager pm = Bukkit.getPluginManager();
 		pm.registerEvents(this, WebAuctionPlus.getPlugin());
 		// load mailbox contents
-		loadInventory();
+		loadInventory(page);
 		player.openInventory(this.chest);
 	}
 
@@ -94,7 +94,7 @@ public class WebInventory implements Listener {
 
 
 	// open mailbox
-	public static void onInventoryOpen(final Player player){
+	public static void onInventoryOpen(final Player player, final int page){
 		if(player == null) throw new NullPointerException();
 		final String playerName = player.getName();
 		final UUID playerUUID = player.getUniqueId();
@@ -114,7 +114,7 @@ public class WebInventory implements Listener {
 					// create new virtual chest
 					player.sendMessage(WebAuctionPlus.chatPrefix+WebAuctionPlus.Lang.getString("mailbox_opened"));
 					WebAuctionPlus.log.info(WebAuctionPlus.logPrefix+"Inventory opened for: "+playerName);
-					final WebInventory inventory = new WebInventory(player, Aplayer_tmp);
+					final WebInventory inventory = new WebInventory(player, Aplayer_tmp, page);
 					openInvs.put(playerUUID, inventory);
 				}
 			} else {
@@ -214,7 +214,7 @@ public class WebInventory implements Listener {
 
 
 	// load inventory from db
-	protected void loadInventory() {
+	protected void loadInventory(final int page) {
 		Connection conn = WebAuctionPlus.dataQueries.getConnection();
 		PreparedStatement st = null;
 		ResultSet rs = null;
@@ -224,9 +224,10 @@ public class WebInventory implements Listener {
 		try {
 			if(WebAuctionPlus.isDebug()) WebAuctionPlus.log.info("WA Query: isLocked");
 			st = conn.prepareStatement("SELECT `id`, `itemId`, `itemDamage`, `qty`, `enchantments`, `itemTitle`, `itemData` "+
-				"FROM `"+WebAuctionPlus.dataQueries.dbPrefix()+"Items` WHERE `playerId` = ? ORDER BY `id` ASC LIMIT ?");
+				"FROM `"+WebAuctionPlus.dataQueries.dbPrefix()+"Items` WHERE `playerId` = ? ORDER BY `itemID` ASC LIMIT ?,?");
 			st.setInt(1, this.Aplayer.getPlayerId());
-			st.setInt   (2, this.chest.getSize());
+			st.setInt   (2, this.chest.getSize()*(page-1));
+			st.setInt   (3, this.chest.getSize());
 			rs = st.executeQuery();
 			ItemStack[] stacks = null;
 			int i = -1;

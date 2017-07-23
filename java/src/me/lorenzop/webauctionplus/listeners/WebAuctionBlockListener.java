@@ -27,7 +27,7 @@ public class WebAuctionBlockListener implements Listener {
 		Player p = event.getPlayer();
 		if(getTypeId(block) == 63 || getTypeId(block) == 68) {
 			Sign thisSign = (Sign) block.getState();
-			if(ChatColor.stripColor(thisSign.getLine(0)).equals("[WebAuction+]")) {
+			if(ChatColor.stripColor(thisSign.getLine(0)).equals("[MineMarket]")) {
 				if(!p.hasPermission("wa.remove")) {
 					event.setCancelled(true);
 					p.sendMessage(WebAuctionPlus.chatPrefix + WebAuctionPlus.Lang.getString("no_permission"));
@@ -55,9 +55,9 @@ public class WebAuctionBlockListener implements Listener {
 		World world = sign.getWorld();
 		if(p == null) return;
 		if (!lines[0].equalsIgnoreCase("[WebAuction]") &&
-			!lines[0].equalsIgnoreCase("[WebAuction+]") &&
-			!lines[0].equalsIgnoreCase("[wa]") ) return;
-		event.setLine(0, "[WebAuction+]");
+			!lines[0].equalsIgnoreCase("[MineMarket]") &&
+			!lines[0].equalsIgnoreCase("[mm]") ) return;
+		event.setLine(0, "[MineMarket]");
 
 		// Shout sign
 		if(lines[1].equalsIgnoreCase("Shout")) {
@@ -91,7 +91,7 @@ public class WebAuctionBlockListener implements Listener {
 				offset = Integer.parseInt(lines[2]);
 			} catch (NumberFormatException ignore) {}
 			if(offset < 1)  offset = 1;
-			if(offset > 10) offset = 10;
+			if(offset > 99) offset = 99;
 			// display auction
 //			if(offset <= WebAuctionPlus.Stats.getTotalAuctions()) {
 //				Auction offsetAuction = WebAuctionPlus.dataQueries.getAuctionForOffset(offset - 1);
@@ -160,9 +160,14 @@ public class WebAuctionBlockListener implements Listener {
 				NoPermission(event);
 				return;
 			}
+			int page = 1;
+			try {
+				page = Integer.parseInt(lines[2]);
+			} catch (NumberFormatException ignore) {}
+			if(page < 1)  page = 1;
+			if(page > 16) page = 16;
 			event.setLine(1, "MailBox");
-			event.setLine(2, "");
-			event.setLine(3, "");
+			event.setLine(2, Integer.toString(page));
 			p.sendMessage(WebAuctionPlus.chatPrefix + WebAuctionPlus.Lang.getString("created_deposit_mail_sign"));
 			return;
 		}
